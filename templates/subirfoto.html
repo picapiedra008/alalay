@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario de Curso</title>
+<link rel="stylesheet" href="C:\Users\DELL\Desktop\listar\stilo.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+
+<body class=" d-flex  justify-content-center  align-items-center  vh-100">
+<div class=" container bg-white p-5 rounded-3 shadow-lg ">
+    <form class="row g-5 border-dark" action="/add" method="POST" enctype="multipart/form-data">
+        
+        <div class="col-4">
+          <label for="courseDescription" class="form-label">Descripción del Curso:</label>
+          <textarea class="form-control" id="courseDescription" name="courseDescription" rows="10" ></textarea>
+        </div>
+        
+        
+        <div class="col-2">
+                <input class="form-control bg-transparent" type="file" id="imageInput" name="imageInput" accept="image/*" >
+        </div>
+        <div class="col-5">
+          <img class="rounded float-end"  id="imagePreview"style="display: none; width: 500px; height: 300px;"  alt="Vista previa de la imagen" />
+        </div>
+        
+
+        <div class="text-center gap-2  ">
+            <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('index') }}">Cancelar</a>
+            <button class ="btn btn-primary btn-lg bg-success" type="submit" class="next-btn">Finalizar Registro</button>
+        </div>
+
+      </form>
+    <style>
+ 
+    </style>
+
+     
+</div>
+
+
+<script>
+ 
+
+  function showPreview(event){
+    if(event.target.files.length > 0){
+      var src = URL.createObjectURL(event.target.files[0]);
+      var preview = document.getElementById("imagePreview");
+      preview.src = src;
+      preview.style.display = "block";
+    }
+  }
+
+  document.getElementById("imageInput").addEventListener("change", showPreview);
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

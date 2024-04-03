@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio Docente</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+<div class="contenedor">
+    <header class="cabecera">
+        <h1>Bienvenido/a, [Nombre del Docente]</h1>
+    </header>
+
+    <nav class="navegacion">
+        <a href="#">Inicio</a>
+        <a href="{{ url_for('listar_cursos') }}"> Mis Cursos</a>  
+        <a href="#">Perfil</a>
+    </nav>
+
+    <section class="contenido">
+        <h2>Mis Cursos</h2>
+        <!-- Lista de cursos existentes. Ejemplo: -->
+        <div class="curso">
+            <h3>Nombre del Curso</h3>
+            <p>Descripción breve del curso.</p>
+            <a href="#">Acceder al Curso</a>
+        </div>
+        <!-- Repite el bloque anterior para cada curso. -->
+    </section>
+
+    <form class="sibebar" action="/registro">
+        <button class="boton-crear">Crear Curso</button>
+    </form>
+    <footer class="pie">
+        <p>Derechos reservados - Sistema de Cursos</p>
+    </footer>
+</div>
+
+</body>
+</html>
