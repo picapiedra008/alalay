@@ -8,10 +8,25 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body class=" d-flex  justify-content-center  align-items-center  vh-100">
+   
 
 <div class="col-8 container bg-white p-5 rounded-3 shadow-lg">
- 
+
   <form class="row g-5 border-dark" action="/subir" method="post">
+    <div class="flash-messages">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          {% for message in messages %}
+            <!-- Puedes agregar clases de alerta de Bootstrap aquí si deseas -->
+            <div class="alert alert-warning" role="alert">{{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
     <h2 class="display-5 fw-bold fs-1" >Registro Curso</h2>
       <div class="col-6">
         <label for="titulo" class="form-label">Título:</label>
@@ -19,7 +34,7 @@
       </div>
       <div class="col-6">
         <label for="cargaHoraria" class="form-label">Carga Horaria:</label>
-        <input class="form-control" type="text" id="cargaHoraria" name="cargaHoraria" required>
+        <input class="form-control" type="number" id="cargaHoraria" name="cargaHoraria" required>
       </div>
       <div class="col-6">
         <label for="categoria" class="form-label">Categoría:</label>
@@ -32,7 +47,7 @@
       </div>
       <div class="col-6">
         <label for="costo" class="form-label">Costo:</label>
-        <input class="form-control" type="text" id="costo" name="costo" required>
+        <input class="form-control" type="number" id="costo" name="costo" required>
       </div>
       <div class="col-6">
         <label for="nivel" class="form-label">Nivel:</label>
@@ -47,8 +62,19 @@
         <button class ="btn btn-primary btn-lg bg-success" type="submit" class="next-btn">Siguiente</button>
       </div>
   </form>
-
+ 
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Encuentra todos los botones de cierre en las alertas
+    document.querySelectorAll('.alert .close').forEach(function(closeButton) {
+      closeButton.onclick = function() {
+        // Encuentra el elemento alerta más cercano y ocúltalo
+        this.parentElement.style.display = 'none';
+      };
+    });
+  });
+  </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

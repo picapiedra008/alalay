@@ -1,0 +1,86 @@
+{% extends './principal.html' %}
+
+{% block title %}perfil{% endblock %}
+
+{% block body %}
+
+<div class="wrapper">
+    <div class="left">
+        <H1>
+
+        </H1>
+        <div>
+            <div class="card" style="height: 550px;">
+                <img src="..." class="card-img-top" alt="...">
+              
+                <div class="card-body">
+                    <h5 class="card-title">nombre: Juan Perez </h5>
+                    <p class="card-text">correo: juan perez@gmail.com</p>
+                    <a href="#" class="btn btn-primary ">editar perfil</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <div class="right">
+        <h3>
+
+
+        </h3>
+        <div class="card-container">
+            <nav class="navbar navbar-dark bg-success justify-content-end">
+                <div class="container-fluid">
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                </div>
+              </nav>
+              <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
+                <div class="bg-info p-4">
+                  <h5 class="text-body-emphasis h4">Panel de control</h5>
+                  <span class="text-body-secondary">Toggleable via the navbar brand.</span>
+                </div>
+              </div>
+
+              <form action="/registro" method="get">
+                <button type="submit" class="btn btn-primary btn-lg">Registrar curso</button>
+            </form>
+               
+
+          <h1>Mis cursos</h1>
+            <div class="card" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                  <h5 class="card-title">titulo curso</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">An item</li>
+                  <li class="list-group-item">A second item</li>
+                  <li class="list-group-item">A third item</li>
+                </ul>
+                
+              </div>
+            
+            <div class="card" aria-hidden="true">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title placeholder-glow">
+                        <span class="placeholder col-6"></span>
+                    </h5>
+                    <p class="card-text placeholder-glow">
+                        <span class="placeholder col-7"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-4"></span>
+                        <span class="placeholder col-6"></span>
+                        <span class="placeholder col-8"></span>
+                    </p>
+                    <a class="btn btn-primary disabled placeholder col-6" aria-disabled="true"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

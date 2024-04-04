@@ -1,7 +1,8 @@
-from flask import Flask,render_template,request,redirect,url_for,flash
+from flask import Flask,render_template,request,redirect,url_for,jsonify,flash
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 import os
+import re
 
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.getcwd(), 'static', 'archivos'))
 ALLOWED_EXTENSION = set(['png', 'jpg'])
@@ -12,10 +13,10 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
-app.config['MYSQL_DB'] = 'cursos'
+app.config['MYSQL_DB'] = 'campus_alalay'
 mysql=MySQL(app)
 
 #setings
@@ -23,7 +24,7 @@ app.secret_key='mysecretkey'
 
 @app.route('/')
 def index():
-    return render_template('inicioDocente.html')
+    return render_template('perfilDocente.html')
 
 @app.route('/listar')
 def listar_cursos():
@@ -55,7 +56,17 @@ def subir():
          nivel=request.form['nivel']
          cargaHoraria=request.form['cargaHoraria']
          costo=request.form['costo']
-    return render_template('subirfoto.html')
+         pattern = r"^[A-Za-z\s'-]+$"
+    
+         if re.match(pattern, titulo):
+        # El título del curso es válido
+        # Aquí puedes procesar el título como necesites
+            return render_template('subirfoto.html')
+         else:
+        # El título del curso no es válido
+            flash('Solo se permiten letras, espacios, guiones (-) y comillas simples (\').')
+            return redirect(url_for('add'))
+    
 
 def idCategoria(tit):
      c3=mysql.connection.cursor()
@@ -83,7 +94,6 @@ def addB():
         if f:
          filename=f.filename
          f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-         
          image_url=url_for('static', filename='archivos/' + filename, _external=True)
          descripcion=request.form['courseDescription']
          codCat=int(idCategoria(categoria))
@@ -91,7 +101,7 @@ def addB():
          cur=mysql.connection.cursor()
          cur.execute('insert into curso(CODCATEGORIA,CODNIVEL,NOMCURSO,CARGAHORARIAC,COSTOC,DESCRIPCIONC,PORTADAC) values (%s,%s,%s,%s,%s,%s,%s)',(codCat,codNiv,titulo,cargaHoraria,costo,descripcion,image_url,))
          mysql.connection.commit()  
-         return redirect(url_for('index'))
+         return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
                   
 if __name__=='__main__':
    app.run(port=3000,debug=True)
