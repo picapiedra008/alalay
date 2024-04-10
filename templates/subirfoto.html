@@ -2,34 +2,37 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Formulario de Curso</title>
-<link rel="stylesheet" href="C:\Users\DELL\Desktop\listar\stilo.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="static/css/Registrar_curso.css">
 </head>
 
 <body class=" d-flex  justify-content-center  align-items-center  vh-100">
 <div class=" container bg-white p-5 rounded-3 shadow-lg ">
     <!-- <form class="row g-5 border-dark" id="formularioRegistro" action="/add" method="POST" enctype="multipart/form-data"> -->
-      <form class="row g-5 border-dark" id="formularioRegistro" method="POST" >
+      <form class="row g-5 border-dark" id="formularioRegistro" method="POST">
 
         <div class="col-4">
           <label for="courseDescription" class="form-label">Descripción del Curso:</label>
-          <textarea class="form-control" id="courseDescription" name="courseDescription" rows="10" ></textarea>
+          <textarea class="form-control" id="courseDescription" name="courseDescription" rows="9" style="resize: none" maxlength="600" minlength="5" required></textarea>
+          <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
         </div>
         
         
-        <div class="col-2">
-                <input class="form-control bg-transparent" type="file" id="imageInput" name="imageInput" accept="image/*" >
+        <div class="col-2 ">                         
+                  <label for="imageInput" class="btn btn-secondary">+ Subir Portada</label>
+                  <input class="form-control bg-transparent d-none" type="file" id="imageInput" name="imageInput" accept=".jpg, .jpeg, .png" required>
+                  <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
         </div>
         <div class="col-5">
-          <img class="rounded float-end"  id="imagePreview" style="display: none; width: 500px; height: 300px;"  alt="Vista previa de la imagen" />
+          <img class="rounded float-end img-fluid"  id="imagePreview" style="display: none; width: 500px; height: 250px;"  alt="Vista previa de la imagen" />
         </div>
         
 
         <div class="text-center gap-2  ">
-            <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('add') }}">Cancelar</a>
-            <button class ="btn btn-primary btn-lg bg-success" id="botonConfirmarRegistro" type="submit" class="next-btn">Finalizar Registro</button>
+            <a class ="btn btn-personal btn-lg me-md-5 " href="{{ url_for('add') }}">&lt; Volver</a>
+            <button class ="btn btn-personal2 btn-lg " id="botonConfirmarRegistro" type="submit" class="next-btn">Finalizar Registro &gt;</button>
         </div>
 
       </form>
@@ -46,7 +49,7 @@
        </div>
        <div class="modal-footer">
         <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
-        <button type="button" class="btn btn-primary" id="botonAceptarModal">Aceptar</button>
+        <button type="button" class="btn btn-personal2" id="botonAceptarModal">Aceptar</button>
        </div>
       </div>
      </div>
@@ -109,7 +112,62 @@
   });
   
 </script>
-
+<script>
+  document.getElementById('formularioRegistro').onsubmit = function(e) {
+      var inputImagen = document.querySelector('input[type="file"]');
+      if (inputImagen.files.length === 0) {
+          e.preventDefault(); // Evita que el formulario se envíe
+          document.getElementById('mesanjeAlerta').style.display = 'none';
+      }
+  };
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Encuentra verfica el campo titulo
+      var tituloInput = document.getElementById('courseDescription');
+      tituloInput.addEventListener('input', function() {
+          var tituloValue = tituloInput.value;
+          if (/^[A-Za-z0-9\s'-]+$/.test(tituloValue)) {
+              // Si es válido, ocultar el mensaje de ayuda
+              document.getElementById('mesanjeAlerta').style.display = 'none';
+          } else {
+              // Si no es válido, mostrar el mensaje de ayuda
+              document.getElementById('mesanjeAlerta').style.display = 'block';
+          }
+      });
+      document.querySelectorAll('.alert .close').forEach(function(closeButton) {
+          closeButton.onclick = function() {
+              // Encuentra el elemento de alerta más cercano y ocúltalo
+              this.parentElement.style.display = 'none';
+          };
+      });
+  });
+  </script>
+  
+  <script>
+    function validarImagen() {
+        var input = document.getElementById('imageInput');
+        var file = input.files[0];
+        if (file) {
+            // Validar tipo
+            var tipoValido = ["image/jpeg", "image/png"];
+            if (!tipoValido.includes(file.type)) {
+                document.getElementById('mesanjeAlerta').style.display = 'none';
+                return;
+            }
+            // Validar tamaño (2MB)
+            var tamañoMaximo = 2 * 1024 * 1024; // 2MB
+            if (file.size > tamañoMaximo) {
+                document.getElementById('mesanjeAlerta').style.display = 'none';
+                return;
+            }
+            // Si todo está correcto, proceder con el envío del formulario o la subida del archivo.
+        } else {
+          document.getElementById('mesanjeAlerta').style.display = 'none';
+        }
+    }
+    </script>
+    
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

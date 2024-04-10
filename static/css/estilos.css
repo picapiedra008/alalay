@@ -4,7 +4,7 @@
     justify-content: center; /* Distribuye los elementos horizontalmente */
     width: 100%; /* Ancho del contenedor principal */
     height: 100%;
-     background-color: rgb(240, 241, 240) ;
+     background-color: rgb(245, 247, 245) ;
 }
 
 .left {
@@ -29,4 +29,22 @@
 }
 .button-container {
     text-align: right; /* Alinea el contenido a la derecha */
+}
+.btn-personal{
+
+    background-color:#35a1f3 ;
+    border: 2px solid #35a1f3;
+    color: aliceblue;
+   
+}
+.btn-personal2{
+
+    background-color:#438e96 ;
+    border: 2px solid #438e96;
+    color: aliceblue;
+   
+}
+.barra-nav{
+
+    background-color:#438e96 ;
 }

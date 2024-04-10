@@ -1,4 +1,4 @@
-from flask import Flask,render_template,request,redirect,url_for,jsonify,flash
+from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 import os
@@ -6,6 +6,8 @@ import re
 
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.getcwd(), 'static', 'archivos'))
 ALLOWED_EXTENSION = set(['png', 'jpg' ,'jpeg'])
+MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
+
 
 
 
@@ -24,6 +26,7 @@ app.secret_key='mysecretkey'
 
 @app.route('/')
 def index():
+    session.clear()
     return render_template('perfilDocente.html')
 
 @app.route('/listar')
@@ -34,8 +37,16 @@ def listar_cursos():
                  and curso.CODNIVEL=nivel.CODNIVEL;""")
      return render_template('listarCurso.html')
 
-@app.route('/registro')
+@app.route('/registro',methods=['POST','GET'])
 def add():
+    if request.method=='POST':
+       session['titulo']=request.form['titulo']
+       session['categoria']=request.form['categoria']
+       session['nivel']=request.form['nivel']
+       session['cargaHoraria']=request.form['cargaHoraria']
+       session['costo']=request.form['costo']
+       return redirect(url_for('subir'))
+    
     print(request.method)
     cur=mysql.connection.cursor()
     cir=cur
@@ -43,29 +54,19 @@ def add():
     data1=cur.fetchall()
     cir.execute('select*from nivel')
     data2=cir.fetchall()
-    return render_template('RegistroCurso.html',categorias=data1,niveles=data2)
+    return render_template('RegistroCurso.html',categorias=data1,niveles=data2,titulo=session.get('titulo',''),categoria=session.get('categoria'),nivel=session.get('nivel'),cargaHoraria=session.get('cargaHoraria'),costo=session.get('costo'))
 
 
 
-@app.route('/subir',methods=['POST'])
+@app.route('/subir',methods=['POST','GET'])
 def subir():
     if request.method=='POST':
-         global titulo,categoria,nivel,cargaHoraria,costo
-         titulo = request.form['titulo'] 
-         categoria=request.form['categoria']
-         nivel=request.form['nivel']
-         cargaHoraria=request.form['cargaHoraria']
-         costo=request.form['costo']
-         pattern = r"^[A-Za-z\s'-]+$"
-    
-         if re.match(pattern, titulo):
-        # El título del curso es válido
-        # Aquí puedes procesar el título como necesites
-            return render_template('subirfoto.html')
-         else:
-        # El título del curso no es válido
-            flash('Solo se permiten letras, espacios, guiones (-) y comillas simples (\').')
-            return redirect(url_for('add'))
+         session['categoria']=request.form['categoria']
+         session['nivel']=request.form['nivel']
+         session['cargaHoraria']=request.form['cargaHoraria']
+         session['costo']=request.form['costo']
+         session['titulo']=request.form['titulo']
+         return render_template('subirfoto.html')
     
 
 def idCategoria(tit):
@@ -79,29 +80,32 @@ def idNivel(niv):
    c3.execute('SELECT CODNIVEL FROM NIVEL WHERE NOMNIVEL = %s',(niv,)) 
    id=c3.fetchall()
    return id[0][0] 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSION
 
 @app.route('/add',methods=['POST'])
 def addB():    
     if request.method=='POST':
+      titulo = session.get('titulo') 
+      categoria=session.get('categoria')
+      nivel=str(session.get('nivel'))
+      cargaHoraria=str(session.get('cargaHoraria'))
+      costo=session.get('costo')
+      print(titulo,categoria,nivel,cargaHoraria,costo)
       if 'imageInput' in request.files:
-        f= request.files['imageInput']
-        filenam = secure_filename(f.filename)
-        extension = filenam.rsplit('.', 1)[1].lower()
-        if extension in ALLOWED_EXTENSION:
-             print('La extensión del archivo es permitida.')
-        else:
-             return 'extencion no permitido'
-        if f:
+         f= request.files['imageInput']
          filename=f.filename
          f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-         image_url=url_for('static', filename='archivos/' + filename, _external=True)
+         image_url=url_for('static', filename='archivos/' + filename)
          descripcion=request.form['courseDescription']
          codCat=int(idCategoria(categoria))
          codNiv=int((idNivel(nivel)))
          cur=mysql.connection.cursor()
          cur.execute('insert into curso(CODCATEGORIA,CODNIVEL,NOMCURSO,CARGAHORARIAC,COSTOC,DESCRIPCIONC,PORTADAC) values (%s,%s,%s,%s,%s,%s,%s)',(codCat,codNiv,titulo,cargaHoraria,costo,descripcion,image_url,))
-         mysql.connection.commit()  
+         mysql.connection.commit()
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+
                   
 if __name__=='__main__':
    app.run(port=3000,debug=True)

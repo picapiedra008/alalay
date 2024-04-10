@@ -6,73 +6,108 @@
 <title>Formulario de Curso</title>
 <!-- <link rel="stylesheet" href="{{url_for('static',filename='css/stilo1.css')}}"> -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="static/css/Registrar_curso.css">
 </head>
 <body class=" d-flex  justify-content-center  align-items-center  vh-100">
-   
-
 <div class="col-8 container bg-white p-5 rounded-3 shadow-lg">
-
   <form class="row g-5 border-dark" action="/subir" method="post">
     <div class="flash-messages">
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          {% for message in messages %}
-            <!-- Puedes agregar clases de alerta de Bootstrap aquí si deseas -->
-            <div class="alert alert-warning" role="alert">{{ message }}
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
+      <h2 class="display-4  fw-bold fs-1  ali text-center" >Registro Curso</h2>
     </div>
-    <h2 class="display-5 fw-bold fs-1" >Registro Curso</h2>
+    
       <div class="col-6">
         <label for="titulo" class="form-label">Título:</label>
-        <input class="form-control " type="text" id="titulo" name="titulo"  required>
+        <input class="form-control" value="{{titulo}}" type="text" id="titulo" name="titulo" minlength="3" maxlength="60"  required>
+        <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
       </div>
       <div class="col-6">
         <label for="cargaHoraria" class="form-label">Carga Horaria:</label>
-        <input class="form-control" type="number" id="cargaHoraria" name="cargaHoraria" required>
+        <input class="form-control" value="{{cargaHoraria}}" type="number" id="cargaHoraria" name="cargaHoraria" required min="0">
       </div>
       <div class="col-6">
         <label for="categoria" class="form-label">Categoría:</label>
-        <select class="form-select" id="categoria" name="categoria">
+        <select class="form-select"  id="categoria" name="categoria">
           {%for categoria in categorias%}
-          <option value="{{categoria.1}}">{{categoria.1}}</option>
+          <option value="{{categoria.1}}" {% if categoria.1 == categoria %} selected {% endif %} >{{categoria.1}}</option>
           {% endfor %}
         </select>
 
       </div>
       <div class="col-6">
         <label for="costo" class="form-label">Costo:</label>
-        <input class="form-control" type="number" id="costo" name="costo" required>
+        <input class="form-control" value="{{costo}}" type="number" id="costo" name="costo" required min="0">
       </div>
       <div class="col-6">
         <label for="nivel" class="form-label">Nivel:</label>
         <select class="form-select" id="nivel" name="nivel">
           {%for nivel in niveles%}
-          <option value="{{nivel.1}}">{{nivel.1}}</option>
+          <option value="{{nivel.1}}"{% if nivel.1 == nivel %} selected {% endif %}>{{nivel.1}}</option>
           {% endfor %}
         </select>
       </div>    
-      <div class="text-center gap-2  ">
-        <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('index') }}">Cancelar</a>
-        <button class ="btn btn-primary btn-lg bg-success" type="submit" class="next-btn">Siguiente</button>
+      <div class="text-center gap-2   ">
+        <!-- <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('index') }}">Cancelar</a> -->
+        <button type="button" class="btn  btn-personal  btn-lg me-md-5" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
+        <button class ="btn btn-personal2 btn-lg " type="submit" class="next-btn">Siguiente &gt;</button>
       </div>
   </form>
+  <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">Confirmación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de cancelar registro?
+            </div>
+            <div class="modal-footer gap-2">
+                <button type="button" class="btn btn-personal" data-bs-dismiss="modal">Seguir Registrando</button>
+                <button type="button" class="btn btn-personal2" onclick="location.href='/'">Si,quiero cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
  
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Encuentra todos los botones de cierre en las alertas
-    document.querySelectorAll('.alert .close').forEach(function(closeButton) {
-      closeButton.onclick = function() {
-        // Encuentra el elemento alerta más cercano y ocúltalo
-        this.parentElement.style.display = 'none';
-      };
+    // Encuentra verfica el campo titulo
+    var tituloInput = document.getElementById('titulo');
+    tituloInput.addEventListener('input', function() {
+        var tituloValue = tituloInput.value;
+        if (/^[A-Za-z\s'-]+$/.test(tituloValue)) {
+            // Si es válido, ocultar el mensaje de ayuda
+            document.getElementById('mesanjeAlerta').style.display = 'none';
+        } else {
+            // Si no es válido, mostrar el mensaje de ayuda
+            document.getElementById('mesanjeAlerta').style.display = 'block';
+        }
     });
+    document.querySelectorAll('.alert .close').forEach(function(closeButton) {
+        closeButton.onclick = function() {
+            // Encuentra el elemento de alerta más cercano y ocúltalo
+            this.parentElement.style.display = 'none';
+        };
+    });
+});
+</script>
+
+<script>
+  function validarCampoNumerico(inputId) {
+    var input = document.getElementById(inputId);
+    var valor = parseFloat(input.value);
+    if (isNaN(valor) || valor <= 0) {
+      input.setCustomValidity("Por favor ingresa un valor válido");
+    }else{
+      input.setCustomValidity("");
+    }
+  }
+  document.getElementById("costo").addEventListener("input", function() {
+    validarCampoNumerico("costo");
+  });
+  document.getElementById("cargaHoraria").addEventListener("input", function() {
+    validarCampoNumerico("cargaHoraria");
   });
   </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
