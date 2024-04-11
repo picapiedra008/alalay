@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ curso.titulo }} - Detalles del Curso</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .nav-bar {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        .nav-bar a {
+            float: left;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .nav-bar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            background-color: #0056b3;
+        }
+
+        .curso-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .curso-card h2 {
+            color: #333;
+        }
+
+        .curso-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .boton-icono {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .boton-icono:hover {
+            background-color: #218838;
+        }
+
+        .boton-volver {
+            background-color: #218838;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block; /* Para que el botón se muestre como bloque y esté centrado */
+            margin-left: auto;
+            margin-right: auto;
+            width: 100px; /* Ancho del botón */
+        }
+
+        .boton-volver:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar bg-success">
+        <a href="#">Inicio</a>
+        <a href="#">Cursos</a>
+        <a href="#">Comunidad</a>
+        <a href="#"><img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;"></a>
+    </div>
+
+    <div class="container">
+        
+        
+        <div class="card mb-3 p-3" style="max-width: 1200px;height: 480px;">
+            <div class="row ">
+                
+                <div class="col-md-6">
+                    <br>
+                    <div class="card-body">
+                      <h1>{{curso[0][3]}}</h1>
+                      <br>
+                      <p>Categoria: {{ curso[0][11] }} </p>
+                       <p>Nivel: {{ curso[0][9] }}</p>
+                       <p>Duración: {{ curso[0][4]}} horas</p>
+                      <p>Costo: {{ curso[0][5] }}</p>
+                      <p>Descripcion: {{ curso[0][6] }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <br>
+                    <h2>Portada del Curso:</h2>
+                    <br>
+                    <img src="{{curso[0][7]}}" class="img-fluid rounded-start" alt="imagen.png" style=" width: 500px; height: 300px;">
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <a href="{{url_for('listar_cursos')}}" class="boton btn-lg me-md-5">Volver</a>
+        </div>
+            
+    </div>
+</body>
+</html>

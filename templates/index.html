@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Alalay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .nav-bar {
+            background-color: #065e06;
+            overflow: hidden;
+        }
+
+        .nav-bar a {
+            float: left;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .nav-bar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .contador {
+            background-color: #fff;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        }
+
+        .boton {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .boton:hover {
+            background-color: #0056b3;
+        }
+
+        .curso-card {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .curso-card h2 {
+            color: #333;
+        }
+
+        .curso-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .boton-icono {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .boton-icono:hover {
+            background-color: #218838;
+        }
+
+        .boton-volver {
+            background-color: #218838;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: block; /* Para que el botón se muestre como bloque y esté centrado */
+            margin-left: auto;
+            margin-right: auto;
+            width: 100px; /* Ancho del botón */
+        }
+
+        .boton-volver:hover {
+            background-color: #218838;
+        }
+
+        .card-img-top-fit {
+            height: 200px; /* Ajusta a la altura deseada */
+            object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
+            width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
+          }
+    </style>
+</head>
+<body>
+    <div class="nav-bar bg-success">
+        <a class="navbar-brand text-white" href="">Campus alalay</a>
+        <a href="#">Inicio</a>
+        <a href="#">Cursos</a>
+        <a href="#">Comunidad</a>
+        <a href="{{url_for('index')}}"><img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;"></a>
+    </div>
+ <!-- Cambia inicio] -->
+    <div class="contador">
+        <h1>Bienvenido a nuestra plataforma de cursos</h1>
+        <form action="{{ url_for('listar_cursos') }}" method="GET">
+            <div class="row"> 
+                <div class="col-2">
+                    <select class="form-control" id="categoria" name="categoria">
+                        <option value="">Categoria</option>
+                        {% for categoria in categorias %}
+                        <option value="{{ categoria[1] }}">{{ categoria[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-2">
+                    <select class="form-control bg-light" id="nivel" name="nivel">
+                        <option value="">Nivel</option>
+                        {% for nivel in niveles %}
+                        <option value="{{ nivel[1] }}">{{ nivel[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-6">
+                    <input type="text" class="form-control" name="busqueda" placeholder="Qué quieres aprender?">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="boton-icono"><img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;"></button>
+                </div>
+                
+            </div>
+        </form>
+        
+        </div>
+        <!-- cambio fin -->
+    <!-- aqui inicia e cambio  -->
+        
+          <div class="container">
+
+            <div class=" row">
+                {% for curso in cursos %}
+                <div class="card col-3 " >
+                        <img src="{{ curso[6] }}" alt="imagen" class="card-img-top card-img-top-fit">
+                        <div class="card-body">
+                        <h2 class="card-title"> {{ curso[1] }}</h2> 
+                        <p>Categoria: {{ curso[2] }}</p> 
+                        <p>Nivel: {{ curso[3] }}</p> 
+                        <p>Duración: {{ curso[4] }} horas</p>
+                        <p>Costo: {{ curso[5] }}</p>
+                        <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="boton">Ver Curso</a>
+                        </div>
+                </div>
+                {% endfor %}    
+        </div>
+
+
+
+
+          </div>  
+            
+            
+            
+            
+        
+        <!-- finaliza el cambio-->
+            
+        
+        </div>
+
+</body>
+</html>

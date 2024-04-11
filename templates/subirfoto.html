@@ -127,7 +127,7 @@
       var tituloInput = document.getElementById('courseDescription');
       tituloInput.addEventListener('input', function() {
           var tituloValue = tituloInput.value;
-          if (/^[A-Za-z0-9\s'-]+$/.test(tituloValue)) {
+          if (/^[A-Za-z0-9\s',.-áéíóúÁÉÍÓÚüÜñÑ]+$/.test(tituloValue)) {
               // Si es válido, ocultar el mensaje de ayuda
               document.getElementById('mesanjeAlerta').style.display = 'none';
           } else {

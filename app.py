@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-#app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
@@ -29,13 +29,102 @@ def index():
     session.clear()
     return render_template('perfilDocente.html')
 
+@app.route('/curso/<int:curso_id>')
+def ver_curso(curso_id):
+    # Obtener el curso de la base de datos
+    cursor =mysql.connection.cursor()
+    query = 'select*from curso,nivel,categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA and curso.CODNIVEL=nivel.CODNIVEL and curso.IDCURSO = %s'
+    cursor.execute(query, (curso_id,))
+    curso = cursor.fetchall()
+    
+    if curso:
+        return render_template('detalles_curso.html', curso=curso)
+    else:
+        return "Curso no encontrado", 404
+@app.route('/subir1', methods=['POST'])
+def Buscar():
+    if request.method == 'POST':
+        cursor = mysql.connection.cursor()
+        
+        # Obtener los cursos con sus respectivos niveles y categorías
+        query = """
+            SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC
+            FROM curso c
+            INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+            INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+        """
+        
+        # Aplicar filtros si se han seleccionado categoría, nivel o búsqueda
+        categoria = request.form.get('categoria')
+        nivel = request.form.get('nivel')
+        busqueda = request.form.get('busqueda')
+        params = []
+        
+        if categoria:
+            query += " WHERE ca.NOMCATEGORIA = %s"
+            params.append(categoria)
+        
+        if nivel:
+            if categoria:
+                query += " AND n.NOMNIVEL = %s"
+            else:
+                query += " WHERE n.NOMNIVEL = %s"
+            params.append(nivel)
+        
+        if busqueda:
+            if categoria or nivel:
+                query += " AND (c.NOMCURSO LIKE %s OR ca.NOMCATEGORIA LIKE %s OR n.NOMNIVEL LIKE %s)"
+            else:
+                query += " WHERE c.NOMCURSO LIKE %s OR ca.NOMCATEGORIA LIKE %s OR n.NOMNIVEL LIKE %s"
+            params.extend(['%' + busqueda + '%'] * 3)
+        
+        cursor.execute(query, params)
+        cursos = cursor.fetchall()
+        
+        return render_template('index.html', cursos=cursos, categorias=categoria, niveles=nivel)
 @app.route('/listar')
 def listar_cursos():
-     cur=mysql.connection.cursor()
-     cur.execute("""SELEC*FROM curso,nivel,categoria 
-                 WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA 
-                 and curso.CODNIVEL=nivel.CODNIVEL;""")
-     return render_template('listarCurso.html')
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM categoria')
+    categorias = cur.fetchall()
+    
+    cir = mysql.connection.cursor()
+    cir.execute('SELECT * FROM nivel')
+    niveles = cir.fetchall()
+    
+    # Obtener parámetros de búsqueda
+    categoria_seleccionada = request.args.get('categoria', '')
+    nivel_seleccionado = request.args.get('nivel', '')
+    busqueda = request.args.get('busqueda', '')
+
+    # Construir consulta SQL con filtros
+    query = """
+        SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC
+        FROM curso c
+        INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+        INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+        WHERE 1=1
+    """
+    params = []
+
+    if categoria_seleccionada:
+        query += " AND ca.NOMCATEGORIA = %s"
+        params.append(categoria_seleccionada)
+    
+    if nivel_seleccionado:
+        query += " AND n.NOMNIVEL = %s"
+        params.append(nivel_seleccionado)
+    
+    if busqueda:
+        query += " AND (c.NOMCURSO LIKE %s OR ca.NOMCATEGORIA LIKE %s OR n.NOMNIVEL LIKE %s)"
+        params.extend(['%' + busqueda + '%'] * 3)
+    
+    cur.execute(query, params)
+    cursos = cur.fetchall()
+    
+    return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles)
+
+
 
 @app.route('/registro',methods=['POST','GET'])
 def add():
