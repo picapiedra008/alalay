@@ -1,0 +1,17 @@
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+.btn-personal{
+
+    background-color:#007bff ;
+    border: 2px solid #007bff;
+    color: aliceblue;
+   
+}
+.btn-personal2{
+
+    background-color:#438e96 ;
+    border: 2px solid #438e96;
+    color: aliceblue;
+   
+}
