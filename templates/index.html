@@ -212,5 +212,19 @@
             });
         </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categoriaSelect = document.getElementById('categoria');
+        categoriaSelect.addEventListener('click', function() {
+            const categoriaOption = categoriaSelect.querySelector('option[value=""]');
+            if (categoriaOption) {
+                categoriaOption.remove();
+            }
+        });
+    });
+</script>
+
+        
+
 </body>
 </html>
