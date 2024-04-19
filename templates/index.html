@@ -122,6 +122,7 @@
           }
     </style>
 </head>
+
 <body>
     <div class="nav-bar bg-success">
         <a class="navbar-brand text-white" href="">Campus alalay</a>
@@ -147,9 +148,9 @@
                 <div class="col-2">
                     <select class="form-control bg-light" id="nivel" name="nivel">
                         <option value="">Nivel</option>
-                        {% for nivel in niveles %}
-                        <option value="{{ nivel[1] }}">{{ nivel[1] }}</option>
-                        {% endfor %}
+                        <option value="Básico">BASICO</option>
+                        <option value="Intermedio">INTERMEDIO</option>
+                        <option value="Avanzado">AVANZADO</option>
                     </select>
                 </div>
                 
@@ -165,7 +166,7 @@
         
         </div>
         <!-- cambio fin -->
-    <!-- aqui inicia e cambio  -->
+    <!-- aqui inicia el cambio  -->
         
           <div class="container">
 
@@ -198,6 +199,18 @@
             
         
         </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const nivelSelect = document.getElementById('nivel');
+                nivelSelect.addEventListener('click', function() {
+                    const nivelOption = nivelSelect.querySelector('option[value=""]');
+                    if (nivelOption) {
+                        nivelOption.remove();
+                    }
+                });
+            });
+        </script>
 
 </body>
 </html>
