@@ -199,7 +199,7 @@
             
         
         </div>
-        
+         <!-- elimina nivel al hacer click en el desplegable nivel-->
         <script>
             document.addEventListener("DOMContentLoaded", function() {
                 const nivelSelect = document.getElementById('nivel');
@@ -211,7 +211,7 @@
                 });
             });
         </script>
-
+    <!-- elimina categoria al hacer click en el desplegable categoria-->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const categoriaSelect = document.getElementById('categoria');
@@ -224,7 +224,36 @@
     });
 </script>
 
-        
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const categoriaSelect = document.getElementById('categoria');
+        const nivelSelect = document.getElementById('nivel');
+
+        // Función para verificar si se seleccionaron ambas opciones y enviar el formulario
+        const verificarYEnviarFormulario = () => {
+            const categoriaSeleccionada = categoriaSelect.value;
+            const nivelSeleccionado = nivelSelect.value;
+            if (categoriaSeleccionada !== '' && nivelSeleccionado !== '') {
+                document.getElementById('categoriaHidden').value = categoriaSeleccionada;
+                document.getElementById('nivelHidden').value = nivelSeleccionado;
+                document.getElementById('filtroForm').submit();
+            }
+        };
+
+        // Evento para detectar cambios en el selector de categoría
+        categoriaSelect.addEventListener('change', verificarYEnviarFormulario);
+
+        // Evento para detectar cambios en el selector de nivel
+        nivelSelect.addEventListener('change', verificarYEnviarFormulario);
+    });
+</script>
+
+<!-- Formulario para filtrar cursos -->
+<form id="filtroForm" action="{{ url_for('listar_cursos') }}" method="GET" style="display: none;">
+    <input type="hidden" name="categoria" id="categoriaHidden">
+    <input type="hidden" name="nivel" id="nivelHidden">
+</form>
+
 
 </body>
 </html>
