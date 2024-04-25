@@ -16,37 +16,25 @@
         <div class="col-4">
           <label for="courseDescription" class="form-label">Descripción del Curso:</label>
           <textarea class="form-control" id="courseDescription" name="courseDescription" rows="9" style="resize: none" maxlength="600" minlength="5" required></textarea>
-<<<<<<< HEAD
-          <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
-        </div>
-        
-        
-        <div class="col-2 ">                         
-                  <label for="imageInput" class="btn btn-secondary">+ Subir Portada</label>
-                  <input class="form-control bg-transparent d-none" type="file" id="imageInput" name="imageInput" accept=".jpg, .jpeg, .png" required>
-                  <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
-        </div>
-=======
           <!-- Agregamos un elemento <span> para mostrar el mensaje de alerta -->
           <span id="courseDescription-alert" class="text-danger"></span>
       </div>
-      
-        
-        
-      <div class="col-2 ">                         
+
+
+
+      <div class="col-2 ">
         <label for="imageInput" class="btn btn-success">+ Subir Portada</label>
         <input class="form-control bg-transparent d-none" type="file" id="imageInput" name="imageInput" accept=".jpg, .jpeg, .png" required>
         <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">Caracter no permitido.</small>
     </div>
->>>>>>> origin/jhonnyDL
         <div class="col-5">
           <img class="rounded float-end img-fluid"  id="imagePreview" style="display: none; width: 500px; height: 250px;"  alt="Vista previa de la imagen" />
         </div>
-        
+
 
         <div class="text-center gap-2  ">
-            <a class ="btn btn-personal btn-lg me-md-5 " href="{{ url_for('add') }}">&lt; Volver</a>
-            <button class ="btn btn-personal2 btn-lg " id="botonConfirmarRegistro" type="submit" class="next-btn">Finalizar Registro &gt;</button>
+            <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('add') }}">&lt; Volver</a>
+            <button class ="btn btn-success btn-lg " id="botonConfirmarRegistro" type="submit" class="next-btn">Finalizar Registro &gt;</button>
         </div>
 
       </form>
@@ -63,19 +51,12 @@
        </div>
        <div class="modal-footer">
         <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
-        <button type="button" class="btn btn-personal2" id="botonAceptarModal">Aceptar</button>
+        <button type="button" class="btn btn-success" id="botonAceptarModal">Aceptar</button>
        </div>
       </div>
      </div>
-   </div>   
+   </div>
 </div>
-<<<<<<< HEAD
-
-
-<script>
- 
-
-=======
 <script>
   // Función para validar la descripción del curso en tiempo real
   function validarDescripcionCurso() {
@@ -92,7 +73,7 @@
           descripcionInput.setCustomValidity(""); // Limpiamos la validación personalizada si es válida
       }
 
-      
+
       descripcionInput.reportValidity();
   }
 
@@ -102,7 +83,6 @@
 
 
 <script>
->>>>>>> origin/jhonnyDL
   function showPreview(event){
     if(event.target.files.length > 0){
       var src = URL.createObjectURL(event.target.files[0]);
@@ -117,11 +97,11 @@
     const formulario = document.getElementById('formularioRegistro');
     formulario.addEventListener('submit', function(event) {
       event.preventDefault(); // Previene el envío estándar del formulario
-  
+
       // Usar FormData para capturar los valores del formulario
       const formData = new FormData(formulario);
       const vistaPrevia = document.getElementById('imagePreview');
-  
+
       // Enviar los datos del formulario al servidor Flask usando Fetch API
       fetch('/add', {
         method: 'POST',
@@ -134,18 +114,18 @@
           formulario.reset();
           var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
           modalExito.show();
-          
+
         } else {
           // Manejar el caso de error
           alert('Hubo un error al registrar.');
         }
       })
-      
+
       .catch(error => {
         console.error('Error:', error);
         alert('Error al enviar el formulario.');
       });
-      
+
       document.getElementById('botonAceptarModal').addEventListener('click', () => {
         window.location.href = '/'; // Redirige a la ruta deseada
       });
@@ -153,7 +133,7 @@
     });
 
   });
-  
+
 </script>
 <script>
   document.getElementById('formularioRegistro').onsubmit = function(e) {
@@ -164,33 +144,8 @@
       }
   };
   </script>
-<<<<<<< HEAD
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Encuentra verfica el campo titulo
-      var tituloInput = document.getElementById('courseDescription');
-      tituloInput.addEventListener('input', function() {
-          var tituloValue = tituloInput.value;
-          if (/^[A-Za-z0-9\s',.-áéíóúÁÉÍÓÚüÜñÑ]+$/.test(tituloValue)) {
-              // Si es válido, ocultar el mensaje de ayuda
-              document.getElementById('mesanjeAlerta').style.display = 'none';
-          } else {
-              // Si no es válido, mostrar el mensaje de ayuda
-              document.getElementById('mesanjeAlerta').style.display = 'block';
-          }
-      });
-      document.querySelectorAll('.alert .close').forEach(function(closeButton) {
-          closeButton.onclick = function() {
-              // Encuentra el elemento de alerta más cercano y ocúltalo
-              this.parentElement.style.display = 'none';
-          };
-      });
-  });
-  </script>
-=======
-  
->>>>>>> origin/jhonnyDL
-  
+
+
   <script>
     function validarImagen() {
         var input = document.getElementById('imageInput');
@@ -214,7 +169,7 @@
         }
     }
     </script>
-    
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
