@@ -3,15 +3,25 @@ body {
 }
 .btn-personal{
 
+<<<<<<< HEAD
     background-color:#007bff ;
     border: 2px solid #007bff;
+=======
+    background-color:#499949 ;
+    border: 2px solid #066837;
+>>>>>>> origin/jhonnyDL
     color: aliceblue;
    
 }
 .btn-personal2{
 
+<<<<<<< HEAD
     background-color:#438e96 ;
     border: 2px solid #438e96;
+=======
+    background-color:#218838 ;
+    border: 2px solid #017901;
+>>>>>>> origin/jhonnyDL
     color: aliceblue;
    
 }

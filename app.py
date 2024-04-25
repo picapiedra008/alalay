@@ -15,7 +15,11 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
+<<<<<<< HEAD
 app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
+=======
+#app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
+>>>>>>> origin/jhonnyDL
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
@@ -32,6 +36,7 @@ def index():
 @app.route('/curso/<int:curso_id>')
 def ver_curso(curso_id):
     # Obtener el curso de la base de datos
+<<<<<<< HEAD
     cursor =mysql.connection.cursor()
     query = 'select*from curso,nivel,categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA and curso.CODNIVEL=nivel.CODNIVEL and curso.IDCURSO = %s'
     cursor.execute(query, (curso_id,))
@@ -82,6 +87,26 @@ def Buscar():
         cursos = cursor.fetchall()
         
         return render_template('index.html', cursos=cursos, categorias=categoria, niveles=nivel)
+=======
+    cursor = mysql.connection.cursor()
+    query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
+    cursor.execute(query, (curso_id,))
+    curso = cursor.fetchall()
+
+    # Obtener el ID del curso anterior y siguiente
+    query = 'SELECT IDCURSO FROM curso ORDER BY IDCURSO'
+    cursor.execute(query)
+    cursos = cursor.fetchall()
+    curso_index = cursos.index((curso_id,))
+    curso_anterior_id = cursos[curso_index - 1][0] if curso_index > 0 else None
+    curso_siguiente_id = cursos[curso_index + 1][0] if curso_index < len(cursos) - 1 else None
+
+    if curso:
+        return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
+    else:
+        return "Curso no encontrado", 404
+
+>>>>>>> origin/jhonnyDL
 @app.route('/listar')
 def listar_cursos():
     cur = mysql.connection.cursor()

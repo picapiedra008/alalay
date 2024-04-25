@@ -16,6 +16,7 @@
         <div class="col-4">
           <label for="courseDescription" class="form-label">Descripción del Curso:</label>
           <textarea class="form-control" id="courseDescription" name="courseDescription" rows="9" style="resize: none" maxlength="600" minlength="5" required></textarea>
+<<<<<<< HEAD
           <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
         </div>
         
@@ -25,6 +26,19 @@
                   <input class="form-control bg-transparent d-none" type="file" id="imageInput" name="imageInput" accept=".jpg, .jpeg, .png" required>
                   <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
         </div>
+=======
+          <!-- Agregamos un elemento <span> para mostrar el mensaje de alerta -->
+          <span id="courseDescription-alert" class="text-danger"></span>
+      </div>
+      
+        
+        
+      <div class="col-2 ">                         
+        <label for="imageInput" class="btn btn-success">+ Subir Portada</label>
+        <input class="form-control bg-transparent d-none" type="file" id="imageInput" name="imageInput" accept=".jpg, .jpeg, .png" required>
+        <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">Caracter no permitido.</small>
+    </div>
+>>>>>>> origin/jhonnyDL
         <div class="col-5">
           <img class="rounded float-end img-fluid"  id="imagePreview" style="display: none; width: 500px; height: 250px;"  alt="Vista previa de la imagen" />
         </div>
@@ -55,11 +69,40 @@
      </div>
    </div>   
 </div>
+<<<<<<< HEAD
 
 
 <script>
  
 
+=======
+<script>
+  // Función para validar la descripción del curso en tiempo real
+  function validarDescripcionCurso() {
+      var descripcionInput = document.getElementById("courseDescription");
+      var descripcionAlert = document.getElementById("courseDescription-alert");
+      var descripcionValue = descripcionInput.value;
+
+      // Validamos la longitud de la descripción
+      if (descripcionValue.length > 599) {
+
+          descripcionInput.setCustomValidity("Se llego al limite de carateres permitidos");
+      } else {
+          descripcionAlert.innerText = ""; // Limpiamos el mensaje de alerta si es válido
+          descripcionInput.setCustomValidity(""); // Limpiamos la validación personalizada si es válida
+      }
+
+      
+      descripcionInput.reportValidity();
+  }
+
+  // Llamamos a validarDescripcionCurso en cada cambio en la descripción del curso
+  document.getElementById("courseDescription").addEventListener("input", validarDescripcionCurso);
+</script>
+
+
+<script>
+>>>>>>> origin/jhonnyDL
   function showPreview(event){
     if(event.target.files.length > 0){
       var src = URL.createObjectURL(event.target.files[0]);
@@ -121,6 +164,7 @@
       }
   };
   </script>
+<<<<<<< HEAD
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Encuentra verfica el campo titulo
@@ -143,6 +187,9 @@
       });
   });
   </script>
+=======
+  
+>>>>>>> origin/jhonnyDL
   
   <script>
     function validarImagen() {
