@@ -12,20 +12,30 @@
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            
         }
 
         .nav-bar {
-            background-color: #065e06;
-            overflow: hidden;
-        }
+            margin-top: 0; 
+    background-color: #065e06;
+    overflow: hidden;
+    display: flex; /* Cambiado de display: contents a display: flex */
+    align-items: center; /* Alinea verticalmente los elementos */
+    box-sizing: border-box; /* Asegura que el relleno se incluya en el ancho total */
+    height: 70px; /* Altura deseada */
+
+      }
+
 
         .nav-bar a {
             float: left;
-            color: white;
+            color: rgb(245, 236, 236);
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 25px;
             text-decoration: none;
+            border: #34b634;
+            font-size: x-large;
+            border-color: #ddd;
         }
 
         .nav-bar a:hover {
@@ -34,7 +44,7 @@
         }
 
         .contador {
-            background-color: #fff;
+            background-color: #a8e6b8;
             padding: 20px;
             margin-top: 20px;
             border-radius: 5px;
@@ -43,7 +53,7 @@
         }
 
         .boton {
-            background-color: #007bff;
+            background-color: #218838;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -56,7 +66,7 @@
         }
 
         .boton:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
 
         .curso-card {
@@ -77,7 +87,7 @@
         }
 
         .boton-icono {
-            background-color: #28a745;
+            background-color: #10852c;
             color: white;
             border: none;
             padding: 5px;
@@ -93,27 +103,11 @@
             background-color: #218838;
         }
 
-        .boton-volver {
-            background-color: #218838;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            display: block; /* Para que el botón se muestre como bloque y esté centrado */
-            margin-left: auto;
-            margin-right: auto;
-            width: 100px; /* Ancho del botón */
-        }
 
         .boton-volver:hover {
             background-color: #218838;
         }
+        
 
         .card-img-top-fit {
             height: 200px; /* Ajusta a la altura deseada */
@@ -122,15 +116,24 @@
           }
     </style>
 </head>
-<body>
-    <div class="nav-bar bg-success">
-        <a class="navbar-brand text-white" href="">Campus alalay</a>
-        <a href="#">Inicio</a>
-        <a href="#">Cursos</a>
-        <a href="#">Comunidad</a>
-        <a href="{{url_for('index')}}"><img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;"></a>
+<div class="nav-bar bg-success d-flex justify-content-between align-items-center">
+    <div>
+      <a class="navbar-brand text-white" href="">Campus alalay</a>
     </div>
- <!-- Cambia inicio] -->
+    <div class="d-flex justify-content-center flex-grow-1">
+      <div class="nav-links">
+        <a href="#">Inicio</a>
+        <a href="{{ url_for('listar_cursos') }}">Cursos</a>
+        <a href="#">Comunidad</a>
+      </div>
+    </div>
+    <div>
+      <a href="{{ url_for('index') }}">
+        <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
+      </a>
+    </div>
+  </div>
+<body>
     <div class="contador">
         <h1>Bienvenido a nuestra plataforma de cursos</h1>
         <form action="{{ url_for('listar_cursos') }}" method="GET">
@@ -163,41 +166,71 @@
             </div>
         </form>
         
-        </div>
+     </div>
         <!-- cambio fin -->
-    <!-- aqui inicia e cambio  -->
-        
-          <div class="container">
-
-            <div class=" row">
-                {% for curso in cursos %}
-                <div class="card col-3 " >
-                        <img src="{{ curso[6] }}" alt="imagen" class="card-img-top card-img-top-fit">
-                        <div class="card-body">
-                        <h2 class="card-title"> {{ curso[1] }}</h2> 
-                        <p>Categoria: {{ curso[2] }}</p> 
-                        <p>Nivel: {{ curso[3] }}</p> 
-                        <p>Duración: {{ curso[4] }} horas</p>
-                        <p>Costo: {{ curso[5] }}</p>
-                        <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="boton">Ver Curso</a>
-                        </div>
+        {% if cursos %}
+        <div class="container">
+            <div class="row">
+              {% for curso in cursos %}
+              <div class="card col-3">
+                <img src="{{ curso[6] }}" alt="imagen" class="card-img-top card-img-top-fit">
+                <div class="card-body d-flex flex-column">
+                  <h2 class="card-title">{{ curso[1] }}</h2>
+                  <p>Categoría: {{ curso[2] }}</p>
+                  <p>Nivel: {{ curso[3] }}</p>
+                  <p>Duración: {{ curso[4] }} horas</p>
+                  <p>Costo: {{ curso[5] }}</p>
+                  <div class="mt-auto">
+                    <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="btn btn-success btn-block">Ver Curso</a>
+                  </div>
                 </div>
-                {% endfor %}    
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p>No se ah encontrado resultados para el curso que busca.</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('listar_cursos') }}" class="boton" style="background-color:#218838; color: white;">Volver a Cursos</a>
+                </div>
+            </div>
         </div>
-
-
-
-
-          </div>  
-            
-            
-            
-            
-        
-        <!-- finaliza el cambio-->
-            
-        
+    {% endif %}
+    
         </div>
-
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const categoriaSelect = document.getElementById('categoria');
+                const nivelSelect = document.getElementById('nivel');
+        
+                // Función para enviar el formulario con los filtros seleccionados
+                const enviarFormulario = () => {
+                    const categoriaSeleccionada = categoriaSelect.value;
+                    const nivelSeleccionado = nivelSelect.value;
+                    document.getElementById('categoriaHidden').value = categoriaSeleccionada;
+                    document.getElementById('nivelHidden').value = nivelSeleccionado;
+                    document.getElementById('filtroForm').submit();
+                };
+        
+                // Evento para detectar cambios en el selector de categoría
+                categoriaSelect.addEventListener('change', () => {
+                    enviarFormulario();
+                });
+        
+                // Evento para detectar cambios en el selector de nivel
+                nivelSelect.addEventListener('change', () => {
+                    enviarFormulario();
+                });
+            });
+        </script>
+        <form id="filtroForm" action="{{ url_for('listar_cursos') }}" method="GET" style="display: none;">
+            <input type="hidden" name="categoria" id="categoriaHidden">
+            <input type="hidden" name="nivel" id="nivelHidden">
+        </form> 
 </body>
 </html>
