@@ -25,6 +25,11 @@ mysql=MySQL(app)
 app.secret_key='mysecretkey'
 
 @app.route('/')
+def landing():
+    session.clear()
+    return render_template('Landing.html')
+
+@app.route('/home')
 def index():
     session.clear()
     return render_template('perfilDocente.html')
