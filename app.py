@@ -101,24 +101,19 @@ def listar_cursos():
 
 @app.route('/registro',methods=['POST','GET'])
 def add():
-    if request.method=='POST':
-       session['titulo']=request.form['titulo']
-       session['categoria']=request.form['categoria']
-       session['nivel']=request.form['nivel']
-       session['cargaHoraria']=request.form['cargaHoraria']
-       session['costo']=request.form['costo']
-       return redirect(url_for('subir'))
-    
     print(request.method)
     cur=mysql.connection.cursor()
     cir=cur
+    nom=cir
+    nom.execute('select NOMCURSO from curso')
+    data3=nom.fetchall()
     cur.execute('select*from categoria')
     data1=cur.fetchall()
     cir.execute('select*from nivel')
     data2=cir.fetchall()
-    return render_template('RegistroCurso.html',categorias=data1,niveles=data2,titulo=session.get('titulo',''),categoria=session.get('categoria'),nivel=session.get('nivel'),cargaHoraria=session.get('cargaHoraria'),costo=session.get('costo'))
-
-
+    nombres=[titulo[0] for titulo in data3]
+    
+    return render_template('RegistroCurso.html',titulos=nombres ,categorias=data1,niveles=data2,titulo=session.get('titulo',''),cat=session.get('categoria'),niv=session.get('nivel'),cargaHoraria=session.get('cargaHoraria'),costo=session.get('costo'))
 
 @app.route('/subir',methods=['POST','GET'])
 def subir():
