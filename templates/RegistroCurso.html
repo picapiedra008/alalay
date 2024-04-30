@@ -57,7 +57,7 @@
       </div>
       <div class="text-center gap-2   ">
         <!-- <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('index') }}">Cancelar</a> -->
-        <button type="button" class="btn  btn-primary  btn-lg me-md-5" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
+        <button type="button" onclick="verificarCampos()" class="btn btn-primary btn-lg me-md-5" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
         <button class ="btn btn-success btn-block btn-lg " type="submit" class="next-btn">Siguiente &gt;</button>
         <div id="mensaje"></div>     
       </div>
@@ -73,7 +73,7 @@
                 ¿Estás seguro de cancelar registro?
             </div>
             <div class="modal-footer gap-2">
-                <button type="button" class="btn btn-primary" onclick="location.href='/'">Si,quiero cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='/home'">Si,quiero cancelar</button>
                 <button type="button" class="btn btn-success" data-bs-dismiss="modal">Seguir Registrando</button>
 
             </div>
@@ -82,6 +82,40 @@
 </div>
 
 </div>
+<script>
+document.getElementById('costo').addEventListener('keydown', function(event) {
+    // Lista de teclas permitidas en un campo numérico: números, teclas de navegación, etc.
+    const teclasPermitidas = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+    // Comprobar si la tecla presionada está en la lista de permitidas
+    if (!teclasPermitidas.includes(event.key)) {
+        event.preventDefault(); // Prevenir la acción por defecto si no es una tecla permitida
+    }
+});
+document.getElementById('cargaHoraria').addEventListener('keydown', function(event) {
+  // Lista de teclas permitidas en un campo numérico: números, teclas de navegación, etc.
+  const teclasPermitidas = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', 'ArrowLeft', 'ArrowRight', 'Delete', 'Tab'];
+
+  // Comprobar si la tecla presionada está en la lista de permitidas
+  if (!teclasPermitidas.includes(event.key)) {
+      event.preventDefault(); // Prevenir la acción por defecto si no es una tecla permitida
+  }
+});
+</script>
+
+<script>
+  function verificarCampos() {
+    var titulo = document.getElementById('titulo').value;
+    var costo = document.getElementById('costo').value;
+    var carga = document.getElementById('cargaHoraria').value;
+    var nivel = document.getElementById('nivel').value;
+    var categoria = document.getElementById('categoria').value;
+    if (titulo.trim() === ''&&costo.trim() === ''&&carga.trim() === ''&&nivel.trim() === ''&&categoria.trim() === '') {
+        // No mostrar el modal si el campo está vacío
+         window.location.href = '/home';
+    } 
+  }
+</script>
 <script>
   // Función para validar el campo del título en tiempo real
   function validarTitulo() {
