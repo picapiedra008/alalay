@@ -9,46 +9,57 @@
 <link rel="stylesheet" href="static/css/Registrar_curso.css">
 </head>
 <body class=" d-flex  justify-content-center  align-items-center  vh-100">
-<div class="col-8 container bg-white p-5 rounded-3 shadow-lg">
-  <form class="row g-5 border-dark" action="/subir" method="post">
+<div class="col-8 container bg-white p-5  shadow-lg" style="border-radius: 15px;">
+  <form class="row g-5 border-dark" id="miFormulario" action="/subir" method="post">
     <div class="flash-messages">
       <h2 class="display-4  fw-bold fs-1  ali text-center" >Registro Curso</h2>
     </div>
-    
+
+     <div class="col-6">
+      <label for="titulo" class="form-label">Título:<span style="color: brown;">*</span></label>
+      <input class="form-control" value="{{titulo}}" type="text" id="titulo" name="titulo" minlength="3" maxlength="60" pattern="^[A-Za-z0-9\s'-,.-]*$" required>
+      <!-- Agregamos un elemento <span> para mostrar el mensaje de alerta -->
+      <span id="titulo-alert" class="text-danger"></span>
+     </div>
       <div class="col-6">
-        <label for="titulo" class="form-label">Título:</label>
-        <input class="form-control" value="{{titulo}}" type="text" id="titulo" name="titulo" minlength="3" maxlength="60"  required>
-        <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">"Caracter no permitido."</small>
+        <label for="cargaHoraria" class="form-label">Carga Horaria:<span style="color: brown;">*</span></label>
+        <div class="input-group">
+          <span class="input-group-text">Horas</span>
+          <input class="form-control" value="{{cargaHoraria}}" type="number" id="cargaHoraria" name="cargaHoraria" required min="0">
+        </div>
+        
       </div>
       <div class="col-6">
-        <label for="cargaHoraria" class="form-label">Carga Horaria:</label>
-        <input class="form-control" value="{{cargaHoraria}}" type="number" id="cargaHoraria" name="cargaHoraria" required min="0">
-      </div>
-      <div class="col-6">
-        <label for="categoria" class="form-label">Categoría:</label>
+        <label for="categoria" class="form-label">Categoría:<span style="color: brown;">*</span></label>
         <select class="form-select"  id="categoria" name="categoria">
+          <option value="">Sin Asignar</option>
           {%for categoria in categorias%}
-          <option value="{{categoria.1}}" {% if categoria.1 == categoria %} selected {% endif %} >{{categoria.1}}</option>
+          <option value="{{categoria.1}}" {% if categoria.1 == cat %} selected {% endif %} >{{categoria.1}}</option>
           {% endfor %}
         </select>
 
       </div>
       <div class="col-6">
-        <label for="costo" class="form-label">Costo:</label>
-        <input class="form-control" value="{{costo}}" type="number" id="costo" name="costo" required min="0">
+        <label for="costo" class="form-label">Costo:<span style="color: brown;">*</span></label>
+        <div class="input-group">
+          <span class="input-group-text">$</span>
+        <input class="form-control" value="{{costo}}" type="number" id="costo" name="costo"  required min="0" max="9000">
+        </div>
       </div>
       <div class="col-6">
-        <label for="nivel" class="form-label">Nivel:</label>
+        <label for="nivel" class="form-label">Nivel:<span style="color: brown;">*</span></label>
         <select class="form-select" id="nivel" name="nivel">
+          <option value="">Sin Asignar</option>
           {%for nivel in niveles%}
-          <option value="{{nivel.1}}"{% if nivel.1 == nivel %} selected {% endif %}>{{nivel.1}}</option>
+          <option value="{{nivel.1}}"{% if nivel.1 == niv %} selected {% endif %}>{{nivel.1}}</option>
           {% endfor %}
         </select>
-      </div>    
+      </div>
       <div class="text-center gap-2   ">
         <!-- <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('index') }}">Cancelar</a> -->
-        <button type="button" class="btn  btn-personal  btn-lg me-md-5" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
-        <button class ="btn btn-personal2 btn-lg " type="submit" class="next-btn">Siguiente &gt;</button>
+        <button type="button" class="btn  btn-primary  btn-lg me-md-5" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
+        <button class ="btn btn-success btn-block btn-lg " type="submit" class="next-btn">Siguiente &gt;</button>
+        <div id="mensaje"></div>     
       </div>
   </form>
   <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
@@ -62,54 +73,119 @@
                 ¿Estás seguro de cancelar registro?
             </div>
             <div class="modal-footer gap-2">
-                <button type="button" class="btn btn-personal" data-bs-dismiss="modal">Seguir Registrando</button>
-                <button type="button" class="btn btn-personal2" onclick="location.href='/'">Si,quiero cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="location.href='/'">Si,quiero cancelar</button>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Seguir Registrando</button>
+
             </div>
         </div>
     </div>
 </div>
- 
+
 </div>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Encuentra verfica el campo titulo
-    var tituloInput = document.getElementById('titulo');
-    tituloInput.addEventListener('input', function() {
-        var tituloValue = tituloInput.value;
-        if (/^[A-Za-z\s'-]+$/.test(tituloValue)) {
-            // Si es válido, ocultar el mensaje de ayuda
-            document.getElementById('mesanjeAlerta').style.display = 'none';
+  // Función para validar el campo del título en tiempo real
+  function validarTitulo() {
+      var tituloInput = document.getElementById("titulo");
+      var tituloAlert = document.getElementById("titulo-alert");
+      var tituloValue = tituloInput.value;
+      const nombres = JSON.parse('{{ titulos | tojson | safe }}');
+      console.log('Datos recibidos:', nombres);
+      var indice = nombres.indexOf(tituloValue);
+      if (tituloValue.length > 59) {
+            tituloInput.setCustomValidity("Se llego al limite de carateres permitidos");
         } else {
-            // Si no es válido, mostrar el mensaje de ayuda
-            document.getElementById('mesanjeAlerta').style.display = 'block';
+            tituloInput.setCustomValidity(""); // Limpiamos la validación personalizada si la longitud es válida
         }
-    });
-    document.querySelectorAll('.alert .close').forEach(function(closeButton) {
-        closeButton.onclick = function() {
-            // Encuentra el elemento de alerta más cercano y ocúltalo
-            this.parentElement.style.display = 'none';
-        };
-    });
-});
+      // Validamos el título con la expresión regular
+      if (!/^[\p{L}0-9\s.,'-]*$/u.test(tituloValue)) {
+          tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
+      } else if(indice!==-1) {
+        tituloInput.setCustomValidity("Título ya se encuentra registrado"); 
+      }else{
+          tituloAlert.innerText = ""; // Limpiamos el mensaje de alerta si es válido
+      }
+
+      tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
+  }
+
+  // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+  document.getElementById("titulo").addEventListener("input", validarTitulo);
 </script>
 
 <script>
-  function validarCampoNumerico(inputId) {
-    var input = document.getElementById(inputId);
+
+   // Llamar a validarCampoNumerico en cada cambio en los campos de entrada
+   document.getElementById("costo").addEventListener("input", function() {
+    var input = document.getElementById('costo');
     var valor = parseFloat(input.value);
-    if (isNaN(valor) || valor <= 0) {
-      input.setCustomValidity("Por favor ingresa un valor válido");
-    }else{
-      input.setCustomValidity("");
-    }
-  }
-  document.getElementById("costo").addEventListener("input", function() {
-    validarCampoNumerico("costo");
+      if (isNaN(valor)||valor <= 0) {      
+        input.setCustomValidity("Por favor ingresa un valor válido");
+      } else {        
+        input.setCustomValidity("");
+      }
+    // Mostrar el mensaje de validación en tiempo real
+    input.reportValidity();
   });
+
   document.getElementById("cargaHoraria").addEventListener("input", function() {
-    validarCampoNumerico("cargaHoraria");
+    var input = document.getElementById('cargaHoraria');
+    var valor = parseFloat(input.value);
+      if (isNaN(valor)||valor <= 0||valor>360) {  
+        if(valor>360){
+          input.setCustomValidity("El valor debe ser inferior o igual a 360");
+        }else{
+          input.setCustomValidity("Por favor ingresa un valor válido");
+        }    
+        
+      } else {        
+        input.setCustomValidity("");
+      }
+    // Mostrar el mensaje de validación en tiempo real
+    input.reportValidity();
   });
-  </script>
+  
+  //para validar las opciones seleccionados
+  document.getElementById('miFormulario').onsubmit = function(event) {
+    var select = document.getElementById('categoria');
+    var select2=document.getElementById('nivel');
+    select.setCustomValidity("");
+    select2.setCustomValidity("")
+    if (select.value === ""||select2.value==="") {
+        // Establecer mensaje de validación personalizado
+        if(select.value===""){
+          select.setCustomValidity("Por favor seleccione una opción válida.");
+        }else{
+          select2.setCustomValidity("Por favor seleccione una opción válida.");
+        }
+        
+    } else {
+        // Limpiar el mensaje de validación personalizado
+        if(!select.value===""){
+          select.setCustomValidity("");
+        }
+          select2.setCustomValidity("")
+    }
+
+    // Verificar si el formulario es válido antes de enviar
+    if (!this.checkValidity()) {
+      event.preventDefault(); // Detener el envío del formulario si no es válido
+      event.stopPropagation(); // Detiene la propagación del evento en el DOM
+
+      // Esta función muestra explícitamente las validaciones del formulario
+      this.reportValidity();
+    }
+  };
+   document.getElementById('nivel').onchange = function() {
+    this.setCustomValidity("");
+   };
+  document.getElementById('categoria').onchange = function() {
+    this.setCustomValidity("");
+   };
+// También es necesario restablecer la validación cuando el usuario cambia la selección
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </body>
 </html>

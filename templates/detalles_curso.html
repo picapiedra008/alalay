@@ -10,21 +10,27 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
         }
-
         .nav-bar {
-            background-color: #333;
-            overflow: hidden;
-        }
+            margin-top: 0;
+    background-color: #065e06;
+    overflow: hidden;
+    display: flex; /* Cambiado de display: contents a display: flex */
+    align-items: center; /* Alinea verticalmente los elementos */
+    box-sizing: border-box; /* Asegura que el relleno se incluya en el ancho total */
+    height: 70px; /* Altura deseada */
 
-        .nav-bar a {
+      }
+
+      .nav-bar a {
             float: left;
-            color: white;
+            color: rgb(245, 236, 236);
             text-align: center;
-            padding: 14px 16px;
+            padding: 14px 25px;
             text-decoration: none;
+            border: #34b634;
+            font-size: x-large;
+            border-color: #ddd;
         }
 
         .nav-bar a:hover {
@@ -33,7 +39,7 @@
         }
 
         .container {
-            background-color: #fff;
+            background-color: #f2f5f3;
             padding: 20px;
             margin-top: 20px;
             border-radius: 5px;
@@ -41,7 +47,7 @@
         }
 
         .boton {
-            background-color: #007bff;
+            background-color: #218838;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -115,19 +121,36 @@
     </style>
 </head>
 <body>
-    <div class="nav-bar bg-success">
-        <a href="#">Inicio</a>
-        <a href="#">Cursos</a>
-        <a href="#">Comunidad</a>
-        <a href="#"><img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;"></a>
-    </div>
-
+    <div class="nav-bar bg-success d-flex justify-content-between align-items-center">
+        <div>
+          <a class="navbar-brand text-white" href="">Campus alalay</a>
+        </div>
+        <div class="d-flex justify-content-center flex-grow-1">
+          <div class="nav-links">
+            <a href="#">Inicio</a>
+            <a href="{{ url_for('listar_cursos') }}">Cursos</a>
+            <a href="#">Comunidad</a>
+          </div>
+        </div>
+        <div>
+          <a href="{{ url_for('index') }}">
+            <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
+          </a>
+        </div>
+      </div>
     <div class="container">
-        
-        
-        <div class="card mb-3 p-3" style="max-width: 1200px;height: 480px;">
+
+        <div class="row">
+        <div class="d-flex justify-content-between align-items-center mb-3 col-1 ">
+
+            <a href="{{ url_for('ver_curso', curso_id=curso_anterior_id) if curso_anterior_id else '#' }}" class="btn btn-lg" style=" color: #333;">
+                &lt;
+            </a>
+        </div>
+
+        <div class="card mb-3 p-3 col-10" style="max-width: 1200px;height: 480px;">
             <div class="row ">
-                
+
                 <div class="col-md-6">
                     <br>
                     <div class="card-body">
@@ -141,17 +164,22 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <br>
-                    <h2>Portada del Curso:</h2>
-                    <br>
+
                     <img src="{{curso[0][7]}}" class="img-fluid rounded-start" alt="imagen.png" style=" width: 500px; height: 300px;">
                 </div>
             </div>
+            <div class="text-center">
+                <a href="{{url_for('listar_cursos')}}" class="boton btn-success btn-lg me-md-5">Volver</a>
+            </div>
         </div>
-        <div class="text-center">
-            <a href="{{url_for('listar_cursos')}}" class="boton btn-lg me-md-5">Volver</a>
+        <div class="d-flex justify-content-between align-items-center mb-3 col-1 ">
+            <a href="{{ url_for('ver_curso', curso_id=curso_siguiente_id) if curso_siguiente_id else '#' }}" class="btn btn-lg" style="color: #333;">
+                 &gt;
+            </a>
         </div>
-            
+    </div>
+
+
     </div>
 </body>
 </html>
