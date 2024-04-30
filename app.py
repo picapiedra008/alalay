@@ -29,10 +29,45 @@ def landing():
     session.clear()
     return render_template('Landing.html')
 
+@app.route('/registrar_docente')
+def registrar_docente():
+    return render_template('registro_docente.html')
+
+@app.route('/upload', methods=['POST','GET'])
+def upload_file():
+  if request.method=='POST':
+      # Obtener los datos del formulario
+        nombre_completo = request.form['nombre']
+        correo_electronico = request.form['email']
+        contrasena = request.form['contrasena']
+        especialidad = request.form['especialidad']
+        nacionalidad = request.form['nacionalidad']
+        descripcion = request.form['descripcion']
+        print('hola mundo')
+        if 'file' in request.files and 'imageInput' in request.files:
+         foto = request.files['file']
+         archivo=request.files['imageInput']
+         filename2=archivo.filename
+         filename=foto.filename
+         foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+         archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
+         image_url=url_for('static', filename='archivos/' + filename)
+         image_url2=url_for('static', filename='archivos/' + filename2)
+         cur = mysql.connection.cursor()
+         cur.execute("INSERT INTO registro_docentes (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion,curiculum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                     (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad,image_url, descripcion,image_url2))
+         mysql.connection.commit()
+         cur.close()
+         print("se registro con exito")
+         return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+         
+  return redirect(url_for('registrar_docente'))
+
 @app.route('/home')
 def index():
     session.clear()
     return render_template('perfilDocente.html')
+
 
 @app.route('/curso/<int:curso_id>')
 def ver_curso(curso_id):
@@ -164,41 +199,7 @@ def addB():
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
       
 # Ruta y función para manejar el registro de docentes
-@app.route('/registrar_docente', methods=['GET', 'POST'])
-def registrar_docente():
-    if request.method == 'POST':
-        # Obtener los datos del formulario
-        nombre_completo = request.form['nombre']
-        correo_electronico = request.form['email']
-        contrasena = request.form['contrasena']
-        especialidad = request.form['especialidad']
-        nacionalidad = request.form['nacionalidad']
-        foto = request.files['foto']
-        
-        descripcion = request.form['descripcion']
 
-        # Guardar la foto en la carpeta de subidas
-        if foto and allowed_file(foto.filename):
-            filename = secure_filename(foto.filename)
-            foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        else:
-            filename = None  # Opcional: si no se sube ninguna foto
-
-        # Insertar los datos en la base de datos
-        try:
-            cur = mysql.connection.cursor()
-            cur.execute("INSERT INTO registro_docentes (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-                        (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, filename, descripcion))
-            mysql.connection.commit()
-            cur.close()
-            # Si todo sale bien, establecer el mensaje de éxito
-            flash("Docente registrado exitosamente.", "success")
-            return redirect(url_for('registrar_docente'))
-        except Exception as e:
-            # Si ocurre un error, establecer el mensaje de error
-            flash("Error al registrar el docente.", "error")
-
-    return render_template('registro_docente.html')
 
 
                   
