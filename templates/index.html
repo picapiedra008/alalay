@@ -5,116 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campus Alalay</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="/static/css/styles.css"> -->
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            
-        }
-
-        .nav-bar {
-            margin-top: 0; 
-    background-color: #065e06;
-    overflow: hidden;
-    display: flex; /* Cambiado de display: contents a display: flex */
-    align-items: center; /* Alinea verticalmente los elementos */
-    box-sizing: border-box; /* Asegura que el relleno se incluya en el ancho total */
-    height: 70px; /* Altura deseada */
-
-      }
-
-
-        .nav-bar a {
-            float: left;
-            color: rgb(245, 236, 236);
-            text-align: center;
-            padding: 14px 25px;
-            text-decoration: none;
-            border: #34b634;
-            font-size: x-large;
-            border-color: #ddd;
-        }
-
-        .nav-bar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-
-        .contador {
-            background-color: #a8e6b8;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-
-        }
-
-        .boton {
-            background-color: #218838;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .boton:hover {
-            background-color: #218838;
-        }
-
-        .curso-card {
-            background-color: #f9f9f9;
-            padding: 20px;
-            margin-top: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .curso-card h2 {
-            color: #333;
-        }
-
-        .curso-card p {
-            margin: 5px 0;
-            color: #666;
-        }
-
-        .boton-icono {
-            background-color: #10852c;
-            color: white;
-            border: none;
-            padding: 5px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .boton-icono:hover {
-            background-color: #218838;
-        }
-
-
-        .boton-volver:hover {
-            background-color: #218838;
-        }
-        
-
-        .card-img-top-fit {
-            height: 200px; /* Ajusta a la altura deseada */
-            object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
-            width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
-          }
-    </style>
+    <link rel="stylesheet" href="static/css/index.css">
 </head>
 <div class="nav-bar bg-success d-flex justify-content-between align-items-center">
     <div>
@@ -137,34 +28,46 @@
     <div class="contador">
         <h1>Bienvenido a nuestra plataforma de cursos</h1>
         <form action="{{ url_for('listar_cursos') }}" method="GET">
-            <div class="row"> 
-                <div class="col-2">
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
                     <select class="form-control" id="categoria" name="categoria">
                         <option value="">Categoria</option>
                         {% for categoria in categorias %}
-                        <option value="{{ categoria[1] }}">{{ categoria[1] }}</option>
+                            {% if categoria[1] == categoria_seleccionada %}
+                                <option value="{{ categoria[1] }}" selected>{{ categoria[1] }}</option>
+                            {% else %}
+                                <option value="{{ categoria[1] }}">{{ categoria[1] }}</option>
+                            {% endif %}
                         {% endfor %}
                     </select>
                 </div>
                 
-                <div class="col-2">
+                <div class="col-md-3 col-sm-6">
                     <select class="form-control bg-light" id="nivel" name="nivel">
                         <option value="">Nivel</option>
-                        <option value="Básico">BASICO</option>
-                        <option value="Intermedio">INTERMEDIO</option>
-                        <option value="Avanzado">AVANZADO</option>
+                        {% for nivel in niveles %}
+                            {% if nivel[1] == nivel_seleccionado %}
+                                <option value="{{ nivel[1] }}" selected>{{ nivel[1] }}</option>
+                            {% else %}
+                                <option value="{{ nivel[1] }}">{{ nivel[1] }}</option>
+                            {% endif %}
+                        {% endfor %}
                     </select>
                 </div>
                 
-                <div class="col-6">
-                    <input type="text" class="form-control" name="busqueda" placeholder="Qué quieres aprender?">
-                </div>
-                <div class="col-2">
-                    <button type="submit" class="boton-icono"><img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;"></button>
+                <div class="col-md-3 col-sm-6">
+                    <input type="text" class="form-control" name="busqueda" placeholder="Qué quieres aprender?" value="{{ busqueda }}">
                 </div>
                 
+                <div class="col-md-3 col-sm-6">
+                    <button type="submit" class="btn btn-success">
+                        <img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;">
+                    </button>
+                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</a>
+                </div>
             </div>
         </form>
+        
         
      </div>
         <!-- cambio fin -->
@@ -232,6 +135,8 @@
                 });
             });
         </script>
+        
+        
         <form id="filtroForm" action="{{ url_for('listar_cursos') }}" method="GET" style="display: none;">
             <input type="hidden" name="categoria" id="categoriaHidden">
             <input type="hidden" name="nivel" id="nivelHidden">
