@@ -9,19 +9,19 @@
 <link rel="stylesheet" href="static/css/Registrar_curso.css">
 </head>
 <body class=" d-flex  justify-content-center  align-items-center  vh-100">
-<div class="col-8 container bg-white p-5  shadow-lg" style="border-radius: 15px;">
+<div class="col-md-8 container bg-white p-5  shadow-lg" style="border-radius: 15px;">
   <form class="row g-5 border-dark" id="miFormulario" action="/subir" method="post">
     <div class="flash-messages">
       <h2 class="display-4  fw-bold fs-1  ali text-center" >Registro Curso</h2>
     </div>
 
-     <div class="col-6">
+     <div class="col-md-6">
       <label for="titulo" class="form-label">Título:<span style="color: brown;">*</span></label>
       <input class="form-control" value="{{titulo}}" type="text" id="titulo" name="titulo" minlength="3" maxlength="60" pattern="^[A-Za-z0-9\s'-,.-]*$" required>
       <!-- Agregamos un elemento <span> para mostrar el mensaje de alerta -->
       <span id="titulo-alert" class="text-danger"></span>
      </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <label for="cargaHoraria" class="form-label">Carga Horaria:<span style="color: brown;">*</span></label>
         <div class="input-group">
           <span class="input-group-text">Horas</span>
@@ -29,7 +29,7 @@
         </div>
         
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <label for="categoria" class="form-label">Categoría:<span style="color: brown;">*</span></label>
         <select class="form-select"  id="categoria" name="categoria">
           <option value="">Sin Asignar</option>
@@ -39,14 +39,14 @@
         </select>
 
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <label for="costo" class="form-label">Costo:<span style="color: brown;">*</span></label>
         <div class="input-group">
           <span class="input-group-text">$</span>
         <input class="form-control" value="{{costo}}" type="number" id="costo" name="costo"  required min="0" max="9000">
         </div>
       </div>
-      <div class="col-6">
+      <div class="col-md-6">
         <label for="nivel" class="form-label">Nivel:<span style="color: brown;">*</span></label>
         <select class="form-select" id="nivel" name="nivel">
           <option value="">Sin Asignar</option>
@@ -57,8 +57,8 @@
       </div>
       <div class="text-center gap-2   ">
         <!-- <a class ="btn btn-primary btn-lg me-md-5 " href="{{ url_for('index') }}">Cancelar</a> -->
-        <button type="button" onclick="verificarCampos()" class="btn btn-primary btn-lg me-md-5" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
-        <button class ="btn btn-success btn-block btn-lg " type="submit" class="next-btn">Siguiente &gt;</button>
+        <button type="button" onclick="verificarCampos()" class="btn btn-primary btn-lg me-md-5" style="border-radius: 10px;" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
+        <button class ="btn btn-success btn-block btn-lg " type="submit" class="next-btn" style="border-radius: 10px;">Siguiente &gt;</button>
         <div id="mensaje"></div>     
       </div>
   </form>
@@ -73,8 +73,8 @@
                 ¿Estás seguro de cancelar registro?
             </div>
             <div class="modal-footer gap-2">
-                <button type="button" class="btn btn-primary" onclick="location.href='/home'">Si,quiero cancelar</button>
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Seguir Registrando</button>
+                <button type="button" class="btn btn-primary" style="border-radius: 10px;" onclick="location.href='/home'">Si,quiero cancelar</button>
+                <button type="button" class="btn btn-success" style="border-radius: 10px;" data-bs-dismiss="modal">Seguir Registrando</button>
 
             </div>
         </div>
