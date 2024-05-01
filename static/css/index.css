@@ -1,0 +1,106 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    
+}
+
+.nav-bar {
+    margin-top: 0; 
+background-color: #065e06;
+overflow: hidden;
+display: flex; /* Cambiado de display: contents a display: flex */
+align-items: center; /* Alinea verticalmente los elementos */
+box-sizing: border-box; /* Asegura que el relleno se incluya en el ancho total */
+height: 70px; /* Altura deseada */
+
+}
+
+
+.nav-bar a {
+    float: left;
+    color: rgb(245, 236, 236);
+    text-align: center;
+    padding: 14px 25px;
+    text-decoration: none;
+    border: #34b634;
+    font-size: x-large;
+    border-color: #ddd;
+}
+
+.nav-bar a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.contador {
+    background-color: #a8e6b8;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+}
+
+.boton {
+    background-color: #218838;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.boton:hover {
+    background-color: #218838;
+}
+
+.curso-card {
+    background-color: #f9f9f9;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.curso-card h2 {
+    color: #333;
+}
+
+.curso-card p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.boton-icono {
+    background-color: #10852c;
+    color: white;
+    border: none;
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.boton-icono:hover {
+    background-color: #218838;
+}
+
+
+.boton-volver:hover {
+    background-color: #218838;
+}
+
+
+.card-img-top-fit {
+    height: 200px; /* Ajusta a la altura deseada */
+    object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
+    width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
+  }
