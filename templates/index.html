@@ -7,30 +7,44 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="static/css/index.css">
 </head>
-<div class="nav-bar bg-success d-flex justify-content-between align-items-center">
-    <div>
-      <a class="navbar-brand text-white" href="{{url_for('landing')}}">Campus alalay</a>
-    </div>
-    <div class="d-flex justify-content-center flex-grow-1">
-      <div class="nav-links">
-        <a href="#">Inicio</a>
-        <a href="{{ url_for('listar_cursos') }}">Cursos</a>
-        <a href="#">Comunidad</a>
-      </div>
-    </div>
-    <div>
-      <a href="{{ url_for('index') }}">
-        <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
-      </a>
-    </div>
-  </div>
+
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand fs-2" href="#" >Campus alalay</a>
+            
+            <!-- Toggler for mobile view -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link  fs-3" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#">Comunidad</a>
+                    </li>
+                </ul>
+                <!-- User Icon -->
+                <a href="{{ url_for('index') }}" class="d-flex">
+                    <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
+                </a>
+            </div>
+        </div>
+    </nav>
     <div class="contador">
         <h1>Bienvenido a nuestra plataforma de cursos</h1>
         <form action="{{ url_for('listar_cursos') }}" method="GET">
             <div class="row">
                 <div class="col-md-3 col-sm-6">
-                    <select class="form-control" id="categoria" name="categoria">
+                    <select class="form-control bg-light" id="categoria" name="categoria" style="border-radius: 10px;">
                         <option value="">Categoria</option>
                         {% for categoria in categorias %}
                             {% if categoria[1] == categoria_seleccionada %}
@@ -43,7 +57,7 @@
                 </div>
                 
                 <div class="col-md-3 col-sm-6">
-                    <select class="form-control bg-light" id="nivel" name="nivel">
+                    <select class="form-control bg-light" id="nivel" name="nivel" style="border-radius: 10px;">
                         <option value="">Nivel</option>
                         {% for nivel in niveles %}
                             {% if nivel[1] == nivel_seleccionado %}
@@ -55,15 +69,15 @@
                     </select>
                 </div>
                 
-                <div class="col-md-3 col-sm-6">
-                    <input type="text" class="form-control" name="busqueda" placeholder="Qué quieres aprender?" value="{{ busqueda }}">
+                <div class="col-md-3 col-sm-6" >
+                    <input type="text" style="border-radius: 25px;" class="form-control" name="busqueda" placeholder="Qué quieres aprender?" value="{{ busqueda }}">
                 </div>
                 
                 <div class="col-md-3 col-sm-6">
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success" style="border-radius: 100%;">
                         <img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;">
                     </button>
-                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-secondary" onclick="limpiarFormulario()">Limpiar</a>
+                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-secondary" style="border-radius: 25px;" onclick="limpiarFormulario()">Limpiar</a>
                 </div>
             </div>
         </form>
@@ -78,16 +92,16 @@
             <div class="row  ">
             <div class="d-flex justify-content-center flex-wrap gap-2">
               {% for curso in cursos %}
-              <div class="card col-3" style="width: 19rem;" >
+              <div class="card col-md-3" style="width: 19rem; border-radius: 15px;" >
                 <img src="{{ curso[6] }}" alt="imagen" class="card-img-top card-img-top-fit">
                 <div class="card-body d-flex flex-column">
                   <h2 class="card-title">{{ curso[1] }}</h2>
                   <p>Categoría: {{ curso[2] }}</p>
                   <p>Nivel: {{ curso[3] }}</p>
                   <p>Duración: {{ curso[4] }} horas</p>
-                  <p>Costo: {{ curso[5] }}</p>
+                  <p>Costo: {{ curso[5] }}$</p>
                   <div class="mt-auto">
-                    <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="btn btn-success btn-block">Ver Curso</a>
+                    <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="btn btn-success btn-block"style="border-radius: 10px;" >Ver Curso</a>
                   </div>
                 </div>
               </div>
@@ -141,5 +155,6 @@
             <input type="hidden" name="categoria" id="categoriaHidden">
             <input type="hidden" name="nivel" id="nivelHidden">
         </form> 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script> 
 </body>
 </html>
