@@ -40,8 +40,8 @@
 
         .container {
             background-color: #f2f5f3;
-            padding: 20px;
-            margin-top: 20px;
+            padding: 10px;
+            margin-top: 50px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -138,38 +138,32 @@
           </a>
         </div>
       </div>
+     
     <div class="container">
 
-        <div class="row">
+    <div class="row">
         <div class="d-flex justify-content-between align-items-center mb-3 col-1 ">
-
             <a href="{{ url_for('ver_curso', curso_id=curso_anterior_id) if curso_anterior_id else '#' }}" class="btn btn-lg" style=" color: #333;">
                 &lt;
             </a>
         </div>
 
-        <div class="card mb-3 p-3 col-10" style="max-width: 1200px;height: 480px;">
+        <div class="card mb-3 p-3 col-10" style="max-width: 1200px;height: 500px;">
             <div class="row ">
-
-                <div class="col-md-6">
-                    <br>
+                <div class="col-md-6 ">
+                    <img src="{{curso[0][7]}}" class="img-fluid rounded-start" alt="imagen.png" style=" width: 100%; height: 468px;">
+                </div>
+                <div class="col-md-6">                    
                     <div class="card-body">
-                      <h1>{{curso[0][3]}}</h1>
-                      <br>
-                      <p>Categoria: {{ curso[0][11] }} </p>
-                       <p>Nivel: {{ curso[0][9] }}</p>
-                       <p>Duración: {{ curso[0][4]}} horas</p>
-                      <p>Costo: {{ curso[0][5] }}</p>
-                      <p>Descripcion: {{ curso[0][6] }}</p>
+                      <h1 class="card-title">{{curso[0][3]}}</h1>
+                      <p>Categoria: {{ curso[0][11] }}</p> 
+                       <p> Nivel: {{ curso[0][9] }}</p>
+                       <p class="card-text" >Duración: {{ curso[0][4]}} horas</p>
+                      <p class="card-text" >Costo: {{ curso[0][5] }}$</p>
+                      <p class="card-text" >Descripcion: {{ curso[0][6] }}</p>
                     </div>
                 </div>
-                <div class="col-md-6">
-
-                    <img src="{{curso[0][7]}}" class="img-fluid rounded-start" alt="imagen.png" style=" width: 500px; height: 300px;">
-                </div>
-            </div>
-            <div class="text-center">
-                <a href="{{url_for('listar_cursos')}}" class="boton btn-success btn-lg me-md-5">Volver</a>
+                
             </div>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-3 col-1 ">
@@ -178,7 +172,11 @@
             </a>
         </div>
     </div>
-
+    <div style="display: flex; justify-content: center; align-items: center; height: 50px; width: 2160px;">
+        <a href="{{url_for('listar_cursos')}}" class="btn btn-success" style="width: 200px; height: 45px; border-radius: 15px; display: flex; justify-content: center; align-items: center; text-decoration: none; color: white;">
+          Volver
+        </a>
+      </div>
 
     </div>
 </body>

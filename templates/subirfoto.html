@@ -68,7 +68,7 @@
 
       if(!regex.test(descripcionValue)){
         descripcionInput.setCustomValidity("Descripcion inválido, caracteres no permitidos");
-      }else if (descripcionValue.length>320){
+      }else if (descripcionValue.length>365){
         descripcionInput.setCustomValidity("Se llego al limite de carateres permitidos");
       }else{
         descripcionInput.setCustomValidity("");
@@ -126,7 +126,7 @@
       });
 
       document.getElementById('botonAceptarModal').addEventListener('click', () => {
-        window.location.href = '/'; // Redirige a la ruta deseada
+        window.location.href = '/listar'; // Redirige a la ruta deseada
       });
 
     });
