@@ -14,7 +14,7 @@
 
   <div class="d-flex   justify-content-center align-items-center" style="margin: 0; padding: 0;">
      <div class="container col-7 d-inline-block p-5  m-3 shadow-lg" style=" border-radius: 15px;" >      
-       <form id="formularioRegistro" class="row g-4"  method="post" >
+       <form id="formularioRegistro" name="formularioRegistro" class="row g-4"  method="post" >
         
         <div class="flash-messages">
             <h1 style="font-family: Arial, Helvetica, sans-serif; font-size: 70px;">Registrar Docente</h1>
@@ -22,7 +22,7 @@
        
         <div class="col-6">
         <label for="nombre" class="form-label">Nombre Completo: <span style="color: brown;">*</span></label>
-        <input class="form-control" type="text" id="nombre" name="nombre" required>
+        <input class="form-control" type="text" id="nombre" name="nombre"  minlength="3" maxlength="60" required>
        </div>
         
        <div class="col-6">
@@ -101,98 +101,81 @@
   </div>
 <script>
   
-// También es necesario restablecer la validación cuando el usuario cambia la selección
-document.getElementById('nacionalidad').onchange = function() {
-    this.setCustomValidity("");
-};
+
 
   document.addEventListener('DOMContentLoaded', () => {
     const formulario = document.getElementById('formularioRegistro');
     formulario.addEventListener('submit', function(event) {
-      event.preventDefault(); // Previene el envío estándar del formulario
-
-      // Usar FormData para capturar los valores del formulario
-      const formData = new FormData(formulario);
-   
-      // Enviar los datos del formulario al servidor Flask usando Fetch API
-      fetch('/upload', {
-        method: 'POST',
-        body: formData,
-      })
-
-      .then(response => response.json())
-      .then(data => {
-        if(data.status === 'success') {
-          // Muestra el modal de éxito
-          formulario.reset();
-          var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
-          modalExito.show();
-
-        } else {
-          // Manejar el caso de error
-          alert('Hubo un error al registrar.');
-        }
-      })
-
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Error al enviar el formulario.');
-      });
-
-      document.getElementById('botonAceptarModal').addEventListener('click', () => {
-        window.location.href = '/'; // Redirige a la ruta deseada
-      });
-
-    });
+      event.preventDefault();  // Prevenir el envío automático del formulario
+  
+      // Verifica si el formulario es válido
+      if (this.checkValidity()) {
+          const formData = new FormData(this);
+  
+          fetch('/upload', {
+              method: 'POST',
+              body: formData,
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.status === 'success') {
+                  // Lógica para manejo de éxito
+                  modalExito.show();
+                  this.reset();  // Resetea el formulario si es necesario
+              } else {
+                  // Manejar el caso de error
+                  alert('Hubo un error al registrar.');
+              }
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              alert('Error al enviar el formulario.');
+          });
+      } else {
+          // Forzar la validación para mostrar mensajes
+          this.reportValidity();
+      }
+  });
 
    });
 
 
 </script>
 
-<script>
-  // Función para validar el campo del título en tiempo real
-  function validarTitulo() {
-    var tituloInput = document.getElementById("nombre");
-    var tituloAlert = document.getElementById("titulo-alert");
-    var tituloValue = tituloInput.value;
-    // Validamos el título con la expresión regular
-    if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
-        tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
-    } else if(tituloValue.length>30){
-      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
-    }else{
-      tituloInput.setCustomValidity("");
-    }
-    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
-  }
- // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
-document.getElementById("nombre").addEventListener("input", validarTitulo);
 
- //validar el campo de la especialidad 
- function validarEspecialidad() {
-  var tituloInput = document.getElementById("especialidad");
-  var tituloAlert = document.getElementById("titulo-alert");
-  var tituloValue = tituloInput.value;
-    // Validamos el título con la expresión regular
-    if (!/^[\p{L}\s.,'-]*$/u.test(tituloValue)) {
-        tituloInput.setCustomValidity("Especialidad inválido, caracteres no permitidos");
-    } else if(tituloValue.length>30){
-      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
-    }else{
-      tituloInput.setCustomValidity("");
+
+<script>
+
+  // También es necesario restablecer la validación cuando el usuario cambia la selección
+   //para validar las opciones seleccionados
+  //para validar las opciones seleccionados
+  document.getElementById('formularioRegistro').onsubmit = function(event) {
+    var select = document.getElementById('nacionalidad');
+    select.setCustomValidity("");
+    if (select.value === "") {
+          select.setCustomValidity("Por favor seleccione una opción válida.");
+          console.log("no se muestra el mensaje")
+    } else {
+        // Limpiar el mensaje de validación personalizado
+          select.setCustomValidity("");
     }
-    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
-  }
-// Llamamos a validarTitulo en cada cambio en el campo de entrada del título
-  document.getElementById("especialidad").addEventListener("input", validarEspecialidad);
-  
+
+    // Verificar si el formulario es válido antes de enviar
+    if (!this.checkValidity()) {
+      event.preventDefault(); // Detener el envío del formulario si no es válido
+      event.stopPropagation(); // Detiene la propagación del evento en el DOM
+
+      // Esta función muestra explícitamente las validaciones del formulario
+      this.reportValidity();
+    }
+  };
+  document.getElementById('nacionalidad').onchange = function() {
+    this.setCustomValidity("");
+  };
 </script>
 
-
-
 <script>
-  const selectImage = document.querySelector('.select-image');
+const selectImage = document.querySelector('.select-image');
 const inputFile = document.querySelector('#file');
 const imgArea = document.querySelector('.img-area');
 
