@@ -21,25 +21,34 @@
 .form-control {
     min-height: 39px;
 }
-.text-area {
-    min-height: 200px; /* ajusta este valor según lo grande que quieras que sea el área de texto hacia abajo */
-}
+
 .primer-contenedor {
-    background-color: #cccccc; /* Plomo */
-    padding: 20px; /* Espaciado interno */
-    margin-bottom: 20px; /* Espaciado inferior */
+    background-color:#ddd; 
+    padding: 10px;
+    height: auto; 
+    margin-bottom: 0; /* Eliminar el margen inferior */
 }
 .segundo-contenedor{
-  background-color: #fafcfd; /* Plomo */
+  background-color: #fafcfd; 
     padding: 20px; /* Espaciado interno */
     margin-bottom: 20px; /* Espaciado inferior */
+    margin-top: 5px;
+}
+h3{
+align-items: center;
+ color: antiquewhite;
+ background:#1a8f75;
+text-align: center;
 
 }
 #presentationFile{
 
-    display: none;
+display: none;
 }
 
 #videoFile{
  display: none;
+}
+.fixed-width-button {
+    width: 200px; /* Establece un ancho fijo para el botón */
 }
