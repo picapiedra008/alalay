@@ -54,20 +54,21 @@ def ver_curso(curso_id):
         return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
     else:
         return "Curso no encontrado", 404
-
+    
 @app.route('/listar')
 def listar_cursos():
-    cur = mysql.connection.cursor()
+    conn = mysql.connection
+    cur = conn.cursor()
     cur.execute('SELECT * FROM categoria')
     categorias = cur.fetchall()
     
-    cir = mysql.connection.cursor()
+    cir = conn.cursor()  # Cambiado aquí
     cir.execute('SELECT * FROM nivel')
     niveles = cir.fetchall()
     
     # Obtener parámetros de búsqueda
-    categoria_seleccionada = request.args.get('categoria', '')
-    nivel_seleccionado = request.args.get('nivel', '')
+    categoria_seleccionada = request.args.get('categoria', None)
+    nivel_seleccionado = request.args.get('nivel', None)
     busqueda = request.args.get('busqueda', '')
 
     # Construir consulta SQL con filtros
@@ -95,7 +96,9 @@ def listar_cursos():
     cur.execute(query, params)
     cursos = cur.fetchall()
     
-    return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles)
+    return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles, 
+                        categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
+                        busqueda=busqueda)
 
 
 
