@@ -12,7 +12,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
             <!-- Brand -->
-            <a class="navbar-brand fs-2" href="#" >Campus alalay</a>
+            <a class="navbar-brand fs-2" href="{{url_for('landing')}}" >Campus alalay</a>
             
             <!-- Toggler for mobile view -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,11 +29,11 @@
                         <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" href="{{url_for('landing')}}">Comunidad</a>
+                        <a class="nav-link fs-3" href="#">Comunidad</a>
                     </li>
                 </ul>
                 <!-- User Icon -->
-                <a href="{{ url_for('index') }}" class="d-flex">
+                <a href="{{ url_for('perfildocente') }}" class="d-flex">
                     <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
                 </a>
             </div>
