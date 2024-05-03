@@ -11,6 +11,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
  .imagen-circular img {
+<<<<<<< HEAD
   width: 290px; /* o el tamaño que prefieras */
   height: 290px; /* debe ser igual al ancho para que sea un círculo perfecto */
   border-radius: 30px; /* esto crea el efecto circular */
@@ -20,6 +21,18 @@
   height: 200px; /* Ajusta a la altura deseada */
   object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
   width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
+=======
+  width: 300px; /* o el tamaño que prefieras */
+  height: 300px; /* debe ser igual al ancho para que sea un círculo perfecto */
+  border-radius: 30px; /* esto crea el efecto circular */
+  object-fit: cover; /* asegura que la imagen cubra completamente el círculo sin deformarse */
+}
+.card-img-top-fit {
+  height: 200px; /* Ajusta a la altura deseada */
+  object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
+  width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
+  border-radius: 15px 15px 0 0;
+>>>>>>> 0a31111db51e0e18da826e26b4ee2432ded34e38
 }
 
  :root {
