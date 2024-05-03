@@ -9,8 +9,6 @@ ALLOWED_EXTENSION = set(['png', 'jpg' ,'jpeg'])
 MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
 
 
-
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
@@ -97,6 +95,16 @@ def listar_cursos():
     
     return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles)
 
+#añadir una nueva seccion al curso
+@app.route('/addunit',methods=['POST'])
+def addunit():
+  if request.method == 'POST':
+    nombre = request.form['nombre']
+    descripcion = request.form['descripcion']
+    cur = mysql.connection.cursor()
+    cur.execute('inser into unidades (nombre,descripcion) values (%s,%s)',(nombre,descripcion))
+    mysql.connection.commit()
+    return 'Seccion añadida correctamente'
 
 
 @app.route('/registro',methods=['POST','GET'])
