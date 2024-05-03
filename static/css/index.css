@@ -104,4 +104,4 @@ height: 70px; /* Altura deseada */
     object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
     width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
     border-radius: 15px 15px 0 0;
-  }
+}

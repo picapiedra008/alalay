@@ -142,7 +142,94 @@
 
 </script>
 
+<script>
+  // Función para validar el campo del título en tiempo real
+  function validarTitulo() {
+    var tituloInput = document.getElementById("nombre");
+    var tituloAlert = document.getElementById("titulo-alert");
+    var tituloValue = tituloInput.value;
+    // Validamos el título con la expresión regular
+    if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
+        tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
+    } else if(tituloValue.length>30){
+      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+    }else{
+      tituloInput.setCustomValidity("");
+    }
+    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
+  }
+ // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+document.getElementById("nombre").addEventListener("input", validarTitulo);
 
+ //validar el campo de la especialidad 
+ function validarEspecialidad() {
+  var tituloInput = document.getElementById("especialidad");
+  var tituloAlert = document.getElementById("titulo-alert");
+  var tituloValue = tituloInput.value;
+    // Validamos el título con la expresión regular
+    if (!/^[\p{L}\s.,'-]*$/u.test(tituloValue)) {
+        tituloInput.setCustomValidity("Especialidad inválido, caracteres no permitidos");
+    } else if(tituloValue.length>30){
+      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+    }else{
+      tituloInput.setCustomValidity("");
+    }
+    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
+  }
+// Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+  document.getElementById("especialidad").addEventListener("input", validarEspecialidad);
+  
+  function validarContraseñaEnTiempoReal() {
+    const inputPassword = document.getElementById('contrasena');
+    const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$');
+
+    inputPassword.addEventListener('input', function () {
+        // Comprobando si la contraseña es válida
+        if (regex.test(inputPassword.value)) {
+          inputPassword.setCustomValidity("");
+        } else {
+          inputPassword.setCustomValidity("Contraseña inválida. Debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&)");
+        }
+           inputPassword.reportValidity();
+    });
+    
+}
+
+// Llamando a la función al cargar la página
+document.addEventListener('DOMContentLoaded', validarContraseñaEnTiempoReal);
+
+document.getElementById('email').addEventListener('input', function (e) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex para validación de correo
+  if (emailRegex.test(e.target.value)) {
+      e.target.setCustomValidity(''); // No hay error
+  } else {
+      e.target.setCustomValidity('Por favor introduce un correo electrónico válido.'); // Mensaje de error
+  }
+  e.target.reportValidity(); // Muestra el mensaje de validación
+});
+
+function validarDescripcionCurso() {
+  var descripcionInput = document.getElementById("descripcion");
+  var descripcionValue = descripcionInput.value;
+  var regex = /^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑüÜ.,;:'"()!¿?-]+$/;
+
+  // Validamos la longitud de la descripción
+
+  if(!regex.test(descripcionValue)){
+    descripcionInput.setCustomValidity("Descripcion inválido, caracteres no permitidos");
+  }else if (descripcionValue.length>365){
+    descripcionInput.setCustomValidity("Se llego al limite de carateres permitidos");
+  }else{
+    descripcionInput.setCustomValidity("");
+  }
+  descripcionInput.reportValidity();
+}
+
+// Llamamos a validarDescripcionCurso en cada cambio en la descripción del curso
+document.getElementById("descripcion").addEventListener("input", validarDescripcionCurso);
+
+  
+</script>
 
 <script>
 

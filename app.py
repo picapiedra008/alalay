@@ -17,7 +17,7 @@ app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
-app.config['MYSQL_PASSWORD'] = '202108055'  # Asegúrate de ingresar tu con
+app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
 mysql=MySQL(app)
 
@@ -89,6 +89,18 @@ def ver_curso(curso_id):
         return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
     else:
         return "Curso no encontrado", 404
+
+@app.route('/ver_curso/<int:curso_id>')
+def ver_curso_docente(curso_id):
+    # Obtener el curso de la base de datos
+    cursor = mysql.connection.cursor()
+    query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
+    cursor.execute(query, (curso_id,))
+    curso = cursor.fetchall()
+    if curso:
+        return render_template('ver_curso.html', curso=curso)
+    else:
+        return "Curso no encontrado", 404
     
 @app.route('/listar')
 def listar_cursos():
@@ -135,8 +147,22 @@ def listar_cursos():
                         categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
                         busqueda=busqueda)
 
-
-
+@app.route('/perfil')
+def perfildocente():
+    conn = mysql.connection.cursor()
+    # Construir consulta SQL con filtros
+    query = """
+        SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC
+        FROM curso c
+        INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+        INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+    """ 
+    conn.execute(query)
+    cursos = conn.fetchall()
+    print(cursos)
+    
+    return render_template('inicioDocente.html', cursos=cursos)
+ 
 @app.route('/registro',methods=['POST','GET'])
 def add():
     print(request.method)
