@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Formulario de Curso</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   <link rel="stylesheet" href="static/css/Registrar_curso.css">
+</head>
+
+<body class=" d-flex  justify-content-center  align-items-center  vh-100">
+  <div class=" container bg-white p-5  shadow-lg  " style="border-radius: 15px;">
+  
+      <form class="row g-5 border-dark" id="formularioRegistro" method="POST">
+
+        <div class="col-md-4">
+          <label for="courseDescription" class="form-label">Descripción del Curso:<span style="color: brown;">*</span></label>
+          <textarea class="form-control" id="courseDescription" name="courseDescription" rows="9" style="resize: none" maxlength="400" minlength="10" required></textarea>
+          <!-- Agregamos un elemento <span> para mostrar el mensaje de alerta -->
+          <span id="courseDescription-alert" class="text-danger"></span>
+        </div>
+
+        <div class="col-md-2 ">
+          <label for="imageInput" class="btn btn-success" style="border-radius: 10px;">+ Subir Portada</label>
+          <input class="form-control bg-transparent d-none" type="file" id="imageInput" name="imageInput" accept=".jpg, .jpeg, .png" required>
+          <small id="mesanjeAlerta" class="form-text text-danger" style="display: none;">Caracter no permitido.</small>
+        </div>
+
+        <div class="col-md-5">
+          <img class="rounded float-end img-fluid"  id="imagePreview" style="display: none; width: 500px; height: 250px;"  alt="Vista previa de la imagen" />
+        </div>
+
+        <div class="text-center gap-2  col-md-12 ">
+            <a class ="btn btn-primary btn-lg me-md-5 " style="border-radius: 10px;" href="{{ url_for('add') }}">&lt; Volver</a>
+            <button class ="btn btn-success btn-lg " id="botonConfirmarRegistro" style="border-radius: 10px;" type="submit" class="next-btn">Finalizar Registro &gt;</button>
+        </div>
+
+      </form>
+      <!-- Modal -->
+      <div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+         <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                   <h5 class="modal-title" id="modalExitoLabel">Mensaje</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                      Curso registrado exitosamente!!
+              </div>
+              <div class="modal-footer">
+                 <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
+                 <button type="button" class="btn btn-success" id="botonAceptarModal">Aceptar</button>
+              </div>
+           </div>
+         </div>
+      </div>
+  </div>
+
+  <script>
+  // Función para validar la descripción del curso en tiempo real
+  function validarDescripcionCurso() {
+      var descripcionInput = document.getElementById("courseDescription");
+      var descripcionAlert = document.getElementById("courseDescription-alert");
+      var descripcionValue = descripcionInput.value;
+      var regex = /^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑüÜ.,;:'"()!¿?-]+$/;
+
+      // Validamos la longitud de la descripción
+
+      if(!regex.test(descripcionValue)){
+        descripcionInput.setCustomValidity("Descripcion inválido, caracteres no permitidos");
+      }else if (descripcionValue.length>365){
+        descripcionInput.setCustomValidity("Se llego al limite de carateres permitidos");
+      }else{
+        descripcionInput.setCustomValidity("");
+      }
+      descripcionInput.reportValidity();
+  }
+
+  // Llamamos a validarDescripcionCurso en cada cambio en la descripción del curso
+  document.getElementById("courseDescription").addEventListener("input", validarDescripcionCurso);
+  </script>
+
+  <script>
+   function showPreview(event){
+    if(event.target.files.length > 0){
+      var src = URL.createObjectURL(event.target.files[0]);
+      var preview = document.getElementById("imagePreview");
+      preview.src = src;
+       preview.style.display = "block";
+    }
+   }
+   document.getElementById("imageInput").addEventListener("change", showPreview);
+
+   document.addEventListener('DOMContentLoaded', () => {
+    var descripcionInput = document.getElementById("");
+    const formulario = document.getElementById('formularioRegistro');
+    formulario.addEventListener('submit', function(event) {
+      event.preventDefault(); // Previene el envío estándar del formulario
+
+      // Usar FormData para capturar los valores del formulario
+      const formData = new FormData(formulario);
+      const vistaPrevia = document.getElementById('imagePreview');
+
+      // Enviar los datos del formulario al servidor Flask usando Fetch API
+      fetch('/add', {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.status === 'success') {
+          // Muestra el modal de éxito
+          formulario.reset();
+          var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+          modalExito.show();
+
+        } else {
+          // Manejar el caso de error
+          alert('Hubo un error al registrar.');
+        }
+      })
+
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error al enviar el formulario.');
+      });
+
+      document.getElementById('botonAceptarModal').addEventListener('click', () => {
+        window.location.href = '/perfil'; // Redirige a la ruta deseada
+      });
+
+    });
+
+   });
+
+  </script>
+
+  <script>
+    document.getElementById('formularioRegistro').onsubmit = function(e) {
+      var inputImagen = document.querySelector('input[type="file"]');
+      if (inputImagen.files.length === 0) {
+          e.preventDefault(); // Evita que el formulario se envíe
+          document.getElementById('mesanjeAlerta').style.display = 'none';
+      }
+    };
+  </script>
+
+  <script>
+    function validarImagen() {
+        var input = document.getElementById('imageInput');
+        var file = input.files[0];
+        if (file) {
+            // Validar tipo
+            var tipoValido = ["image/jpeg", "image/png"];
+            if (!tipoValido.includes(file.type)) {
+                document.getElementById('mesanjeAlerta').style.display = 'none';
+                return;
+            }
+            // Validar tamaño (2MB)
+            var tamañoMaximo = 2 * 1024 * 1024; // 2MB
+            if (file.size > tamañoMaximo) {
+                document.getElementById('mesanjeAlerta').style.display = 'none';
+                return;
+            }
+            // Si todo está correcto, proceder con el envío del formulario o la subida del archivo.
+        } else {
+          document.getElementById('mesanjeAlerta').style.display = 'none';
+        }
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

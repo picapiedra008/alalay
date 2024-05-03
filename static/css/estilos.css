@@ -1,0 +1,50 @@
+
+.wrapper {
+    display: flex;
+    justify-content: center; /* Distribuye los elementos horizontalmente */
+    width: 100%; /* Ancho del contenedor principal */
+    height: 100%;
+     background-color: rgb(245, 247, 245) ;
+}
+
+.left {
+    flex: 1; /* Hace que ocupe el espacio disponible */
+}
+
+.right {
+    flex: 1; /* Hace que ocupe el espacio disponible */
+}
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: first normal; /* Alinea los elementos a la izquierda dentro del contenedor */
+    background-color: rgb(228, 248, 234);
+    color-interpolation-filters: auto;
+}
+
+.card {
+    margin-bottom: 20px; /* Espacio entre las tarjetas */
+    width: 300px; /* Ancho de las tarjetas */
+}
+.button-container {
+    text-align: right; /* Alinea el contenido a la derecha */
+}
+.btn-personal{
+
+    background-color:#007bff ;
+    border: 2px solid #007bff;
+    color: aliceblue;
+   
+}
+.btn-personal2{
+
+    background-color:#438e96 ;
+    border: 2px solid #438e96;
+    color: aliceblue;
+   
+}
+.barra-nav{
+
+    background-color:#008000 ;
+}
