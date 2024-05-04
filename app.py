@@ -9,13 +9,11 @@ ALLOWED_EXTENSION = set(['png', 'jpg' ,'jpeg'])
 MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
 
 
-
-
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
@@ -29,10 +27,45 @@ def landing():
     session.clear()
     return render_template('Landing.html')
 
+@app.route('/registrar_docente')
+def registrar_docente():
+    return render_template('registro_docente.html')
+
+@app.route('/upload', methods=['POST','GET'])
+def upload_file():
+  if request.method=='POST':
+      # Obtener los datos del formulario
+        nombre_completo = request.form['nombre']
+        correo_electronico = request.form['email']
+        contrasena = request.form['contrasena']
+        especialidad = request.form['especialidad']
+        nacionalidad = request.form['nacionalidad']
+        descripcion = request.form['descripcion']
+        print('hola mundo')
+        if 'file' in request.files and 'customFile' in request.files:
+         foto = request.files['file']
+         archivo=request.files['customFile']
+         filename2=archivo.filename
+         filename=foto.filename
+         foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+         archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
+         image_url=url_for('static', filename='archivos/' + filename)
+         image_url2=url_for('static', filename='archivos/' + filename2)
+         cur = mysql.connection.cursor()
+         cur.execute("INSERT INTO registro_docentes (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion,curiculum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+                     (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad,image_url, descripcion,image_url2))
+         mysql.connection.commit()
+         cur.close()
+         print("se registro con exito")
+         return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+         
+  return redirect(url_for('registrar_docente'))
+
 @app.route('/home')
 def index():
     session.clear()
     return render_template('perfilDocente.html')
+
 
 @app.route('/curso/<int:curso_id>')
 def ver_curso(curso_id):
@@ -52,6 +85,18 @@ def ver_curso(curso_id):
 
     if curso:
         return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
+    else:
+        return "Curso no encontrado", 404
+
+@app.route('/ver_curso/<int:curso_id>')
+def ver_curso_docente(curso_id):
+    # Obtener el curso de la base de datos
+    cursor = mysql.connection.cursor()
+    query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
+    cursor.execute(query, (curso_id,))
+    curso = cursor.fetchall()
+    if curso:
+        return render_template('ver_curso.html', curso=curso)
     else:
         return "Curso no encontrado", 404
     
@@ -100,28 +145,88 @@ def listar_cursos():
                         categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
                         busqueda=busqueda)
 
+#añadir una nueva seccion al curso
+@app.route('/addseccion/<int:curso_id>', methods=['GET', 'POST'])
+def addseccion(curso_id):
+    if request.method == 'POST':
+        name = request.form['section-name']
+        description = request.form['section-description']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO unidad (nombreU, descripcion,IDCURSO) VALUES (%s, %s,%s)", (name, description,curso_id))
+        mysql.connection.commit()
+        cur.close()
+    # Recuperar todas las secciones
+    cur = mysql.connection.cursor()
+    conn=mysql.connection.cursor()
+    cur.execute("SELECT*FROM unidad where IDCURSO=%s",(curso_id,))
+    conn.execute("SELECT co.*FROM curso c ,unidad u , contenido co WHERE c.IDCURSO = u.IDCURSO and u.codUnidad= co.codUnidad AND c.IDCURSO=%s",(curso_id,))
+    sections = cur.fetchall()
+    contenido=conn.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)
+
+@app.route('/addfile/<int:id_seccion>/<int:curso_id>', methods=['GET', 'POST'])
+def addfile(id_seccion,curso_id):
+    # Obtener los datos del formulario
+    if request.method =='POST':
+        print('hola mundo')
+        if 'videoFile' in request.files and 'presentationFile' in request.files:
+           video = request.files['videoFile']
+           archivo =request.files['presentationFile']
+           descripcion=request.form['descripcion']
+           filename2=archivo.filename
+           filename=video.filename
+           video.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+           archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
+           video_url=url_for('static', filename='archivos/' + filename)
+           archivo_url2=url_for('static', filename='archivos/' + filename2)
+           cur = mysql.connection.cursor()
+           print('hola sdf')
+           cur.execute("INSERT into contenido (videoC,archivo,descripcion,codUnidad)VALUES(%s,%s,%s,%s)",(video_url,archivo_url2,descripcion,id_seccion))
+           mysql.connection.commit()
+           cur.close()
+        # Recuperar todas las secciones
+    cur = mysql.connection.cursor()
+    conn=mysql.connection.cursor()
+    cur.execute("SELECT*FROM unidad where IDCURSO=%s",(curso_id,))
+    conn.execute("SELECT co.*FROM curso c ,unidad u , contenido co WHERE c.IDCURSO = u.IDCURSO and u.codUnidad= co.codUnidad AND c.IDCURSO=%s",(curso_id,))
+    sections = cur.fetchall()
+    contenido=conn.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)        
 
 
+@app.route('/perfil')
+def perfildocente():
+    conn = mysql.connection.cursor()
+    # Construir consulta SQL con filtros
+    query = """
+        SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC
+        FROM curso c
+        INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+        INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+    """ 
+    conn.execute(query)
+    cursos = conn.fetchall()
+    return render_template('inicioDocente.html', cursos=cursos)
+ 
 @app.route('/registro',methods=['POST','GET'])
 def add():
-    if request.method=='POST':
-       session['titulo']=request.form['titulo']
-       session['categoria']=request.form['categoria']
-       session['nivel']=request.form['nivel']
-       session['cargaHoraria']=request.form['cargaHoraria']
-       session['costo']=request.form['costo']
-       return redirect(url_for('subir'))
-    
     print(request.method)
     cur=mysql.connection.cursor()
     cir=cur
+    nom=cir
+    nom.execute('select NOMCURSO from curso')
+    data3=nom.fetchall()
     cur.execute('select*from categoria')
     data1=cur.fetchall()
     cir.execute('select*from nivel')
     data2=cir.fetchall()
-    return render_template('RegistroCurso.html',categorias=data1,niveles=data2,titulo=session.get('titulo',''),categoria=session.get('categoria'),nivel=session.get('nivel'),cargaHoraria=session.get('cargaHoraria'),costo=session.get('costo'))
-
-
+    nombres=[titulo[0] for titulo in data3]
+    
+    return render_template('RegistroCurso.html',titulos=nombres ,categorias=data1,niveles=data2,titulo=session.get('titulo',''),cat=session.get('categoria'),niv=session.get('nivel'),cargaHoraria=session.get('cargaHoraria'),costo=session.get('costo'))
 
 @app.route('/subir',methods=['POST','GET'])
 def subir():
@@ -142,7 +247,7 @@ def idCategoria(tit):
      return id[0][0] 
 def idNivel(niv):
    c3=mysql.connection.cursor()
-   c3.execute('SELECT CODNIVEL FROM NIVEL WHERE NOMNIVEL = %s',(niv,)) 
+   c3.execute('SELECT CODNIVEL FROM nivel WHERE NOMNIVEL = %s',(niv,)) 
    id=c3.fetchall()
    return id[0][0] 
 def allowed_file(filename):
@@ -170,7 +275,14 @@ def addB():
          cur.execute('insert into curso(CODCATEGORIA,CODNIVEL,NOMCURSO,CARGAHORARIAC,COSTOC,DESCRIPCIONC,PORTADAC) values (%s,%s,%s,%s,%s,%s,%s)',(codCat,codNiv,titulo,cargaHoraria,costo,descripcion,image_url,))
          mysql.connection.commit()
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+      
+# Ruta y función para manejar el registro de docentes
+
+
 
                   
 if __name__=='__main__':
    app.run(port=3000,debug=True)
+   
+   
+   
