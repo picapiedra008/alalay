@@ -1,0 +1,27 @@
+<!DOCTYPE html>a
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crear Unidad</title>
+    <link rel="stylesheet" href="../static/css/styleUdd.css" />
+  </head>
+  <body>
+    <h1>Añadir Secciones al Curso</h1>
+    <form action="/addunit" method="POST">
+      <label for="nombre">Nombre de la Seccion:</label>
+      <input
+        type="text"
+        id="nombre"
+        name="nombre"
+        pattern="[A-Za-z0-9]+"
+        title="Solo se permiten caracteres alfanumericos"
+        required
+      />
+      <label for="descripcion">Descripción de la Seccion:</label>
+      <textarea id="descripcion" name="descripcion" required></textarea>
+      <button type="submit">Crear Seccion</button>
+      <button type="submit">Cancelar</button>
+    </form>
+  </body>
+</html>
