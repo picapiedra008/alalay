@@ -16,7 +16,7 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
-app.config['MYSQL_DB'] = 'campusalalay'
+app.config['MYSQL_DB'] = 'campus_alalay'
 mysql=MySQL(app)
 
 #setings
@@ -146,15 +146,21 @@ def listar_cursos():
                         busqueda=busqueda)
 
 #añadir una nueva seccion al curso
-@app.route('/addunit',methods=['POST'])
-def addunit():
-  if request.method == 'POST':
-    nombre = request.form['nombre']
-    descripcion = request.form['descripcion']
+@app.route('/addseccion/<int:curso_id>', methods=['GET', 'POST'])
+def addseccion(curso_id):
+    if request.method == 'POST':
+        name = request.form['section-name']
+        description = request.form['section-description']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO unidad (nombreU, descripcion,IDCURSO) VALUES (%s, %s,%s)", (name, description,curso_id))
+        mysql.connection.commit()
+        cur.close()
+    # Recuperar todas las secciones
     cur = mysql.connection.cursor()
-    cur.execute('inser into unidades (nombre,descripcion) values (%s,%s)',(nombre,descripcion))
-    mysql.connection.commit()
-    return 'Seccion añadida correctamente'
+    cur.execute("SELECT * FROM unidad")
+    sections = cur.fetchall()
+    cur.close()
+    return render_template('addUnit.html', sections=sections,curso_id=curso_id)
 
 
 @app.route('/perfil')
