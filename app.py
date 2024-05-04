@@ -157,10 +157,45 @@ def addseccion(curso_id):
         cur.close()
     # Recuperar todas las secciones
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM unidad")
+    conn=mysql.connection.cursor()
+    cur.execute("SELECT*FROM unidad where IDCURSO=%s",(curso_id,))
+    conn.execute("SELECT co.*FROM curso c ,unidad u , contenido co WHERE c.IDCURSO = u.IDCURSO and u.codUnidad= co.codUnidad AND c.IDCURSO=%s",(curso_id,))
     sections = cur.fetchall()
+    contenido=conn.fetchall()
     cur.close()
-    return render_template('addUnit.html', sections=sections,curso_id=curso_id)
+    conn.close()
+    return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)
+
+@app.route('/addfile/<int:id_seccion>/<int:curso_id>', methods=['GET', 'POST'])
+def addfile(id_seccion,curso_id):
+    # Obtener los datos del formulario
+    if request.method =='POST':
+        print('hola mundo')
+        if 'videoFile' in request.files and 'presentationFile' in request.files:
+           video = request.files['videoFile']
+           archivo =request.files['presentationFile']
+           descripcion=request.form['descripcion']
+           filename2=archivo.filename
+           filename=video.filename
+           video.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+           archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
+           video_url=url_for('static', filename='archivos/' + filename)
+           archivo_url2=url_for('static', filename='archivos/' + filename2)
+           cur = mysql.connection.cursor()
+           print('hola sdf')
+           cur.execute("INSERT into contenido (videoC,archivo,descripcion,codUnidad)VALUES(%s,%s,%s,%s)",(video_url,archivo_url2,descripcion,id_seccion))
+           mysql.connection.commit()
+           cur.close()
+        # Recuperar todas las secciones
+    cur = mysql.connection.cursor()
+    conn=mysql.connection.cursor()
+    cur.execute("SELECT*FROM unidad where IDCURSO=%s",(curso_id,))
+    conn.execute("SELECT co.*FROM curso c ,unidad u , contenido co WHERE c.IDCURSO = u.IDCURSO and u.codUnidad= co.codUnidad AND c.IDCURSO=%s",(curso_id,))
+    sections = cur.fetchall()
+    contenido=conn.fetchall()
+    cur.close()
+    conn.close()
+    return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)        
 
 
 @app.route('/perfil')
