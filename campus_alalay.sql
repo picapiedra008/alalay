@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3310
--- Tiempo de generación: 04-05-2024 a las 07:16:55
+-- Tiempo de generación: 04-05-2024 a las 21:29:52
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -49,10 +49,9 @@ INSERT INTO `categoria` (`CODCATEGORIA`, `NOMCATEGORIA`) VALUES
 
 CREATE TABLE `contenido` (
   `codContenido` int(11) NOT NULL,
-  `nombreC` varchar(100) NOT NULL,
-  `videoC` varchar(100) NOT NULL,
-  `archivo` varchar(100) NOT NULL,
-  `descripcion` varchar(1000) NOT NULL,
+  `videoC` varchar(100) DEFAULT NULL,
+  `archivo` varchar(100) DEFAULT NULL,
+  `descripcion` varchar(1000) DEFAULT NULL,
   `codUnidad` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -83,8 +82,7 @@ INSERT INTO `curso` (`IDCURSO`, `CODCATEGORIA`, `CODNIVEL`, `NOMCURSO`, `CARGAHO
 (36, 1, 2, 'Inteligencia Artificial', '34', '25', 'La inteligencia artificial  es un campo de la informatica que se enfoca en crear sistemas que puedan realizar tareas que normalmente requieren inteligencia humana como el aprendizaje el razonamiento y la percepcion', '/static/archivos/ia.jpeg'),
 (37, 2, 2, 'Base de datos', '34', '25', 'Una base de datos es una recopilacion de datos sistematica y almacenada electronicamente', '/static/archivos/Arregui-como-crear-codigos-seguros.jpg'),
 (54, 1, 2, 'Curso de Fundamentos de IA para Data y Machine Learning', '345', '90', 'Descubre el mundo de la IA y machine learning desde cero sin saber programación. Domina los conceptos fundamentales y conoce sus aplicaciones en una variedad de campos. Conoce cómo funcionan por dentro herramientas como ChatGPT, Dall-E 2 y Hugging Face. Aprender de IA y data science es un reto, pero Platzi lo hace efectivo .', '/static/archivos/inteligencia%20artificial.jpeg'),
-(60, 1, 2, 'Desarrollo Web Completo con HTML5, CSS3, JS PHP y MySQL', '350', '25', ' Un curso paso a paso si deseas comenzar en el mundo de la Programación Web.En este curso aprenderás 10 Lenguajes y Tecnologías Web:HTML, CSS, SASS, Workflows, JavaScript, Fetch (Antes AJAX), PHP, POO - MVC, MySQL - SQL y API\'sEl Curso Incluye 4 proyectos finales, puedes ver los videos con los demos totalmente gratis Además, aprenderás otros temas muy importante.', '/static/archivos/980450_7fc0_4.jpg'),
-(61, 1, 1, 'sdfsdf', '44', '567', ' Un curso paso a paso si deseas comenzar en el mundo de la Programación Web.En este curso aprenderás 10 Lenguajes y Tecnologías Web:HTML, CSS, SASS, Workflows, JavaScript, Fetch (Antes AJAX), PHP, POO - MVC, MySQL - SQL y API\'sEl Curso Incluye 4 proyectos finales, puedes ver los videos con los demos totalmente gratis Además.', '/static/archivos/contrase%C3%B1a.jpg');
+(60, 1, 2, 'Desarrollo Web Completo con HTML5, CSS3, JS PHP y MySQL', '350', '25', ' Un curso paso a paso si deseas comenzar en el mundo de la Programación Web.En este curso aprenderás 10 Lenguajes y Tecnologías Web:HTML, CSS, SASS, Workflows, JavaScript, Fetch (Antes AJAX), PHP, POO - MVC, MySQL - SQL y API\'sEl Curso Incluye 4 proyectos finales, puedes ver los videos con los demos totalmente gratis Además, aprenderás otros temas muy importante.', '/static/archivos/980450_7fc0_4.jpg');
 
 -- --------------------------------------------------------
 
@@ -124,13 +122,6 @@ CREATE TABLE `registro_docentes` (
   `curiculum` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
---
--- Volcado de datos para la tabla `registro_docentes`
---
-
-INSERT INTO `registro_docentes` (`id`, `nombre_completo`, `correo_electronico`, `contrasena`, `especialidad`, `nacionalidad`, `foto`, `descripcion`, `curiculum`) VALUES
-(1, 'Jhonny rojas flores', 'jhonnyrojasflo@gmail.com', 'asdfWE@123', 'estudiante', 'bolivia', '/static/archivos/juan%20perez.jpeg', 'asdfasdfasdf', '/static/archivos/medelo%20relacional.pdf');
-
 -- --------------------------------------------------------
 
 --
@@ -143,13 +134,6 @@ CREATE TABLE `unidad` (
   `descripcion` varchar(500) NOT NULL,
   `IDCURSO` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `unidad`
---
-
-INSERT INTO `unidad` (`codUnidad`, `nombreU`, `descripcion`, `IDCURSO`) VALUES
-(119, 'Introduccion', 'Este libro cubre todas las materias de un curso universitario inicial de matemáticas y está pensado para que sirva a los profesores como texto guía y a los alumnos para comprender y ejercitar de manera concreta los temas propuestos. Cada capítulo cuenta con problemas resueltos paso a paso, una completa guía de ejercicios con solucionario y una autoevaluación, para que el estudiante pueda medir sus conocimientos y avances, además de un examen final donde el alumno podrá integrar todas las materia', 35);
 
 --
 -- Índices para tablas volcadas
@@ -209,7 +193,7 @@ ALTER TABLE `categoria`
 -- AUTO_INCREMENT de la tabla `contenido`
 --
 ALTER TABLE `contenido`
-  MODIFY `codContenido` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `codContenido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `curso`
@@ -233,7 +217,7 @@ ALTER TABLE `registro_docentes`
 -- AUTO_INCREMENT de la tabla `unidad`
 --
 ALTER TABLE `unidad`
-  MODIFY `codUnidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=120;
+  MODIFY `codUnidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123;
 
 --
 -- Restricciones para tablas volcadas
