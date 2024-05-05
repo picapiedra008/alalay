@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
@@ -30,6 +30,16 @@ def landing():
 @app.route('/registrar_docente')
 def registrar_docente():
     return render_template('registro_docente.html')
+
+@app.route('/addMaterial/<int:section_id>')
+def addmat(section_id):
+    # Consulta para obtener el nombre de la unidad
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT codUnidad, nombreU FROM unidad WHERE codUnidad = %s", (section_id,))
+    unidad = cur.fetchone()
+    cur.close()
+
+    return render_template('añadirArchivo.html', unidad=unidad)
 
 @app.route('/upload', methods=['POST','GET'])
 def upload_file():

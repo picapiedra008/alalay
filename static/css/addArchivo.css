@@ -1,3 +1,19 @@
+.section-box {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+
+#form-container {
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
 .nav-bar {
     margin-top: 0; 
     background-color: #065e06;
@@ -34,21 +50,17 @@
     margin-bottom: 20px; /* Espaciado inferior */
     margin-top: 5px;
 }
-h3{
-align-items: center;
- color: antiquewhite;
- background:#1a8f75;
-text-align: center;
 
-}
-#presentationFile{
-
-display: none;
-}
-
-#videoFile{
- display: none;
-}
-.fixed-width-button {
-    width: 200px; /* Establece un ancho fijo para el botón */
-}
+    #presentationFile{
+    
+    display: none;
+    }
+    
+    #videoFile{
+     display: none;
+    }
+    .fixed-width-button {
+        width: 250px; /* Establece un ancho fijo para el botón */
+        height: 40px; 
+    }
+    
