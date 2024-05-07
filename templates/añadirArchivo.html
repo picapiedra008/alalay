@@ -31,59 +31,50 @@
     <div class="container my-4 primer-contenedor">
         <h3><h3>{{ unidad[1] }}</h3></h3>
         <div class="container my my-5 segundo-contenedor">
-            <div class="form-group">
-                <label>1. Escoge un video</label>
-                <div class="d-flex align-items-center"> <!-- Div envolvente para alinear los elementos en la misma línea -->
-                    <div class="input-group" style="width: 1000px;"> <!-- Establecer el ancho deseado para el form-control -->
-                        <div class="form-control form-control-sm" id="videoFileName">Ningún archivo seleccionado</div>
-                        <input type="file" id="videoFile" accept="video/mp4, video/x-matroska">
+            <form id="contenidoForm" enctype="multipart/form-data"></form>
+                <div class="form-group">
+                    <label>1. Escoge un video</label>
+                    <div class="d-flex align-items-center">
+                        <div class="input-group" style="width: 1000px;">
+                            <div class="form-control form-control-sm" id="videoFileName">Ningún archivo seleccionado</div>
+                            <input type="file" id="videoFile" name="videoFile" accept="video/mp4, video/x-matroska">
+                        </div>
+                        <button type="button" class="btn btn-success ms-2 fixed-width-button" id="videoFileButton" onclick="document.getElementById('videoFile').click()">Seleccionar Archivo</button>
                     </div>
-                    <button type="button" class="btn btn-success ms-2 fixed-width-button" id="videoFileButton" onclick="document.getElementById('videoFile').click()">Seleccionar Archivo</button>
+                    <small class="form-text text-muted">Nota: Todos los videos deben tener  menos de 1080p y pesar menos de 4 GB.</small>
                 </div>
-                <small class="form-text text-muted">Nota: Todos los archivos deben tener al menos 720p y pesar menos de 4 GB.</small>
-            </div>
             
-            <div class="form-group">
-                <label>2. Escoge una presentación</label>
-                <div class="d-flex align-items-center"> 
-                    <div class="input-group" style="width: 1000px;">  
-                        <div class="form-control form-control-sm" id="presentationFileName">Ningún archivo seleccionado</div>
-                        <input type="file" id="presentationFile" style="display: none;" accept=".pdf,.docx,.docxf,.odt,.xlsx,.pptx,.html">
+                <div class="form-group">
+                    <label>2. Escoge una presentación</label>
+                    <div class="d-flex align-items-center">
+                        <div class="input-group" style="width: 1000px;">
+                            <div class="form-control form-control-sm" id="presentationFileName">Ningún archivo seleccionado</div>
+                            <input type="file" id="presentationFile" name="presentationFile" style="display: none;" accept=".pdf,.docx,.docxf,.odt,.xlsx,.pptx,.html">
+                        </div>
+                        <button type="button" class="btn btn-success ms-2 fixed-width-button" id="presentationFileButton" onclick="document.getElementById('presentationFile').click()">Seleccionar Archivo</button>
                     </div>
-                    <button type="button" class="btn btn-success ms-2 fixed-width-button" id="presentationFileButton" onclick="document.getElementById('presentationFile').click()">Seleccionar Archivo</button>
-                </div>
-                <small class="form-text text-muted">Nota: Una presentación significa diapositivas (ej: PowerPoint, Keynote). Las diapositivas son una excelente manera de combinar texto e imágenes para explicar conceptos de manera eficaz y efectiva.</small>
-            </div>            
+                    <small class="form-text text-muted">Nota: Una presentación significa diapositivas (ej: PowerPoint, Keynote). Las diapositivas son una excelente manera de combinar texto e imágenes para explicar conceptos de manera eficaz y efectiva.</small>
+                </div>    
             <label>3.- texto</label>
             <div class="container">
                 <div class="toolbar">
                     <div class="head">
-                        <input type="text" placeholder="Filename" value="untitled" id="filename">
+                        <div>
+                            <button onclick="clearContent()">Limpiar</button>
+                        </div>
                         <select onchange="fileHandle(this.value); this.selectedIndex=0">
-                            <option value="" selected="" hidden="" disabled="">File</option>
-                            <option value="new">New file</option>
-                            <option value="txt">Save as txt</option>
-                            <option value="pdf">Save as pdf</option>
-                        </select>
-                        <select onchange="formatDoc('formatBlock', this.value); this.selectedIndex=0;">
-                            <option value="" selected="" hidden="" disabled="">Format</option>
-                            <option value="h1">Heading 1</option>
-                            <option value="h2">Heading 2</option>
-                            <option value="h3">Heading 3</option>
-                            <option value="h4">Heading 4</option>
-                            <option value="h5">Heading 5</option>
-                            <option value="h6">Heading 6</option>
-                            <option value="p">Paragraph</option>
+                            <option value="" selected="" hidden="" disabled="">Guardar como</option>
+                            <option value="pdf">Guardar como pdf</option>
                         </select>
                         <select onchange="formatDoc('fontSize', this.value); this.selectedIndex=0;">
-                            <option value="" selected="" hidden="" disabled="">Font size</option>
-                            <option value="1">Extra small</option>
-                            <option value="2">Small</option>
-                            <option value="3">Regular</option>
-                            <option value="4">Medium</option>
-                            <option value="5">Large</option>
-                            <option value="6">Extra Large</option>
-                            <option value="7">Big</option>
+                            <option value="" selected="" hidden="" disabled="">tamaño de texto</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
                         </select>
                         <div class="color">
                             <span>Color</span>
@@ -108,17 +99,19 @@
                         <button onclick="formatDoc('insertOrderedList')"><i class='bx bx-list-ol' ></i></button>
                         <button onclick="formatDoc('insertUnorderedList')"><i class='bx bx-list-ul' ></i></button>
                         <button onclick="addLink()"><i class='bx bx-link' ></i></button>
-                        <button onclick="formatDoc('unlink')"><i class='bx bx-unlink' ></i></button>
                         <button id="show-code" data-active="false">&lt;/&gt;</button>
                     </div>
                 </div>
-                <div id="content" contenteditable="true" spellcheck="false">
+                <div id="content" contenteditable="true" spellcheck="false"></div>
                 </div>
             </div>
             <div class="d-flex justify-content-end mt-2">
                 <button type="button" class="btn btn-danger me-3" style="width: 150px; border-radius: 15px;" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
-                <button type="submit" class="btn btn-success" style="width: 150px; border-radius: 15px;">Finalizar</button>
+                <button type="button" class="btn btn-success" style="width: 150px; border-radius: 15px;" onclick="guardarContenido()">Finalizar</button>
             </div>
+            <input type="hidden" id="codUnidad" name="codUnidad" value="{{ unidad[0] }}">
+        </form>
+        
                 <!-- Modal -->
                 <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -139,6 +132,24 @@
                 </div>
         </div>
     </div>
+    <!-- Modal de éxito -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Éxito</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                El material se agregó correctamente.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" style="border-radius: 10px;" onclick="window.history.back();" >Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <script>
         // Función para actualizar el texto del botón y validar el tipo de archivo
@@ -192,8 +203,8 @@
                         // Obtener la resolución del video
                         const videoWidth = this.videoWidth;
                         const videoHeight = this.videoHeight;
-                        if (videoWidth > 1280 || videoHeight > 720) { // Verificar si la resolución excede los límites
-                            alert('El video seleccionado tiene una resolución mayor a 720p.');
+                        if (videoWidth > 1280 || videoHeight > 1080) { // Verificar si la resolución excede los límites
+                            alert('El video seleccionado tiene una resolución mayor a 1080.');
                             input.value = '';
                             display.textContent = "Ningún archivo seleccionado";
                             button.textContent = "Seleccionar Archivo";
@@ -214,7 +225,51 @@
         document.getElementById('presentationFile').addEventListener('change', function() {
             updateFileNameAndValidate('presentationFile', 'presentationFileName', 'presentationFileButton', ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.oasis.opendocument.text', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/html'], 'Subir otro');
         });
+
     </script>
+    <script>
+        function guardarContenido() {
+            const contenidoHTML = document.getElementById('content').innerHTML;
+            const videoFile = document.getElementById('videoFile').files[0];
+            const presentationFile = document.getElementById('presentationFile').files[0];
+            const codUnidad = document.getElementById('codUnidad').value;
+        
+            const formData = new FormData();
+        
+            if (videoFile) {
+                formData.append('videoFile', videoFile);
+            }
+        
+            if (presentationFile) {
+                formData.append('presentationFile', presentationFile);
+            }
+        
+            if (contenidoHTML.trim() !== '') {
+                formData.append('contenidoHTML', contenidoHTML);
+            }
+        
+            formData.append('codUnidad', codUnidad);
+        
+            fetch('/add1', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    $('#cancelModal').modal('hide'); // Oculta el modal de confirmación
+                    $('#successModal').modal('show'); // Muestra el modal de éxito
+                } else {
+                    alert('ERROR, seleccione al menos un tipo de archivo');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ocurrió un error al guardar el contenido.2');
+            });
+        }
+        </script>
+        
     
     
     
