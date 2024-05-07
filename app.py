@@ -24,7 +24,7 @@ app.secret_key='mysecretkey'
 
 @app.route('/')
 def landing():
-    session.clear()
+    # session.clear()
     return render_template('Landing.html')
 
 @app.route('/registrar_docente')
@@ -175,41 +175,44 @@ def addseccion(curso_id):
     cur.close()
     conn.close()
     return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)
+@app.route('/add1', methods=['POST'])
+def addfile():
+    if request.method == 'POST':
+        video = request.files.get('videoFile')
+        archivo = request.files.get('presentationFile')
+        contenido_html = request.form.get('contenidoHTML', '') # Asegúrate de proporcionar un valor por defecto si no se envía
+        cod_unidad = request.form.get('codUnidad')
 
-@app.route('/addfile/<int:id_seccion>/<int:curso_id>', methods=['GET', 'POST'])
-def addfile(id_seccion,curso_id):
-    # Obtener los datos del formulario
-    if request.method =='POST':
-        print('hola mundo')
-        if 'videoFile' in request.files and 'presentationFile' in request.files:
-           video = request.files['videoFile']
-           archivo =request.files['presentationFile']
-           descripcion=request.form['descripcion']
-           filename2=archivo.filename
-           filename=video.filename
-           video.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-           archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
-           video_url=url_for('static', filename='archivos/' + filename)
-           archivo_url2=url_for('static', filename='archivos/' + filename2)
-           cur = mysql.connection.cursor()
-           print('hola sdf')
-           cur.execute("INSERT into contenido (videoC,archivo,descripcion,codUnidad)VALUES(%s,%s,%s,%s)",(video_url,archivo_url2,descripcion,id_seccion))
-           mysql.connection.commit()
-           cur.close()
-        # Recuperar todas las secciones
-    cur = mysql.connection.cursor()
-    conn=mysql.connection.cursor()
-    cur.execute("SELECT*FROM unidad where IDCURSO=%s",(curso_id,))
-    conn.execute("SELECT co.*FROM curso c ,unidad u , contenido co WHERE c.IDCURSO = u.IDCURSO and u.codUnidad= co.codUnidad AND c.IDCURSO=%s",(curso_id,))
-    sections = cur.fetchall()
-    contenido=conn.fetchall()
-    cur.close()
-    conn.close()
-    return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)        
+        if video or archivo or contenido_html.strip() != '':
+            filename = video.filename if video else None
+            filename2 = archivo.filename if archivo else None
+
+            if filename:
+                video.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                video_url = url_for('static', filename='archivos/' + filename)
+            else:
+                video_url = None
+
+            if filename2:
+                archivo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+                archivo_url2 = url_for('static', filename='archivos/' + filename2)
+            else:
+                archivo_url2 = None
+
+            cur = mysql.connection.cursor()
+            cur.execute("INSERT INTO contenido (videoC, archivo, descripcion, codUnidad) VALUES (%s, %s, %s, %s)", (video_url, archivo_url2, contenido_html, cod_unidad))
+            mysql.connection.commit()
+            cur.close()
+            print("Se registró con éxito")
+            return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+        else:
+            return jsonify({'status': 'error', 'message': 'Debe proporcionar al menos un campo de contenido.'})
 
 
+        
 @app.route('/perfil')
 def perfildocente():
+    session.clear()
     conn = mysql.connection.cursor()
     # Construir consulta SQL con filtros
     query = """

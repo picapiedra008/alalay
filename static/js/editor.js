@@ -38,9 +38,31 @@ showCode.addEventListener('click', function () {
 	active = !active
 	if(active) {
 		content.textContent = content.innerHTML;
-		content.setAttribute('contenteditable', false);
+		content.setAttribute('contenteditable', true);
 	} else {
 		content.innerHTML = content.textContent;
 		content.setAttribute('contenteditable', true);
 	}
 })
+
+
+
+const filename = document.getElementById('filename');
+
+function clearContent() {
+    content.innerHTML = '';
+    filename.value = 'untitled';
+}
+
+function fileHandle(value) {
+    if(value === 'txt') {
+        const blob = new Blob([content.innerText])
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${filename.value}.txt`;
+        link.click();
+    } else if(value === 'pdf') {
+        html2pdf(content).save(filename.value);
+    }
+}
