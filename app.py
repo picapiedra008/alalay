@@ -26,6 +26,18 @@ app.secret_key='mysecretkey'
 def landing():
     # session.clear()
     return render_template('Landing.html')
+#temporal
+@app.route('/tablaContenido')
+def contenido():
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    SELECT contenido.codContenido, contenido.videoC, contenido.archivo, contenido.descripcion, unidad.nombreU
+    FROM contenido
+    JOIN unidad ON contenido.codUnidad = unidad.codUnidad
+     """)
+    datos_contenido = cursor.fetchall()
+    cursor.close()
+    return render_template('tablacontenido.html', datos_contenido=datos_contenido)
 
 @app.route('/registrar_docente')
 def registrar_docente():
