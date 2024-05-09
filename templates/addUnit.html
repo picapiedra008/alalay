@@ -41,16 +41,17 @@
 
 
 
-    <div class="d-flex  align-items-center justify-content-center" style="margin: 0; padding: 0;">
+    <div class="d-flex  align-items-center justify-content-center" style="margin: 5; padding: 5;">
         <div class="container col-md-9">
-            
-            <h1>Material y Recursos del Curso </h1>
-
+            <div style="display: flex; align-items: baseline;">
+                <h1 style="margin-bottom: 0;">Material y Recursos del Curso</h1>
+                <a href="/tablaContenido" class="btn " style=" background:rgb(8, 153, 85); height: auto; padding: 1px 10px; border: 1px solid black; margin-left: auto;">Ver material</a>
+            </div> 
                 <div class="row">
                         {% for section in sections %}
                             <div class="col-md-12 section-box ">
                                 <div class="d-flex justify-content-between">
-                                    <h3>unidad: {{loop.index}}: {{ section[1] }}</h3>
+                                    <h3>Unidad {{loop.index}}: {{ section[1] }}</h3>
                                     <button class="btn btn-success" onclick="openAddMaterialPage('{{ section[0] }}')">Añadir Material</button>
                                 </div>
                                 <p>Descripcion: {{section[2] }}</p>
