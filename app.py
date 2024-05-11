@@ -52,6 +52,12 @@ def addmat(section_id):
     cur.close()
 
     return render_template('añadirArchivo.html', unidad=unidad)
+# Editar Perfil
+@app.route('/editar_perfil.html')
+def editar_perfil():
+    # Aquí puedes incluir lógica adicional si es necesario
+    return render_template('editar_perfil.html')
+
 
 @app.route('/upload', methods=['POST','GET'])
 def upload_file():
