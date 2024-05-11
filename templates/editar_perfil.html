@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <!-- Agrega aquí tus enlaces a hojas de estilo CSS si es necesario -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #faf6f6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin:30px auto; /*Esppacio  que contiene de la barra de tareas*/
+            padding: 20px;
+            background-color: #e4f3e0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+        }
+
+        .left-section {
+            flex: 1;
+            padding-right: 20px;
+        }
+
+        .right-section {
+            flex: 2;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        .imagen-circular {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .imagen-circular img {
+            border-radius: 50%;
+            border: 2px solid #ccc;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #e0f0e7;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 16px;
+            padding-right: 30px;
+        }
+
+        button[type="submit"] {
+            background-color: #77e494;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #5bd66f;
+        }
+
+        #drop_zone_container {
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #drop_zone_inner {
+            padding: 20px;
+        }
+
+        #drop_zone {
+            width: calc(100% - 40px);
+            height: calc(100% - 40px);
+            padding: 20px;
+            border: 2px dashed #ccc;
+            border-radius: 5px;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #preview {
+            max-width: 100%;
+            max-height: 200px;
+            display: none;
+            margin-top: 20px;
+        }
+
+        /* Estilos de la barra de navegación */
+        nav {
+            background-color: #0e8c3a;
+            padding: 10px 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0 20px;
+            font-size: 18px;
+        }
+
+        nav a:hover {
+            background-color: #5bd66f;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#">Campus Alalay </a>
+        <a href="#">Inicio</a>
+        <a href="#">Cursos</a>
+        <a href="#">Comunidad</a>
+    </nav>
+    <div class="container">
+        <div class="left-section">
+            <!-- Aquí se muestra la imagen del perfil -->
+            <div class="imagen-circular">
+                <img src="/static/archivos/juanperez.jpg" alt="imagen">
+            </div>
+            <h2>Juan Perez</h2>
+            <h3>JuanPerez@gmail.com</h3>
+        </div>
+        <div class="right-section">
+            <h1>Editar Perfil</h1>
+            
+            <form action="/guardar_perfil" method="POST" enctype="multipart/form-data">
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+                
+                <label for="correo">Correo electrónico:</label>
+                <input type="email" id="correo" name="correo" placeholder="correo@example.com">
+                
+                <label for="pais">País:</label>
+                <select id="pais" name="pais">
+                    <!-- Opciones predefinidas -->
+                    <option value="Seleccione">Seleccione</option>
+                    <!-- Opciones de países de América generadas dinámicamente -->
+                </select>
+                <label for="pais">Cambiar Imagen</label>
+                <div id="drop_zone_container">
+                    <div id="drop_zone" ondrop="drop(event)" ondragover="allowDrop(event)">
+                        <div id="drop_zone_inner">
+                            Arrastra y suelta la imagen aquí<br>
+                            o haz clic para seleccionar un archivo.
+                            <input type="file" id="file_input" name="file_input" style="display: none;" onchange="fileSelected()">
+                        </div>
+                    </div>
+                    <img id="preview" src="#" alt="Imagen de perfil">
+                </div>
+
+                <!-- Otros campos de perfil que desees editar -->
+
+                <button type="submit">Guardar Cambios</button>
+            </form>
+            <!-- Puedes añadir más contenido HTML según tus necesidades -->
+        </div>
+    </div>
+
+    <script>
+        // Lista de países de América
+        var paisesAmerica = [
+            "Argentina", "Bolivia", "Brasil", "Canadá", "Chile", "Colombia", "Costa Rica",
+            "Cuba", "Ecuador", "El Salvador", "Estados Unidos", "Guatemala", "Honduras",
+            "México", "Nicaragua", "Panamá", "Paraguay", "Perú", "República Dominicana",
+            "Uruguay", "Venezuela"
+        ];
+
+        // Función para agregar opciones de países al ComboBox
+        function agregarPaises() {
+            var selectPais = document.getElementById("pais");
+            paisesAmerica.forEach(function(pais) {
+                var option = document.createElement("option");
+                option.text = pais;
+                selectPais.add(option);
+            });
+        }
+
+        // Llama a la función para agregar países cuando la página se cargue
+        window.onload = function() {
+            agregarPaises();
+        };
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            fileSelected(files[0]);
+        }
+
+        function fileSelected(file) {
+            var preview = document.getElementById('preview');
+            var fileInput = document.getElementById('file_input');
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+            else if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+    </script>
+</body>
+</html>
