@@ -54,15 +54,14 @@ function clearContent() {
     filename.value = 'untitled';
 }
 
-function fileHandle(value) {
-    if(value === 'txt') {
-        const blob = new Blob([content.innerText])
-        const url = URL.createObjectURL(blob)
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `${filename.value}.txt`;
-        link.click();
-    } else if(value === 'pdf') {
-        html2pdf(content).save(filename.value);
+function showSelectedTextSize() {
+	var select = document.getElementById("fontSizeSelector");
+	var selectedSize = select.options[select.selectedIndex].text;
+	select.options[0].text = "Tamaño " + selectedSize;
+}
+function updateColorPreview(color, previewId) {
+    var preview = document.getElementById(previewId);
+    if (preview) {
+        preview.style.backgroundColor = color;
     }
 }
