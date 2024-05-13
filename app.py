@@ -291,7 +291,9 @@ def addB():
       
 # Ruta y función para manejar el registro de docentes
 
-
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
                   
 if __name__=='__main__':
