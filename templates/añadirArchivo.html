@@ -107,8 +107,7 @@
                     <button type="button" class="btn btn-danger me-3" style="width: 150px; border-radius: 15px;" onclick="mostrarModalCancelacion()">Cancelar</button>
                     <button type="button" class="btn btn-success" style="width: 150px; border-radius: 15px;" onclick="guardarContenido()">Finalizar</button>
                 </div>
-            </div>
-                                   
+            </div>                    
             <input type="hidden" id="codUnidad" name="codUnidad" value="{{ unidad[0] }}">
         </form>
         
@@ -275,22 +274,15 @@
         return contenidoHTML !== '' || videoFile || presentationFile;
     }
 
-    // Función modificada para manejar el modal de cancelación
+    // Función  para manejar el modal de cancelación
     function mostrarModalCancelacion() {
         if (hayDatos()) {
-            // Hay datos, mostrar el modal de cancelación
             $('#cancelModal').modal('show');
         } else {
-            // No hay datos, volver atrás directamente
             window.history.back();
         }
     }
         </script>
-        
-    
-    
-    
-    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="/static/js/editor.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
