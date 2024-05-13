@@ -39,18 +39,20 @@
 }
 
 .primer-contenedor {
-    background-color:#ddd; 
-    padding: 10px;
-    height: auto; 
-    margin-bottom: 0; /* Eliminar el margen inferior */
-}
-.segundo-contenedor{
-  background-color: #fafcfd; 
-    padding: 20px; /* Espaciado interno */
+    background-color: #cffcd9;
+    padding: 15px;
+    margin-bottom: -5px; /* Eliminar el margen inferior */
+    border-radius: 10px; /* Ajusta el valor según sea necesario */
+  }
+  
+  .segundo-contenedor {
+    background-color: #fafcfd;
+    padding: 10px; /* Espaciado interno */
     margin-bottom: 20px; /* Espaciado inferior */
-    margin-top: 5px;
-}
-
+    border-radius: 5px; /* Ajustar el radio del borde */
+    margin-top: 5px; /* Eliminar el margen superior */
+  }
+  
     #presentationFile{
     
     display: none;
@@ -63,4 +65,4 @@
         width: 250px; /* Establece un ancho fijo para el botón */
         height: 40px; 
     }
-    
+   
