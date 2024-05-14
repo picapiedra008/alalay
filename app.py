@@ -187,6 +187,19 @@ def addseccion(curso_id):
     cur.close()
     conn.close()
     return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)
+
+@app.route('/delete_section/<int:id_section>/<int:curso_id>')
+def delete_section(id_section,curso_id):
+    cur=mysql.connection.cursor()
+    conn=cur
+    cur.execute("delete from contenido where codUnidad=%s",(id_section,))
+    conn.execute("delete from unidad where codUnidad=%s",(id_section,))
+    cur.connection.commit()
+    conn.connection.commit()
+    return redirect(url_for('addseccion',curso_id=curso_id))
+    
+    
+
 @app.route('/add1', methods=['POST'])
 def addfile():
     if request.method == 'POST':
