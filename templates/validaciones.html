@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario con Validaciones</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Formulario con Validaciones</h2>
+
+<form id="myForm" action="/submit" method="post" enctype="multipart/form-data">
+    <label for="name">Nombre:</label><br>
+    <input type="text" id="name" name="name" required pattern="[A-Za-z\s]+" title="Solo se permiten letras"><br>
+    <span class="error" id="nameError"></span><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br>
+    <span class="error" id="emailError"></span><br>
+
+    <label for="phone">Teléfono:</label><br>
+    <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" title="Número de teléfono válido de 10 dígitos"><br>
+    <span class="error" id="phoneError"></span><br>
+
+    <label for="birthdate">Fecha de Nacimiento:</label><br>
+    <input type="date" id="birthdate" name="birthdate" required max="2004-12-31"><br>
+    <span class="error" id="birthdateError"></span><br>
+
+    <label for="address">Dirección:</label><br>
+    <textarea id="address" name="address" rows="4" cols="50" required></textarea><br>
+    <span class="error" id="addressError"></span><br>
+
+    <label for="photo">Foto:</label><br>
+    <input type="file" id="photo" name="photo" accept="image/*"><br>
+
+    <label for="video">Video:</label><br>
+    <input type="file" id="video" name="video" accept="video/*"><br>
+
+    <label for="pdf">PDF:</label><br>
+    <input type="file" id="pdf" name="pdf" accept=".pdf"><br>
+
+    <label for="ppt">PowerPoint:</label><br>
+    <input type="file" id="ppt" name="ppt" accept=".ppt, .pptx"><br>
+
+    <label for="datetime">Fecha y Hora (posterior a actual):</label><br>
+    <input type="datetime-local" id="datetime" name="datetime" required><br>
+    <span class="error" id="datetimeError"></span><br>
+
+    <input type="submit" value="Enviar">
+</form>
+
+<script>
+    document.getElementById("myForm").onsubmit = function() {
+        // Validación de la fecha y hora posterior a la actual
+        var inputDateTime = document.getElementById("datetime").valueAsNumber;
+        var currentDateTime = Date.now();
+        if (inputDateTime <= currentDateTime) {
+            document.getElementById("datetimeError").innerHTML = "La fecha y hora deben ser posteriores a la actual";
+            return false;
+        } else {
+            document.getElementById("datetimeError").innerHTML = "";
+        }
+
+        // Otras validaciones pueden agregarse aquí
+        
+        return true;
+    };
+</script>
+
+</body>
+</html>
