@@ -9,7 +9,7 @@
      <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
      <link rel="stylesheet" href="/static/css/editor.css"> 
 </head>
-<body>
+
     <div class="nav-bar bg-success d-flex justify-content-between align-items-center">
         <div>
             <a class="navbar-brand text-white" href="{{url_for('landing')}}">Campus alalay</a>
@@ -27,10 +27,10 @@
             </a>
         </div>
     </div>
-
-    <div class="container my-4 primer-contenedor">
-        <h3><h3>{{ unidad[1] }}</h3></h3>
-        <div class="container my my-5 segundo-contenedor">
+    <body>
+    <div class="container my-1  primer-contenedor">
+        <h1>Unidad: {{ unidad[1] }}</h1>
+        <div class="container my my-2 segundo-contenedor">
             <form id="contenidoForm" enctype="multipart/form-data"></form>
                 <div class="form-group">
                     <label>1. Escoge un video</label>
@@ -41,19 +41,19 @@
                         </div>
                         <button type="button" class="btn btn-success ms-2 fixed-width-button" id="videoFileButton" onclick="document.getElementById('videoFile').click()">Seleccionar Archivo</button>
                     </div>
-                    <small class="form-text text-muted">Nota: Todos los videos deben tener  menos de 1080p y pesar menos de 4 GB.</small>
+                    <small class="form-text" style="color: rgb(223, 148, 148);">Nota: Todos los videos deben tener menos de 720p y pesar menos de 4 GB.</small>
                 </div>
             
                 <div class="form-group">
-                    <label>2. Escoge una presentación</label>
+                    <label>2. Escoge una presentación o documento</label>
                     <div class="d-flex align-items-center">
                         <div class="input-group" style="width: 1000px;">
                             <div class="form-control form-control-sm" id="presentationFileName">Ningún archivo seleccionado</div>
-                            <input type="file" id="presentationFile" name="presentationFile" style="display: none;" accept=".pdf,.docx,.docxf,.odt,.xlsx,.pptx,.html">
+                            <input type="file" id="presentationFile" name="presentationFile" style="display: none;" accept=".pdf,.docx,.odt,.xlsx,.pptx">
                         </div>
                         <button type="button" class="btn btn-success ms-2 fixed-width-button" id="presentationFileButton" onclick="document.getElementById('presentationFile').click()">Seleccionar Archivo</button>
                     </div>
-                    <small class="form-text text-muted">Nota: Una presentación significa diapositivas (ej: PowerPoint, Keynote). Las diapositivas son una excelente manera de combinar texto e imágenes para explicar conceptos de manera eficaz y efectiva.</small>
+                    <small class="form-text" style="color: rgb(223, 148, 148);">Nota:Se permiten los siguientes formatos de archivo:PPTX, docxf, PDF, XLSX</small>
                 </div>    
             <label>3.- texto</label>
             <div class="container">
@@ -62,12 +62,8 @@
                         <div>
                             <button onclick="clearContent()">Limpiar</button>
                         </div>
-                        <select onchange="fileHandle(this.value); this.selectedIndex=0">
-                            <option value="" selected="" hidden="" disabled="">Guardar como</option>
-                            <option value="pdf">Guardar como pdf</option>
-                        </select>
-                        <select onchange="formatDoc('fontSize', this.value); this.selectedIndex=0;">
-                            <option value="" selected="" hidden="" disabled="">tamaño de texto</option>
+                        <select id="fontSizeSelector" onchange="formatDoc('fontSize', this.value); showSelectedTextSize()">
+                            <option value="" selected disabled hidden>tamaño de texto</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -105,10 +101,14 @@
                 <div id="content" contenteditable="true" spellcheck="false"></div>
                 </div>
             </div>
-            <div class="d-flex justify-content-end mt-2">
-                <button type="button" class="btn btn-danger me-3" style="width: 150px; border-radius: 15px;" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancelar</button>
-                <button type="button" class="btn btn-success" style="width: 150px; border-radius: 15px;" onclick="guardarContenido()">Finalizar</button>
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                <small class="form-text flex-grow: 1;">Nota: Al menos debe subir un tipo de archivo o texto </small>
+                <div>
+                    <button type="button" class="btn btn-danger me-3" style="width: 150px; border-radius: 15px;" onclick="mostrarModalCancelacion()">Cancelar</button>
+                    <button type="button" class="btn btn-success" style="width: 150px; border-radius: 15px;" onclick="guardarContenido()">Finalizar</button>
+                </div>
             </div>
+                                   
             <input type="hidden" id="codUnidad" name="codUnidad" value="{{ unidad[0] }}">
         </form>
         
@@ -121,7 +121,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                ¿Estás seguro de cancelar el registro?
+                                ¿Estás seguro de cancelar?
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="window.history.back();">Sí, quiero cancelar</button>
@@ -138,10 +138,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="successModalLabel">Éxito</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
+                  </div>
             <div class="modal-body">
-                El material se agregó correctamente.
+                Material agregado correctamente a la unidad {{ unidad[1] }} 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" style="border-radius: 10px;" onclick="window.history.back();" >Aceptar</button>
@@ -268,6 +267,24 @@
                     alert('Ocurrió un error al guardar el contenido.2');
             });
         }
+        function hayDatos() {
+        const contenidoHTML = document.getElementById('content').innerHTML.trim();
+        const videoFile = document.getElementById('videoFile').files[0];
+        const presentationFile = document.getElementById('presentationFile').files[0];
+
+        return contenidoHTML !== '' || videoFile || presentationFile;
+    }
+
+    // Función modificada para manejar el modal de cancelación
+    function mostrarModalCancelacion() {
+        if (hayDatos()) {
+            // Hay datos, mostrar el modal de cancelación
+            $('#cancelModal').modal('show');
+        } else {
+            // No hay datos, volver atrás directamente
+            window.history.back();
+        }
+    }
         </script>
         
     

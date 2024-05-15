@@ -1,6 +1,12 @@
-from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session
+from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session,abort
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+import requests
+import pathlib
 import os
 import re
 
@@ -10,6 +16,8 @@ MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
 
 
 app = Flask(__name__)
+app.secret_key='mysecretkey'
+
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
@@ -19,9 +27,73 @@ app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
 mysql=MySQL(app)
 
-#setings
-app.secret_key='mysecretkey'
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
+GOOGLE_CLIENT_ID = "767449868214-nqko9t273dmno2ehkht331o9070bc78h.apps.googleusercontent.com"
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+
+flow = Flow.from_client_secrets_file(
+    client_secrets_file=client_secrets_file,
+    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+    redirect_uri="http://127.0.0.1:5000/callback"
+)
+
+def login_is_required(function):
+    def wrapper(*args, **kwargs):
+        if "google_id" not in session:
+            return abort(401)  # Authorization required
+        else:
+            return function()
+
+    return wrapper
+
+@app.route("/callback")
+def callback():
+    flow.fetch_token(authorization_response=request.url)
+
+    if not session["state"] == request.args["state"]:
+        abort(500)  # State does not match!
+
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session=cached_session)
+
+    id_info = id_token.verify_oauth2_token(
+        id_token=credentials._id_token,
+        request=token_request,
+        audience=GOOGLE_CLIENT_ID
+    )
+
+    session["google_id"] = id_info.get("sub")
+    session["name"] = id_info.get("name")
+    session["email"]=id_info.get("email")
+    session["picture"]=id_info.get("picture")
+    return redirect("/protected_area")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
+
+@app.route("/login_google")
+def login_google():
+    authorization_url, state = flow.authorization_url()
+    session["state"] = state
+    return redirect(authorization_url)
+
+@app.route("/protected_area")
+@login_is_required
+def protected_area():
+   nombre=session.get('name')
+   foto=session.get('picture')
+   correo=session.get('email')
+   cur=mysql.conntection.cursor()
+   conn=cur
+   cur.execute('select*from registro_docentes where nombre_completo=%s and correo_electronico=%s',(nombre,correo,))
+   docentes=cur.fetchone()
+   if docentes is None :
+       cur.execute('insert into estudiante(nombre,correo,contrasena)values(%s)')
 @app.route('/')
 def landing():
     # session.clear()
@@ -88,7 +160,6 @@ def index():
     session.clear()
     return render_template('perfilDocente.html')
 
-
 @app.route('/curso/<int:curso_id>')
 def ver_curso(curso_id):
     # Obtener el curso de la base de datos
@@ -122,7 +193,7 @@ def ver_curso_docente(curso_id):
     else:
         return "Curso no encontrado", 404
     
-@app.route('/listar')
+@app.route('/listar' , methods=['POST','GET'])
 def listar_cursos():
     conn = mysql.connection
     cur = conn.cursor()
@@ -198,8 +269,6 @@ def delete_section(id_section,curso_id):
     conn.connection.commit()
     return redirect(url_for('addseccion',curso_id=curso_id))
     
-    
-
 @app.route('/add1', methods=['POST'])
 def addfile():
     if request.method == 'POST':
@@ -232,10 +301,8 @@ def addfile():
             return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
         else:
             return jsonify({'status': 'error', 'message': 'Debe proporcionar al menos un campo de contenido.'})
-
-
-        
-@app.route('/perfil')
+      
+@app.route('/perfil',methods=['POST','GET'])
 def perfildocente():
     session.clear()
     conn = mysql.connection.cursor()
@@ -246,6 +313,7 @@ def perfildocente():
         INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
         INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
     """ 
+    
     conn.execute(query)
     cursos = conn.fetchall()
     return render_template('inicioDocente.html', cursos=cursos)
@@ -276,7 +344,6 @@ def subir():
          session['titulo']=request.form['titulo']
          return render_template('subirfoto.html')
     
-
 def idCategoria(tit):
      c3=mysql.connection.cursor()
      c3.execute('select CODCATEGORIA from categoria where NOMCATEGORIA = %s',(tit,)) 
@@ -315,9 +382,12 @@ def addB():
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
       
 # Ruta y función para manejar el registro de docentes
-
-
-
+@app.route('/login')
+def login():
+    conn=mysql.connection.cursor()
+    conn.execute("SELECT id,nombre_completo , correo_electronico,contrasena from registro_docentes")
+    docentes=conn.fetchall()
+    return render_template('InisioSesion.html',docentes=docentes)
                   
 if __name__=='__main__':
    app.run(port=3000,debug=True)

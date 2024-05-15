@@ -12,7 +12,8 @@ a {
 
 .toolbar {
 	padding: 5px;
-	background: #e9dcdc;
+	background: #e7fceb;
+	border-radius: 7px;
 }
 .toolbar .head {
 	display: flex;
@@ -24,7 +25,7 @@ a {
 	max-width: 100px;
 	padding: 6px 10px;
 	border-radius: 6px;
-	border: 2px solid #e7dddd;
+	border: 2px solid #cbfadd;
 	outline: none;
 }
 .toolbar .head select {
@@ -85,8 +86,8 @@ a {
 }
 #content {
     width: auto; /* Establece un ancho específico */
-    height: 100px; /* Establece una altura específica */
-    padding: 40px;
+    height: 100px; 
+    padding: 10px;
     outline: none;      
     overflow: auto;
     border: 1px solid rgb(177, 169, 169); /* Añade un borde negro */
