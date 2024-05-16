@@ -1,8 +1,11 @@
+
 from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 import os
-import re
+import smtplib
+import email
+from email.mime.text import MIMEText
 
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.getcwd(), 'static', 'archivos'))
 ALLOWED_EXTENSION = set(['png', 'jpg' ,'jpeg'])
@@ -26,6 +29,18 @@ app.secret_key='mysecretkey'
 def landing():
     # session.clear()
     return render_template('Landing.html')
+#temporal
+@app.route('/tablaContenido')
+def contenido():
+    cursor = mysql.connection.cursor()
+    cursor.execute("""
+    SELECT contenido.codContenido, contenido.videoC, contenido.archivo, contenido.descripcion, unidad.nombreU
+    FROM contenido
+    JOIN unidad ON contenido.codUnidad = unidad.codUnidad
+     """)
+    datos_contenido = cursor.fetchall()
+    cursor.close()
+    return render_template('tablacontenido.html', datos_contenido=datos_contenido)
 
 @app.route('/registrar_docente')
 def registrar_docente():
@@ -289,15 +304,83 @@ def addB():
          mysql.connection.commit()
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
       
-# Ruta y función para manejar el registro de docentes
+
 
 @app.route('/login')
 def login():
     return render_template('login.html')
 
-                  
+def send_welcome_email(email, name):
+    try:
+        # Configurar los detalles del servidor SMTP y el remitente
+        smtp_server = 'smtp.gmail.com'
+        smtp_port = 587
+        smtp_username = 'campusalalay2024@gmail.com'
+        smtp_password = 'cqgt pcqq xbwa ovzl'
+        sender_email = smtp_username
+        # Configurar el contenido del correo electrónico
+        recipient_email = email
+        subject = '¡Bienvenido a Campus Alalay!' + name
+        body = 'Bienvenido a la plataforma Campus Alalay. ¡Gracias por registrarte!'
+        # Crear el mensaje
+        msg = MIMEText(body, 'plain', 'utf-8')
+        msg['Subject'] = subject
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+
+        # Iniciar la conexión SMTP
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+
+        # Enviar el correo electrónico
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+
+        # Cerrar la conexión
+        server.quit()
+        print('Correo electrónico enviado correctamente')
+    except Exception as e:
+        print(f'Error al enviar el correo electrónico: {str(e)}')
+
+@app.route('/check_email', methods=['POST'])
+def check_email():
+    email = request.json['email']
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM estudiante WHERE Email = %s", (email,))
+    account = cur.fetchone()
+    cur.close()
+    if account:
+        return jsonify({'exists': True})
+    else:
+        return jsonify({'exists': False})
+
+@app.route('/register', methods=['POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Verificar si el correo ya está registrado
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM estudiante WHERE Email = %s", (email,))
+        account = cur.fetchone()
+        if account:
+            flash('El correo electrónico ya se encuentra registrado.', 'error')
+            return redirect(url_for('login', form='register') + '#registro')
+        
+        # Insertar los datos del usuario en la base de datos
+        cur.execute("INSERT INTO estudiante (nombre, Email, Contraseña) VALUES (%s, %s, %s)", (name, email, password))
+        mysql.connection.commit()
+        cur.close()
+        
+        # Enviar el correo electrónico de bienvenida
+        send_welcome_email(email, name)
+        
+        return redirect(url_for('login', form='register') + '#registro')
+
 if __name__=='__main__':
-   app.run(port=3000,debug=True)
+   app.run(port=5000,debug=True)
    
    
    
