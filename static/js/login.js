@@ -9,3 +9,9 @@ registerBtn.addEventListener('click', () => {
 loginBtn.addEventListener('click', () => {
     container.classList.remove("active");
 });
+document.getElementById('toggle-password').addEventListener('click', function () {
+    var passwordInput = document.getElementById('password');
+    var type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    this.textContent = type === 'password' ? '👁️' : '🙈'; // Cambia el icono de ojo
+  });

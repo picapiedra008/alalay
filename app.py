@@ -1,6 +1,12 @@
-from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session
+from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session,abort
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+import requests
+import pathlib
 import os
 import re
 
@@ -10,17 +16,17 @@ MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
 
 
 app = Flask(__name__)
+app.secret_key='mysecretkey'
+
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
 mysql=MySQL(app)
 
-#setings
-app.secret_key='mysecretkey'
 
 @app.route('/')
 def landing():
@@ -94,7 +100,6 @@ def index():
     session.clear()
     return render_template('perfilDocente.html')
 
-
 @app.route('/curso/<int:curso_id>')
 def ver_curso(curso_id):
     # Obtener el curso de la base de datos
@@ -128,7 +133,7 @@ def ver_curso_docente(curso_id):
     else:
         return "Curso no encontrado", 404
     
-@app.route('/listar')
+@app.route('/listar' , methods=['POST','GET'])
 def listar_cursos():
     conn = mysql.connection
     cur = conn.cursor()
@@ -193,6 +198,17 @@ def addseccion(curso_id):
     cur.close()
     conn.close()
     return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)
+
+@app.route('/delete_section/<int:id_section>/<int:curso_id>')
+def delete_section(id_section,curso_id):
+    cur=mysql.connection.cursor()
+    conn=cur
+    cur.execute("delete from contenido where codUnidad=%s",(id_section,))
+    conn.execute("delete from unidad where codUnidad=%s",(id_section,))
+    cur.connection.commit()
+    conn.connection.commit()
+    return redirect(url_for('addseccion',curso_id=curso_id))
+    
 @app.route('/add1', methods=['POST'])
 def addfile():
     if request.method == 'POST':
@@ -225,10 +241,8 @@ def addfile():
             return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
         else:
             return jsonify({'status': 'error', 'message': 'Debe proporcionar al menos un campo de contenido.'})
-
-
-        
-@app.route('/perfil')
+      
+@app.route('/perfil',methods=['POST','GET'])
 def perfildocente():
     session.clear()
     conn = mysql.connection.cursor()
@@ -239,6 +253,7 @@ def perfildocente():
         INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
         INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
     """ 
+    
     conn.execute(query)
     cursos = conn.fetchall()
     return render_template('inicioDocente.html', cursos=cursos)
@@ -269,7 +284,6 @@ def subir():
          session['titulo']=request.form['titulo']
          return render_template('subirfoto.html')
     
-
 def idCategoria(tit):
      c3=mysql.connection.cursor()
      c3.execute('select CODCATEGORIA from categoria where NOMCATEGORIA = %s',(tit,)) 
@@ -308,14 +322,15 @@ def addB():
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
       
 # Ruta y función para manejar el registro de docentes
-
 @app.route('/login')
 def login():
-    return render_template('login.html')
-
+    conn=mysql.connection.cursor()
+    conn.execute("SELECT id,nombre_completo , correo_electronico,contrasena from registro_docentes")
+    docentes=conn.fetchall()
+    return render_template('InisioSesion.html',docentes=docentes)
                   
 if __name__=='__main__':
-   app.run(port=5000,debug=True)
+   app.run(port=3000,debug=True)
    
    
    
