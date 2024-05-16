@@ -45,7 +45,7 @@
                     Regístrate
                 </a>
                 <ul class="dropdown-menu rounded-dropdown" style="border-radius: 10px;" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#alumnos">Alumnos</a></li>
+                  <a href="{{ url_for('login') }}?form=register#registro">Estudiante</a>
                     <li><a class="dropdown-item" href="{{url_for('registrar_docente')}}">Docentes</a></li>
                 </ul>
             </li>
@@ -96,6 +96,7 @@
 
       })() 
   </script>
+  
 
 </body>
 
