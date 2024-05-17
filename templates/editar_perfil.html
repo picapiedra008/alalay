@@ -149,6 +149,10 @@
         }
 
         .btn-cancelar {
+            display: inline-block;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
             background-color: #77e494;
             color: #fff;
             border: none;
@@ -156,7 +160,30 @@
             padding: 10px 20px;
             cursor: pointer;
             margin-right: 10px; /* Espacio entre los botones */
-            
+            font-size: 18px; /* Tamaño de letra aumentado */
+        }
+        
+        .btn-cancelar:hover {
+        background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
+        }
+        
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-field {
+            border: 1px solid red !important;
+        }
+
+        .error-icon {
+            display: inline-block;
+            margin-right: 5px;
+            vertical-align: middle;
+            font-size: 16px;
+            color: red;
         }
         
     </style>
@@ -183,9 +210,11 @@
             <form action="/guardar_perfil" method="POST" enctype="multipart/form-data">
                 <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+                <div class="error-message" id="error-nombre"><span class="error-icon">&#9888;</span> Por favor ingresa tu nombre</div>
                 
                 <label for="correo">Correo electrónico:</label>
                 <input type="email" id="correo" name="correo" placeholder="correo@example.com">
+                <div class="error-message" id="error-correo"><span class="error-icon">&#9888;</span> Por favor ingresa tu correo electrónico</div>
                 
                 <label for="pais">País:</label>
                 <select id="pais" name="pais">
@@ -193,6 +222,8 @@
                     <option value="Seleccione">Seleccione</option>
                     <!-- Opciones de países de América generadas dinámicamente -->
                 </select>
+                <div class="error-message" id="error-pais"><span class="error-icon">&#9888;</span> Por favor selecciona tu país</div>
+                
                 <label for="pais">Cambiar Imagen</label>
                 <div id="drop_zone_container">
                     <div id="drop_zone" ondrop="drop(event)" ondragover="allowDrop(event)">
@@ -208,7 +239,7 @@
                 <!-- Otros campos de perfil que desees editar -->
 
                 
-                <a href="{{url_for('perfildocente')}}" class="btn-cancelar" id="btn-cancelar">Cancelar</a>
+                <a href="{{url_for('perfildocente')}}" class="btn-cancelar" id="btn-cancelar" onclick="retroceder()">Cancelar</a>
                 <button type="submit" id="btn-guardar">Guardar Cambios</button>
                 
             </form>
@@ -278,9 +309,42 @@
         });
 
         // Agregar evento de clic al botón Guardar Cambios
-        document.getElementById("btn-guardar").addEventListener("click", function() {
-            // Agrega aquí la lógica para mover el botón Guardar Cambios
+        document.getElementById("btn-guardar").addEventListener("click", function(event) {
+            // Obtener los valores de los campos
+            var nombre = document.getElementById("nombre").value;
+            var correo = document.getElementById("correo").value;
+            var pais = document.getElementById("pais").value;
+
+            // Verificar si algún campo está vacío
+            var error = false;
+            if (nombre.trim() === "") {
+                document.getElementById("error-nombre").style.display = 'block';
+                error = true;
+            } else {
+                document.getElementById("error-nombre").style.display = 'none';
+            }
+            if (correo.trim() === "") {
+                document.getElementById("error-correo").style.display = 'block';
+                error = true;
+            } else {
+                document.getElementById("error-correo").style.display = 'none';
+            }
+            if (pais === "Seleccione") {
+                document.getElementById("error-pais").style.display = 'block';
+                error = true;
+            } else {
+                document.getElementById("error-pais").style.display = 'none';
+            }
+
+            // Evitar que se envíe el formulario si hay errores
+            if (error) {
+                event.preventDefault();
+            }
         });
+
+        function retroceder() {
+            window.history.back();
+        }
     </script>
 </body>
 </html>
