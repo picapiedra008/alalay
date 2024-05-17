@@ -377,7 +377,8 @@ def register():
         # Enviar el correo electrónico de bienvenida
         send_welcome_email(email, name)
         
-        return redirect(url_for('login', form='register') + '#registro')
+        return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+
 
 if __name__=='__main__':
    app.run(port=5000,debug=True)

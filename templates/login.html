@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/static/css/login.css">
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="Y170785774709-1gohancc7g0pfhu7url7u49cepcq3bs3.apps.googleusercontent.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <title>log in</title>
 </head>
 
@@ -25,7 +26,7 @@
                 </div>
                 <button type="submit">Registrarse</button>
                 <div class="social-icons">
-                    <div class="g-signin2" data-onsuccess="onSignIn" data-text="Iniciar sesión con Google"></div>
+                    <a href="#"><i class='bx bxl-google icon'></i>Inicia con Google</a>
                 </div>
             </form>
             
@@ -52,11 +53,13 @@
         <div class="toggle-container">
             <div class="toggle">
                 <div class="toggle-panel toggle-left">
+                    <img src="/static/archivos/logo.jpg" alt="Logo" class="logo-image">
                     <h1>COMIENZA TU APRENDIZAJE AHORA</h1>
-                    <p>Enter your personal details to use all of site features</p>
+                    <p>ya tengo una cuenta</p>
                     <button class="hidden" id="login">Iniciar Sesion</button>
-                </div>
+                </div>                
                 <div class="toggle-panel toggle-right">
+                    <img src="/static/archivos/logo.jpg" alt="Logo" class="logo-image">
                     <h1>COMIENZA TU APRENDIZAJE AHORA</h1>
                     <p>Si aun no tienes cuenta registrate ya<br>Y ten acceso a mas de 500 cursos virtuales</p>
                     <button class="hidden" id="register">Registrate</button>
@@ -75,7 +78,7 @@
             }
         });
     </script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="/static/js/login.js"></script>
 </body>
 
