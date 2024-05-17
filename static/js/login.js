@@ -67,26 +67,6 @@ registerBtn.addEventListener('click', () => {
     container.classList.add("active");
 });
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    $.ajax({
-      type: 'POST',
-      url: '/google-login',
-      contentType: 'application/json;charset=UTF-8',
-      data: JSON.stringify({
-        'id': profile.getId(),
-        'name': profile.getName(),
-        'email': profile.getEmail(),
-        'image': profile.getImageUrl()
-      }),
-      success: function(response) {
-        console.log(response);
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
-} 
 
 function validateForm() {
     const form = document.getElementById('registerForm');
@@ -116,5 +96,38 @@ emailInput.addEventListener('invalid', () => {
         emailInput.setCustomValidity('Por favor, ingrese una dirección de correo electrónico válida.');
     } else {
         emailInput.setCustomValidity('');
+    }
+});
+// Código de validación del formulario de registro
+const registerForm = document.getElementById('registerForm');
+registerForm.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    if (validateForm()) {
+        const formData = new FormData(registerForm);
+        fetch(registerForm.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                Swal.fire({
+                    title: 'Registro exitoso',
+                    text: 'Tu registro fue exitoso. ¡Bienvenido a campus alalay!',
+                    icon: 'success',
+                    confirmButtonText: 'aceptar'
+                }).then(() => {
+                    window.location.href = '/login';
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonText: 'Intentar de nuevo'
+                });
+            }
+        });
     }
 });
