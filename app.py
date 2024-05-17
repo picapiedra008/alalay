@@ -1,7 +1,11 @@
 from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session,abort
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
-
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+import requests
 import pathlib
 import os
 import re
@@ -17,7 +21,7 @@ app.secret_key='mysecretkey'
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
@@ -326,7 +330,7 @@ def login():
     return render_template('InisioSesion.html',docentes=docentes)
                   
 if __name__=='__main__':
-   app.run(port=3000,debug=True)
+   app.run(port=5000,debug=True)
    
    
    
