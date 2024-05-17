@@ -38,9 +38,11 @@
         }
 
         .container {
-            background-color: #f2f5f3;
+            background-color: #ffff;
             padding: 10px;
-            margin-top: 50px;
+            width: 1200px;
+            padding: 30px;
+            margin-top: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
@@ -64,7 +66,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link fs-3" aria-current="page" href="#">Inicio</a>
+                        <a class="nav-link fs-3" aria-current="page" href="{{url_for('perfildocente')}}">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
@@ -81,16 +83,12 @@
         </div>
     </nav>
      
-    <div class="container">
+    <div class="container ">
 
-    <div class="row">
-        <div class="d-flex justify-content-between align-items-center col-md-1 ">
-            <a href="{{ url_for('ver_curso', curso_id=curso_anterior_id) if curso_anterior_id else '#' }}" class="btn btn-lg" style=" color: #333;">
-                &lt;
-            </a>
-        </div>
+    <div class="row" >
 
-        <div class="card mb-3 p-3 col-md-10" style="border-radius: 10px;overflow: hidden;">
+        
+        <div class="card mb-3 p-3 col-md-12" style="border-radius: 10px;overflow: hidden; border: none;">
             <div class="row g-0 ">
                 <div class="col-md-6 d-flex justify-content-between align-items-center">
                     <img src="{{curso[0][7]}}" class="img-fluid rounded-start" alt="imagen.png" style=" width: 100%; height: 468px; border-radius: 15px 3px 3px 15px;">
@@ -108,15 +106,13 @@
                 
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center  col-md-1 ">
-            <a href="{{ url_for('ver_curso', curso_id=curso_siguiente_id) if curso_siguiente_id else '#' }}" class="btn btn-lg" style="color: #333;">
-                 &gt;
-            </a>
-        </div>
     </div>
-    <div style="display: flex; justify-content:flex-end; position: relative; height: 50px; width: 100%;">
-        <a href="{{url_for('listar_cursos')}}" class="btn btn-success" style="width: 200px; height: 45px;  border-radius: 15px; display: flex; position: absolute; right: 100px; justify-content: center; align-items: center; text-decoration: none; color: white;">
-          Volver
+    <div class="text-center">
+        <a href="{{url_for('perfildocente')}}" class="btn btn-primary me-5" style="width: 200px; height: 45px; font-size: 20px; border-radius: 15px;  justify-content: center; align-items: center;  color: white;">
+         <span> &lt;</span> Volver
+        </a>
+        <a href="{{url_for('addseccion',curso_id=curso[0][0])}}" class="btn btn-success" style="width: 200px; height: 45px; font-size: 20px; border-radius: 15px;  justify-content: center; align-items: center;  color: white;" >
+            <span>+</span> Gestion Curso
         </a>
     </div>
 

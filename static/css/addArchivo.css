@@ -1,0 +1,68 @@
+.section-box {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+
+#form-container {
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.nav-bar {
+    margin-top: 0; 
+    background-color: #065e06;
+    overflow: hidden;
+    display: flex; /* Cambiado de display: contents a display: flex */
+    align-items: center; /* Alinea verticalmente los elementos */
+    box-sizing: border-box; /* Asegura que el relleno se incluya en el ancho total */
+    height: 70px; /* Altura deseada */
+}
+
+.nav-bar a {
+    float: left;
+    color: rgb(245, 236, 236);
+    text-align: center;
+    padding: 14px 25px;
+    text-decoration: none;
+    border: #34b634;
+    font-size: x-large;
+    border-color: #ddd;
+}
+.form-control {
+    min-height: 39px;
+}
+
+.primer-contenedor {
+    background-color: #cffcd9;
+    padding: 15px;
+    margin-bottom: -5px; /* Eliminar el margen inferior */
+    border-radius: 10px; /* Ajusta el valor según sea necesario */
+  }
+  
+  .segundo-contenedor {
+    background-color: #fafcfd;
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 20px; /* Espaciado inferior */
+    border-radius: 5px; /* Ajustar el radio del borde */
+    margin-top: 5px; /* Eliminar el margen superior */
+  }
+  
+    #presentationFile{
+    
+    display: none;
+    }
+    
+    #videoFile{
+     display: none;
+    }
+    .fixed-width-button {
+        width: 250px; /* Establece un ancho fijo para el botón */
+        height: 40px; 
+    }
+   
