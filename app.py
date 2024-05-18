@@ -1,4 +1,5 @@
-from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session,abort
+
+from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from google.oauth2 import id_token
@@ -8,7 +9,9 @@ import google.auth.transport.requests
 import requests
 import pathlib
 import os
-import re
+import smtplib
+import email
+from email.mime.text import MIMEText
 
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.getcwd(), 'static', 'archivos'))
 ALLOWED_EXTENSION = set(['png', 'jpg' ,'jpeg'])
@@ -30,7 +33,7 @@ mysql=MySQL(app)
 
 @app.route('/')
 def landing():
-    # session.clear()
+    session.clear()
     return render_template('Landing.html')
 #temporal
 @app.route('/tablaContenido')
@@ -59,10 +62,14 @@ def addmat(section_id):
 
     return render_template('añadirArchivo.html', unidad=unidad)
 # Editar Perfil
-@app.route('/editar_perfil.html')
+@app.route('/editar_perfil')
 def editar_perfil():
-    # Aquí puedes incluir lógica adicional si es necesario
-    return render_template('editar_perfil.html')
+    usuario=session.get('usuario')    
+    conn = mysql.connection.cursor()
+    cur=mysql.connection.cursor()
+    cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+    docente=cur.fetchone()
+    return render_template('editar_perfil.html',docente=docente)
 
 
 @app.route('/upload', methods=['POST','GET'])
@@ -244,19 +251,48 @@ def addfile():
       
 @app.route('/perfil',methods=['POST','GET'])
 def perfildocente():
-    session.clear()
-    conn = mysql.connection.cursor()
-    # Construir consulta SQL con filtros
-    query = """
-        SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC
-        FROM curso c
-        INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
-        INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
-    """ 
-    
-    conn.execute(query)
-    cursos = conn.fetchall()
-    return render_template('inicioDocente.html', cursos=cursos)
+    if request.method == 'POST':
+        usuario=request.form['usuario']
+        session['usuario']=usuario    
+        conn = mysql.connection.cursor()
+        cur=mysql.connection.cursor()
+        cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+        docentes=cur.fetchone()
+        session['id']=docentes[0]
+        # Construir consulta SQL con filtros
+        query = """
+         SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC ,d.id
+         FROM curso c
+         INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+         INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+         INNER JOIN registro_docentes d ON d.id=c.id
+         WHERE d.nombre_completo=%s or d.correo_electronico=%s
+         """          
+        conn.execute(query,(usuario,usuario,))
+        cursos = conn.fetchall()
+        return render_template('inicioDocente.html', cursos=cursos,docentes=docentes)
+    else:
+        usuario=session.get('usuario')
+        session.clear() 
+        session['usuario']=usuario  
+        conn = mysql.connection.cursor()
+        cur=mysql.connection.cursor()
+        cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+        docentes=cur.fetchone()
+        session['id']=docentes[0]
+        # Construir consulta SQL con filtros
+        query = """
+          SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC ,d.id
+         FROM curso c
+         INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+         INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+         INNER JOIN registro_docentes d ON d.id=c.id
+         WHERE d.nombre_completo=%s or d.correo_electronico=%s
+         """           
+        conn.execute(query,(usuario,usuario))
+        cursos = conn.fetchall()
+        return render_template('inicioDocente.html', cursos=cursos,docentes=docentes)
+        
  
 @app.route('/registro',methods=['POST','GET'])
 def add():
@@ -282,7 +318,7 @@ def subir():
          session['cargaHoraria']=request.form['cargaHoraria']
          session['costo']=request.form['costo']
          session['titulo']=request.form['titulo']
-         return render_template('subirfoto.html')
+         return render_template('subirfoto.html',id=id)
     
 def idCategoria(tit):
      c3=mysql.connection.cursor()
@@ -317,18 +353,92 @@ def addB():
          codCat=int(idCategoria(categoria))
          codNiv=int((idNivel(nivel)))
          cur=mysql.connection.cursor()
-         cur.execute('insert into curso(CODCATEGORIA,CODNIVEL,NOMCURSO,CARGAHORARIAC,COSTOC,DESCRIPCIONC,PORTADAC) values (%s,%s,%s,%s,%s,%s,%s)',(codCat,codNiv,titulo,cargaHoraria,costo,descripcion,image_url,))
+         cur.execute('insert into curso(CODCATEGORIA,CODNIVEL,NOMCURSO,CARGAHORARIAC,COSTOC,DESCRIPCIONC,PORTADAC,id) values (%s,%s,%s,%s,%s,%s,%s,%s)',(codCat,codNiv,titulo,cargaHoraria,costo,descripcion,image_url,session.get('id')))
          mysql.connection.commit()
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
       
-# Ruta y función para manejar el registro de docentes
+
+
 @app.route('/login')
 def login():
-    conn=mysql.connection.cursor()
-    conn.execute("SELECT id,nombre_completo , correo_electronico,contrasena from registro_docentes")
-    docentes=conn.fetchall()
-    return render_template('InisioSesion.html',docentes=docentes)
-                  
+    conn= mysql.connection.cursor()
+    cur=conn
+    conn.execute("select*from estudiante")
+    estudiantes=conn.fetchall()
+    cur.execute("select*from registro_docentes")
+    docentes=cur.fetchall()
+    return render_template('login.html',docentes=docentes,estudiantes=estudiantes)
+
+def send_welcome_email(email, name):
+    try:
+        # Configurar los detalles del servidor SMTP y el remitente
+        smtp_server = 'smtp.gmail.com'
+        smtp_port = 587
+        smtp_username = 'campusalalay2024@gmail.com'
+        smtp_password = 'cqgt pcqq xbwa ovzl'
+        sender_email = smtp_username
+        # Configurar el contenido del correo electrónico
+        recipient_email = email
+        subject = '¡Bienvenido a Campus Alalay!' + name
+        body = 'Bienvenido a la plataforma Campus Alalay. ¡Gracias por registrarte!'
+        # Crear el mensaje
+        msg = MIMEText(body, 'plain', 'utf-8')
+        msg['Subject'] = subject
+        msg['From'] = sender_email
+        msg['To'] = recipient_email
+
+        # Iniciar la conexión SMTP
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(smtp_username, smtp_password)
+
+        # Enviar el correo electrónico
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+
+        # Cerrar la conexión
+        server.quit()
+        print('Correo electrónico enviado correctamente')
+    except Exception as e:
+        print(f'Error al enviar el correo electrónico: {str(e)}')
+
+@app.route('/check_email', methods=['POST'])
+def check_email():
+    email = request.json['email']
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM estudiante WHERE correo = %s", (email,))
+    account = cur.fetchone()
+    cur.close()
+    if account:
+        return jsonify({'exists': True})
+    else:
+        return jsonify({'exists': False})
+
+@app.route('/register', methods=['POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        
+        # Verificar si el correo ya está registrado
+        cur = mysql.connection.cursor()
+        cur.execute("SELECT * FROM estudiante WHERE correo = %s", (email,))
+        account = cur.fetchone()
+        if account:
+            flash('El correo electrónico ya se encuentra registrado.', 'error')
+            return redirect(url_for('login', form='register') + '#registro')
+        
+        # Insertar los datos del usuario en la base de datos
+        cur.execute("INSERT INTO estudiante (nombre,correo, Contrasena) VALUES (%s, %s, %s)", (name, email, password))
+        mysql.connection.commit()
+        cur.close()
+        
+        # Enviar el correo electrónico de bienvenida
+        send_welcome_email(email, name)
+        
+        return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+
+
 if __name__=='__main__':
    app.run(port=5000,debug=True)
    

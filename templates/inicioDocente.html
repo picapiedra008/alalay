@@ -64,12 +64,12 @@
                     <div class="nav">
                         <br>
                         <div class="imagen-circular text-center">
-                            <img src="/static/archivos/juanperez.jpg" alt="imagen">
+                            <img src="{{docentes[6]}}" alt="imagen">
                         </div>
                         
                         <br>
-                        <h2 class="text-center">Juan Perez</h2>
-                        <h3 class="text-center">JuanPerez@gmail.com</h3>
+                        <h2 class="text-center">{{ docentes[1] }}</h2>
+                        <h3 class="text-center">{{ docentes[2] }}</h3>
                         <br>
                         <!-- <div class="sb-sidenav-menu-heading">Core</div> -->
                     
@@ -84,7 +84,7 @@
                         <br>
                         
                         <div class="text-center">
-                            <a href="/editar_perfil.html" class="btn btn-success" style="width: 200px; height: 50px; border-radius: 30px; font-size:20px ;">Editar Perfil</a>
+                            <a href="/editar_perfil" class="btn btn-success" style="width: 200px; height: 50px; border-radius: 30px; font-size:20px ;">Editar Perfil</a>
                         </div>
                         
                         
@@ -98,7 +98,7 @@
                 <div class="container-fluid px-4">
                     <h1 class="mt-4">Mis Cursos</h1>
                     <div class="d-flex justify-content-end">    
-                        <a class="btn btn-success" href="{{url_for('add')}}" style="width: 200px;height: 50px;font-size: 20px; border-radius: 15px;"> Registrar Curso <span>+</span></a> 
+                        <a class="btn btn-success" href="/registro" style="width: 200px;height: 50px;font-size: 20px; border-radius: 15px;"> Registrar Curso <span>+</span></a> 
                     </div>
                     
                    <br>
