@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Alalay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/index.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand fs-2" href="{{url_for('landing')}}" >Campus alalay</a>
+            
+            <!-- Toggler for mobile view -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link  fs-3" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#">Comunidad</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="contador">
+        <h1>Bienvenido a nuestra plataforma de cursos</h1>
+        <form action="{{ url_for('listar_cursos') }}" method="GET">
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <select class="form-control bg-light" id="categoria" name="categoria" style="border-radius: 10px;">
+                        <option value="">Categoria</option>
+                        {% for categoria in categorias %}
+                            {% if categoria[1] == categoria_seleccionada %}
+                                <option value="{{ categoria[1] }}" selected>{{ categoria[1] }}</option>
+                            {% else %}
+                                <option value="{{ categoria[1] }}">{{ categoria[1] }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-3 col-sm-6">
+                    <select class="form-control bg-light" id="nivel" name="nivel" style="border-radius: 10px;">
+                        <option value="">Nivel</option>
+                        {% for nivel in niveles %}
+                            {% if nivel[1] == nivel_seleccionado %}
+                                <option value="{{ nivel[1] }}" selected>{{ nivel[1] }}</option>
+                            {% else %}
+                                <option value="{{ nivel[1] }}">{{ nivel[1] }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-3 col-sm-6" >
+                    <input type="text" style="border-radius: 25px;" class="form-control" name="busqueda" placeholder="Qué quieres aprender?" value="{{ busqueda }}">
+                </div>
+                
+                <div class="col-md-3 col-sm-6">
+                    <button type="submit" class="btn btn-success" style="border-radius: 100%;">
+                        <img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;">
+                    </button>
+                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-secondary" style="border-radius: 25px;" onclick="limpiarFormulario()">Limpiar</a>
+                </div>
+            </div>
+        </form>
+        
+        
+     </div>
+        <!-- cambio fin -->
+        {% if cursos %}
+        <div class="container">
+            <br>
+            
+            <div class="row  ">
+            <div class="d-flex justify-content-center flex-wrap gap-2">
+              {% for curso in cursos %}
+              <div class="card col-md-3" style="width: 19rem; border-radius: 15px;" >
+                <img src="{{ curso[6] }}" alt="imagen" class="card-img-top card-img-top-fit">
+                <div class="card-body d-flex flex-column">
+                  <h2 class="card-title">{{ curso[1] }}</h2>
+                  <p>Categoría: {{ curso[2] }}</p>
+                  <p>Nivel: {{ curso[3] }}</p>
+                  <p>Duración: {{ curso[4] }} horas</p>
+                  <p>Costo: {{ curso[5] }}$</p>
+                  <div class="mt-auto">
+                    <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="btn btn-success btn-block"style="border-radius: 10px;" >Ver Curso</a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <p>No se ah encontrado resultados para el curso que busca.</p>
+                </div>
+                <div>
+                    <a href="{{ url_for('listar_cursos') }}" class="boton" style="background-color:#218838; color: white;">Volver a Cursos</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    
+        </div>
+        
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const categoriaSelect = document.getElementById('categoria');
+                const nivelSelect = document.getElementById('nivel');
+        
+                // Función para enviar el formulario con los filtros seleccionados
+                const enviarFormulario = () => {
+                    const categoriaSeleccionada = categoriaSelect.value;
+                    const nivelSeleccionado = nivelSelect.value;
+                    document.getElementById('categoriaHidden').value = categoriaSeleccionada;
+                    document.getElementById('nivelHidden').value = nivelSeleccionado;
+                    document.getElementById('filtroForm').submit();
+                };
+        
+                // Evento para detectar cambios en el selector de categoría
+                categoriaSelect.addEventListener('change', () => {
+                    enviarFormulario();
+                });
+        
+                // Evento para detectar cambios en el selector de nivel
+                nivelSelect.addEventListener('change', () => {
+                    enviarFormulario();
+                });
+            });
+        </script>
+        
+        
+        <form id="filtroForm" action="{{ url_for('listar_cursos') }}" method="GET" style="display: none;">
+            <input type="hidden" name="categoria" id="categoriaHidden">
+            <input type="hidden" name="nivel" id="nivelHidden">
+        </form> 
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script> 
+</body>
+</html>
