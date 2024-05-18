@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,7 +82,7 @@
                        <div class="col-md-12">
                         <label for="pais">Cambiar Imagen</label>
                         <div class="container2" id="drop-area">
-                            <input type="file" id="file" name="file" accept="image/*" hidden required>
+                            <input type="file" id="file_image" name="file_image" accept=".jpg, .jpeg, .png" hidden  required>
                             <div class="img-area">
                               <i class='bx bxs-cloud-upload icon'></i>
                               <h3>Suelta la imagen aquí</h3>
@@ -93,7 +93,7 @@
                        </div>                        
                         <!-- Otros campos de perfil que desees editar -->
                         <div class="text-center mt-4">
-                            <a href="{{url_for('perfildocente')}}" class="btn btn-primary btn-block btn-lg me-4"  style="border-radius: 30px; font-size: 20px;" onclick="retroceder()">Cancelar</a>
+                          <button type="button" class="btn btn-danger btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;" id="cancelButton">Cancelar</button>
                             <button type="submit" id="guardar" class="btn btn-success btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;">Guardar Cambios</button>
                         </div>
                             
@@ -107,13 +107,31 @@
                                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                              </div>
                              <div class="modal-body">
-                                    registrado exitosamente!!
+                                   Cambios realizados!!
                              </div>
                              <div class="modal-footer">
                                 <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
                                 <button type="button" class="btn btn-success" id="botonAceptarModal">Aceptar</button>
                              </div>
                           </div>
+                        </div>
+                       </div>
+                      <!--Modal para el boton de cancelar-->
+                       <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="cancelModalLabel">Confirmación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de cancelar registro?
+                                </div>
+                                <div class="modal-footer gap-2">
+                                    <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="location.href='/'">Si, quiero cancelar</button>
+                                    <button type="button" class="btn btn-success" style="border-radius: 10px;" data-bs-dismiss="modal">Seguir Registrando</button>
+                                </div>
+                            </div>
                         </div>
                        </div>
                 </div>
@@ -125,34 +143,102 @@
         </div>
       
     </div>
+
+    <script>
+      document.getElementById('cancelButton').addEventListener('click', function() {
+        const inputs = document.querySelectorAll('#formularioRegistro input');
+        const selects = document.querySelectorAll('#formularioRegistro select');
+        let isEmpty = true;
+
+        inputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        selects.forEach(select => {
+            if (select.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        if (isEmpty) {
+            window.location.href = '/perfil'; // Redirigir sin mostrar el modal
+        } else {
+            var cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+            cancelModal.show();
+        }
+    });
+    </script>
+    <script>
+      document.getElementById('formularioRegistro').addEventListener('submit', function(event) {
+          const imagenInput = document.getElementById('file_image');
+          const imagen = imagenInput.files[0];
+
+          // Reset custom validity messages
+          imagenInput.setCustomValidity('');
+
+          if (imagen) {
+              const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+              const maxSizeInBytes = 2 * 1024 * 1024; // 2 MB
+
+              if (!validTypes.includes(imagen.type)) {
+                  imagenInput.setCustomValidity('Solo se permiten imágenes en formato JPG, JPEG o PNG.');
+              } else if (imagen.size > maxSizeInBytes) {
+                  imagenInput.setCustomValidity('El tamaño de la imagen no debe exceder los 2 MB.');
+              }
+          }
+
+          if (!imagenInput.checkValidity()) {
+              event.preventDefault(); // Previene el envío del formulario si hay errores
+              imagenInput.reportValidity(); // Muestra los errores de validación
+          }
+      });
+  </script>
+    
 <script>
     // Función para validar el campo del título en tiempo real
   function validarTitulo() {
     var tituloInput = document.getElementById("nombre");
     var tituloAlert = document.getElementById("titulo-alert");
     var tituloValue = tituloInput.value;
+    const nombres = JSON.parse('{{ nombres | tojson | safe }}');
+      console.log('Datos recibidos:', nombres);
+      var indice = nombres.indexOf(tituloValue);
     // Validamos el título con la expresión regular
     if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
         tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
     } else if(tituloValue.length>30){
       tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+    }else if(indice!==-1){
+      tituloInput.setCustomValidity("Usuario ya se encuantra ya registrado");
     }else{
-      tituloInput.setCustomValidity("");
+      tituloInput.setCustomValidity("")
     }
     tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
   }
  // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
 document.getElementById("nombre").addEventListener("input", validarTitulo);
  
-document.getElementById('email').addEventListener('input', function (e) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex para validación de correo
-    if (emailRegex.test(e.target.value)) {
-        e.target.setCustomValidity(''); // No hay error
-    } else {
-        e.target.setCustomValidity('Por favor introduce un correo electrónico válido.'); // Mensaje de error
-    }
-    e.target.reportValidity(); // Muestra el mensaje de validación
-  });
+function validarEmail(){
+  const emailImput = document.getElementById('email');
+  const emailValue = emailImput.value;
+  const correos = JSON.parse('{{ correos | tojson | safe }}');
+  console.log(correos)
+  const indice = correos.indexOf(emailValue);
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)){
+       emailImput.setCustomValidity('Por favor introduce un correo electrónico válido.');
+  }else if(indice!==-1){
+       emailImput.setCustomValidity("El correo electronico ya se encuentra registrado");
+  }else{
+       emailImput.setCustomValidity("");
+  }
+  email.reportValidity();
+}
+
+document.getElementById('email').addEventListener('input', validarEmail);
+  
 </script>
 
 <script>
@@ -199,7 +285,7 @@ document.getElementById('email').addEventListener('input', function (e) {
                 }
               }
             
-              const inputFile = document.getElementById('file');
+              const inputFile = document.getElementById('file_image');
               inputFile.addEventListener('change', function(e) {
                 handleFiles(e.target.files);
               });
@@ -258,13 +344,12 @@ document.getElementById('email').addEventListener('input', function (e) {
           });
     
           document.getElementById('botonAceptarModal').addEventListener('click', () => {
-            window.location.href = '/';
+            window.location.href = '/perfil';
           });
         }
       });
     });
 </script>
-
 <script>
         // Lista de países de América
         var paisesAmerica = [
@@ -320,6 +405,8 @@ document.getElementById('email').addEventListener('input', function (e) {
                 reader.readAsDataURL(fileInput.files[0]);
             }
         }
-    </script>
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
