@@ -71,36 +71,47 @@ def editar_perfil():
     docente=cur.fetchone()
     return render_template('editar_perfil.html',docente=docente)
 
-
-@app.route('/upload', methods=['POST','GET'])
+@app.route('/upload', methods=['POST', 'GET'])
 def upload_file():
-  if request.method=='POST':
-      # Obtener los datos del formulario
+    if request.method == 'POST':
+        # Obtener los datos del formulario
         nombre_completo = request.form['nombre']
         correo_electronico = request.form['email']
         contrasena = request.form['contrasena']
         especialidad = request.form['especialidad']
         nacionalidad = request.form['nacionalidad']
         descripcion = request.form['descripcion']
-        print('hola mundo')
-        if 'file' in request.files and 'customFile' in request.files:
-         foto = request.files['file']
-         archivo=request.files['customFile']
-         filename2=archivo.filename
-         filename=foto.filename
-         foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-         archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
-         image_url=url_for('static', filename='archivos/' + filename)
-         image_url2=url_for('static', filename='archivos/' + filename2)
-         cur = mysql.connection.cursor()
-         cur.execute("INSERT INTO registro_docentes (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion,curiculum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                     (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad,image_url, descripcion,image_url2))
-         mysql.connection.commit()
-         cur.close()
-         print("se registro con exito")
-         return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
-         
-  return redirect(url_for('registrar_docente'))
+
+        foto = request.files.get('file')
+        archivo = request.files.get('customFile')
+
+        # Guardar la foto y el archivo si se proporcionan
+        image_url = None
+        image_url2 = None
+
+        if foto:
+            filename = foto.filename
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image_url = url_for('static', filename='archivos/' + filename)
+
+        if archivo:
+            filename2 = archivo.filename
+            archivo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+            image_url2 = url_for('static', filename='archivos/' + filename2)
+
+        # Insertar los datos en la base de datos
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO registro_docentes (
+                nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion, curiculum
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, image_url, descripcion, image_url2))
+
+        mysql.connection.commit()
+        cur.close()
+        print("se registro con exito")
+        return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+
 
 @app.route('/home')
 def index():
