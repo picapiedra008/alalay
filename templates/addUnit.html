@@ -5,27 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear Sección de Curso</title>
     <link rel="stylesheet" href="/static/css/styleUdd.css">
-     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="/static/css/editor.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </head>
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <!-- Brand -->
-            <a class="navbar-brand fs-2" href="{{url_for('landing')}}" >Campus alalay</a>
-            
-            <!-- Toggler for mobile view -->
+            <a class="navbar-brand fs-2" href="{{url_for('landing')}}">Campus alalay</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
-            <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link  fs-3" aria-current="page" href="{{url_for('perfildocente')}}">Inicio</a>
+                        <a class="nav-link fs-3" aria-current="page" href="{{url_for('perfildocente')}}">Inicio</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
@@ -34,90 +31,163 @@
                         <a class="nav-link fs-3" href="#">Comunidad</a>
                     </li>
                 </ul>
-               
             </div>
         </div>
     </nav>
 
+    <div class="container mt-4">
+        <!-- Mostrar mensajes flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert-container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
 
-
-    <div class="d-flex  align-items-center justify-content-center" style="margin: 5; padding: 5;">
+    <div class="d-flex align-items-center justify-content-center" style="margin: 5; padding: 5;">
         <div class="container col-md-9">
             <div style="display: flex; align-items: baseline;">
                 <h1 style="margin-bottom: 0;">Material y Recursos del Curso</h1>
-                <a href="/tablaContenido" class="btn " style=" background:rgb(8, 153, 85); height: auto; padding: 1px 10px; border: 1px solid black; margin-left: auto;">Ver material</a>
-            </div> 
-                <div class="row">
-                        {% for section in sections %}
-                            <div class="col-md-12 section-box ">
-                                <div class="d-flex justify-content-between">
-                                    <h3>Unidad {{loop.index}}: {{ section[1] }}</h3>
-                                    <button class="btn btn-success" onclick="openAddMaterialPage('{{ section[0] }}')">Añadir Material</button>
-                                </div>
-                                <p>Descripcion: {{section[2] }}</p>
-                                <div class="d-flex justify-content-end p-4">
-                                    <button class="btn btn-success me-5" style="width: 150px; border-radius: 15px;"> Editar</button>
-                                    <!-- <button class="btn btn-danger me-5" style="width: 150px; border-radius: 15px;">Eliminar</button> -->
-                                    <a href="{{url_for('delete_section',id_section=section[0],curso_id=curso_id)}}"class="btn btn-danger me-5" style="width: 150px; border-radius: 15px;">Eliminar</a>
+                <a href="/tablaContenido" class="btn" style="background:rgb(8, 153, 85); height: auto; padding: 1px 10px; border: 1px solid black; margin-left: auto;">Ver material</a>
+            </div>
+            <div class="row">
+                {% for section in sections %}
+                    <div class="col-md-12 section-box">
+                        <div class="d-flex justify-content-between">
+                            <h3>Unidad {{ loop.index }}: {{ section[1] }}</h3>
+                            <button class="btn btn-success" onclick="openAddMaterialPage('{{ section[0] }}')">Añadir Material</button>
+                        </div>
+                        <p>Descripción: {{ section[2] }}</p>
+                        <div class="d-flex justify-content-end p-4">
+                            <button class="btn btn-success me-5" style="width: 150px; border-radius: 15px;">Editar</button>
+                            <button class="btn btn-danger me-5" style="width: 150px; border-radius: 15px;" onclick="confirmDelete('{{ url_for('delete_section', id_section=section[0], curso_id=curso_id) }}')">Eliminar</button>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="col-md-12" id="form-container" style="display: none;">
+                    <form id="myForm" class="row" action="{{ url_for('addseccion', curso_id=curso_id) }}" method="POST" novalidate>
+                        <div class="col-md-2">
+                            <h3>Unidad:</h3>
+                        </div>
+                        <div class="col-md-8 mb-3 row">
+                            <div class="col-ms-10">
+                                <input class="form-control" type="text" id="section-name" name="section-name" required maxlength="60">
+                                <div class="invalid-feedback">
+                                    El título de la unidad debe tener menos de 60 caracteres.
                                 </div>
                             </div>
-                            
-                        {% endfor %}
-                        <div class="col-md-12" id="form-container" style="display: none;">
-                                <form class="row" action="{{url_for('addseccion',curso_id=curso_id)}}" method="POST">
-                                     <div class="col-md-2">
-                                        <h3>Seccion:</h3>
-                                     </div>
-                                    <div class="col-md-8 mb-3 row">
-                                        <div class="col-ms-10">
-                                           <input  class="form-control" type="text" id="section-name" name="section-name" required>
-                                        </div>
-                
-                                        <label class=" form-label mt-4" for="section-description">
-                                            Que podran hacer los estudiantes en esta seccion?
-                                        </label>
-                                        <div class="col-ms-10">
-                                           <textarea class="form-control" id="section-description" name="section-description" style="resize: none;" rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="d-flex justify-content-end" >
-                                        <!-- <button class="btn btn-danger me-5" type="button" style="width: 150px; border-radius: 15px;">Cancelar</button> -->
-                                        <a href="{{url_for('addseccion',curso_id=curso_id)}}" class="btn btn-danger me-5"style="width: 150px; border-radius: 15px;">Cancelar</a>
-                                        <button class="btn btn-success me-5" type="submit" style="width: 150px; border-radius: 15px;">Guardar</button>
-                                    </div>    
-                                </form>   
-                                
-                        </div>
-                       
-                        <div class="">
-                            <button class="btn btn-success" id="add-section-btn" style="width: 150px; border-radius: 10px;"> <span>+</span>Añadir Sección </button>
-                        </div>
-                   
-                </div> 
-         </div>
 
-
+                            <label class="form-label mt-4" for="section-description">
+                                ¿Qué podrán hacer los estudiantes en esta sección?
+                            </label>
+                            <div class="col-ms-10">
+                                <textarea class="form-control" id="section-description" name="section-description" style="resize: none;" rows="5" required maxlength="200" minlength="30"></textarea>
+                                <div class="invalid-feedback" id="description-feedback">
+                                    La descripción debe tener entre 30 y 200 caracteres.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <a href="#" class="btn btn-danger me-5" onclick="hideForm()" style="width: 150px; border-radius: 15px;">Cancelar</a>
+                            <button class="btn btn-success me-5" type="submit" style="width: 150px; border-radius: 15px;">Guardar</button>
+                        </div>    
+                    </form>   
+                </div>
+                <div>
+                    <button class="btn btn-success" id="add-section-btn" style="width: 150px; border-radius: 10px;"> <span>+</span>Añadir Sección </button>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar esta unidad?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Cancelar</button>
+                    <a id="confirmDeleteBtn" class="btn btn-danger">Eliminar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById("add-section-btn").addEventListener("click", function() {
-          document.getElementById("form-container").style.display = "block"; // Muestra el formulario
-        });
-        document.querySelectorAll(".add-file-btn").forEach(button => {
-            button.addEventListener("click", function() {
-                var formId = this.getAttribute("data-target"); // Obtiene el ID del formulario correspondiente
-                document.getElementById(formId).style.display = "block"; // Muestra el formulario correspondiente
-            });
+            document.getElementById("form-container").style.display = "block"; // Muestra el formulario
         });
 
-    </script>
-    >
-    <script>
+        function hideForm() {
+            document.getElementById("form-container").style.display = "none"; // Oculta el formulario
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sectionNameInput = document.getElementById('section-name');
+            const sectionDescriptionTextarea = document.getElementById('section-description');
+
+            sectionNameInput.addEventListener('input', function() {
+                const length = sectionNameInput.value.length;
+                if (length >= 60) {
+                    sectionNameInput.classList.add('is-invalid');
+                } else {
+                    sectionNameInput.classList.remove('is-invalid');
+                }
+            });
+
+            sectionDescriptionTextarea.addEventListener('input', function() {
+                const length = sectionDescriptionTextarea.value.length;
+                if (length < 30 || length > 200) {
+                    sectionDescriptionTextarea.classList.add('is-invalid');
+                } else {
+                    sectionDescriptionTextarea.classList.remove('is-invalid');
+                }
+            });
+
+            // Añade una validación en tiempo de envío del formulario
+            const form = document.getElementById('myForm');
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+
+            // Auto cerrar los mensajes flash después de 3 segundos
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 3000);
+        });
+
         function openAddMaterialPage(sectionId) {
             window.location.href = '/addMaterial/' + sectionId; // Envía el ID de la sección a la página addMaterial
-        } 
+        }
+
+        function confirmDelete(deleteUrl) {
+            const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+            confirmDeleteBtn.setAttribute('href', deleteUrl);
+            const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+            confirmDeleteModal.show();
+        }
     </script>
     
 </body>
 </html>
-
