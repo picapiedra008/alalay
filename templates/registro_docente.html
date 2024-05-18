@@ -248,7 +248,7 @@
         var tituloValue = tituloInput.value;
         // Validamos el título con la expresión regular
         if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
-            tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
+            tituloInput.setCustomValidity("Nombre incorrecto, caracteres no permitidos");
         } else if(tituloValue.length>30){
           tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
         }else{

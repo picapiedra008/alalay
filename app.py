@@ -24,7 +24,7 @@ app.secret_key='mysecretkey'
 app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #mysql conecction
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_PORT'] = 3306  # Asegúrate de especificar el puerto como un número, no como una cadena
+app.config['MYSQL_PORT'] = 3310  # Asegúrate de especificar el puerto como un número, no como una cadena
 app.config['MYSQL_USER'] = 'root'  # Asegúrate de que este es tu usuario correcto
 app.config['MYSQL_PASSWORD'] = ''  # Asegúrate de ingresar tu con
 app.config['MYSQL_DB'] = 'campus_alalay'
@@ -56,34 +56,24 @@ def upload_editar():
         pais=request.form['pais']
         id=session.get('usuario')
         session.clear()
-        if 'file' in request.files:
-            foto=request.files['file']
+        if 'file_image' in request.files:
+            foto=request.files['file_image']
             filename=secure_filename(foto.filename)
             foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
             image_url=url_for('static', filename='archivos/' + filename)
             conn=mysql.connection.cursor()
-            conn.execute("update registro_docentes set nombre_completo=%s,correo_electronico=%s,nacionalidad=%s,foto=%s where id=%s",(nombre,correo,pais,image_url,id))
+            conn.execute("update registro_docentes set nombre_completo=%s,correo_electronico=%s,nacionalidad=%s,foto=%s where nombre_completo=%s",(nombre,correo,pais,image_url,id))
             conn.connection.commit()
             conn.close()
-            
             cur=mysql.connection.cursor()
             con=cur
             cur.execute("select*from registro_docentes where nombre_completo=%s",(nombre,))
             docentes=cur.fetchone()
-            session['id'] = docentes[0]
             session['usuario']=nombre
-        
-            query = """
-            SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC ,d.id
-            FROM curso c
-            INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
-            INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
-            INNER JOIN registro_docentes d ON d.id=c.id
-            WHERE d.nombre_completo=%s or d.correo_electronico=%s
-            """           
-            con.execute(query,(nombre,nombre))
-            cursos = con.fetchall()
-            return render_template('inicioDocente.html', cursos=cursos,docentes=docentes)
+            session['id']=docentes[0]
+            print(session.get('usuario'))
+            return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})      
+
         
 
 @app.route('/registrar_docente')
@@ -106,8 +96,14 @@ def editar_perfil():
     conn = mysql.connection.cursor()
     cur=mysql.connection.cursor()
     cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+    conn.execute("select*from registro_docentes")
+    docentes=conn.fetchall()
+    nombres=[titulo[1] for titulo in docentes]
+    correos=[email[2] for email in docentes]
     docente=cur.fetchone()
-    return render_template('editar_perfil.html',docente=docente)
+    conn.close()
+    cur.close()
+    return render_template('editar_perfil.html',docente=docente,nombres=nombres,correos=correos)
 
 
 @app.route('/upload', methods=['POST','GET'])
