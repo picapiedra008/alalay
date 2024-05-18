@@ -48,6 +48,44 @@ def contenido():
     cursor.close()
     return render_template('tablacontenido.html', datos_contenido=datos_contenido)
 
+@app.route('/upload_editar',methods=['POST','GET'])
+def upload_editar():
+    if request.method=='POST':
+        nombre=request.form['nombre']
+        correo=request.form['email']
+        pais=request.form['pais']
+        id=session.get('usuario')
+        session.clear()
+        if 'file' in request.files:
+            foto=request.files['file']
+            filename=secure_filename(foto.filename)
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            image_url=url_for('static', filename='archivos/' + filename)
+            conn=mysql.connection.cursor()
+            conn.execute("update registro_docentes set nombre_completo=%s,correo_electronico=%s,nacionalidad=%s,foto=%s where id=%s",(nombre,correo,pais,image_url,id))
+            conn.connection.commit()
+            conn.close()
+            
+            cur=mysql.connection.cursor()
+            con=cur
+            cur.execute("select*from registro_docentes where nombre_completo=%s",(nombre,))
+            docentes=cur.fetchone()
+            session['id'] = docentes[0]
+            session['usuario']=nombre
+        
+            query = """
+            SELECT c.IDCURSO, c.NOMCURSO, ca.NOMCATEGORIA, n.NOMNIVEL, c.CARGAHORARIAC, c.COSTOC, c.PORTADAC ,d.id
+            FROM curso c
+            INNER JOIN categoria ca ON c.CODCATEGORIA = ca.CODCATEGORIA
+            INNER JOIN nivel n ON c.CODNIVEL = n.CODNIVEL
+            INNER JOIN registro_docentes d ON d.id=c.id
+            WHERE d.nombre_completo=%s or d.correo_electronico=%s
+            """           
+            con.execute(query,(nombre,nombre))
+            cursos = con.fetchall()
+            return render_template('inicioDocente.html', cursos=cursos,docentes=docentes)
+        
+
 @app.route('/registrar_docente')
 def registrar_docente():
     return render_template('registro_docente.html')

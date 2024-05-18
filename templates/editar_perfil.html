@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil</title>
     <link rel="stylesheet" href="/static/css/editar_perfil.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
@@ -25,7 +26,7 @@
                         <a class="nav-link  fs-3" aria-current="page" href="#">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
+                         <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fs-3" href="#">Comunidad</a>
@@ -38,21 +39,24 @@
             </div>
         </div>
     </nav>
-    <div class="d-flex vh-100 align-items-center justify-content-center">
-        <div class="container p-5" style="background: #e4f3e0;border-radius: 15px;">
-            <div class="row">
-                <div class="col-md-4 ">
-                    <!-- Aquí se muestra la imagen del perfil -->
-                    <div class="imagen-circular">
-                        <img src="{{docente[6]}}" alt="imagen">
+    <div class="d-flex mt-4 align-items-center justify-content-center">
+        <div class="container col-md-10 p-5  m-3 shadow-lg" style=" border-radius: 15px;">
+            <div class="text-center">
+                <h1 class="my-custom-heading">Editar Perfil</h1>
+            </div>
+            <div class="row p-3">
+                <div class="col-md-4 align-items-start d-flex">
+                    <div>
+                        <div class="imagen-circular">
+                            <img src="{{docente[6]}}" alt="imagen">
+                        </div>
+                        <h2>{{docente[1]}}</h2>
+                        <h3>{{docente[2]}}</h3>
                     </div>
-                    <h2>"{{docente[1]}}"</h2>
-                    <h3>{{docente[2]}}</h3>
-                </div>
-                <div class="col-md-8 ">
-                    <h1>Editar Perfil</h1>
                     
-                    <form class="row gap-2" action="/guardar_perfil" method="POST" enctype="multipart/form-data">
+                </div>
+                <div class="col-md-8 "> 
+                    <form class="row gap-2" action="/guardar_perfil" id="formularioRegistro" method="POST" enctype="multipart/form-data">
                        <div class="col-md-12">
                         <label for="nombre">Nombre:</label>
                         <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
@@ -61,42 +65,57 @@
 
                        <div class="col-md-12">
                         <label for="correo">Correo electrónico:</label>
-                        <input type="email" id="correo" name="correo" placeholder="correo@example.com">
-                        <div class="error-message" id="error-correo"><span class="error-icon">&#9888;</span> Por favor ingresa tu correo electrónico</div>
+                        <input type="email" id="email" name="email" placeholder="correo@example.com">
                        </div>
 
                        <div class="col-md-12">
                         <label for="pais">País:</label>
-                        <select id="pais" name="pais">
+                        <select id="pais" name="pais" id="pais">
                             <!-- Opciones predefinidas -->
-                            <option value="Seleccione">Seleccione</option>
+                            <option value="">Seleccione</option>
                             <!-- Opciones de países de América generadas dinámicamente -->
                         </select>
                         <div class="error-message" id="error-pais"><span class="error-icon">&#9888;</span> Por favor selecciona tu país</div> 
                        </div>
                         
-                  
+                       <br>
                        <div class="col-md-12">
                         <label for="pais">Cambiar Imagen</label>
-                        <div id="drop_zone_container">
-                            <div id="drop_zone" ondrop="drop(event)" ondragover="allowDrop(event)">
-                                <div id="drop_zone_inner">
-                                    Arrastra y suelta la imagen aquí<br>
-                                    o haz clic para seleccionar un archivo.
-                                    <input type="file" id="file_input" name="file_input" style="display: none;" onchange="fileSelected()">
-                                </div>
+                        <div class="container2" id="drop-area">
+                            <input type="file" id="file" name="file" accept="image/*" hidden required>
+                            <div class="img-area">
+                              <i class='bx bxs-cloud-upload icon'></i>
+                              <h3>Suelta la imagen aquí</h3>
+                              <p>Tamaño máximo permitido <span>2MB</span> <br/>Formato permitido png , jpeg y jpg</p>
                             </div>
-                            <img id="preview" src="#" alt="Imagen de perfil">
-                        </div>
+                            <button type="button" class="select-image bg-success">Subir Foto</button>
+                          </div>
                        </div>                        
                         <!-- Otros campos de perfil que desees editar -->
                         <div class="text-center mt-4">
                             <a href="{{url_for('perfildocente')}}" class="btn btn-primary btn-block btn-lg me-4"  style="border-radius: 30px; font-size: 20px;" onclick="retroceder()">Cancelar</a>
-                            <button type="submit" id="guardar" class="btn btn-success btn-block btn-lg" style="border-radius: 30px; font-size: 20px;">Guardar Cambios</button>
+                            <button type="submit" id="guardar" class="btn btn-success btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;">Guardar Cambios</button>
                         </div>
                             
                     </form>
                     <!-- Puedes añadir más contenido HTML según tus necesidades -->
+                    <div class="modal" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                           <div class="modal-content">
+                             <div class="modal-header">
+                                  <h5 class="modal-title" id="modalExitoLabel">Mensaje</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                             </div>
+                             <div class="modal-body">
+                                    registrado exitosamente!!
+                             </div>
+                             <div class="modal-footer">
+                                <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
+                                <button type="button" class="btn btn-success" id="botonAceptarModal">Aceptar</button>
+                             </div>
+                          </div>
+                        </div>
+                       </div>
                 </div>
 
 
@@ -106,8 +125,147 @@
         </div>
       
     </div>
+<script>
+    // Función para validar el campo del título en tiempo real
+  function validarTitulo() {
+    var tituloInput = document.getElementById("nombre");
+    var tituloAlert = document.getElementById("titulo-alert");
+    var tituloValue = tituloInput.value;
+    // Validamos el título con la expresión regular
+    if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
+        tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
+    } else if(tituloValue.length>30){
+      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+    }else{
+      tituloInput.setCustomValidity("");
+    }
+    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
+  }
+ // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+document.getElementById("nombre").addEventListener("input", validarTitulo);
+ 
+document.getElementById('email').addEventListener('input', function (e) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex para validación de correo
+    if (emailRegex.test(e.target.value)) {
+        e.target.setCustomValidity(''); // No hay error
+    } else {
+        e.target.setCustomValidity('Por favor introduce un correo electrónico válido.'); // Mensaje de error
+    }
+    e.target.reportValidity(); // Muestra el mensaje de validación
+  });
+</script>
 
-    <script>
+<script>
+            document.addEventListener('DOMContentLoaded', function() {
+              let dropArea = document.getElementById('drop-area');
+            
+              ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+              });
+            
+              function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            
+              ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+              });
+            
+              ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+              });
+            
+              dropArea.addEventListener('drop', handleDrop, false);
+            
+              function handleDrop(e) {
+                let dt = e.dataTransfer;
+                let files = dt.files;
+                handleFiles(files);
+              }
+            
+              function handleFiles(files) {
+                files = [...files];
+                files.forEach(previewFile);
+              }
+            
+              function previewFile(file) {
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function() {
+                  let img = document.createElement('img');
+                  img.src = reader.result;
+                  document.querySelector('.img-area').appendChild(img);
+                }
+              }
+            
+              const inputFile = document.getElementById('file');
+              inputFile.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+              });
+            
+              const selectImageBtn = document.querySelector('.select-image');
+              selectImageBtn.addEventListener('click', function() {
+                inputFile.click();
+              });
+            });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const formulario = document.getElementById('formularioRegistro');
+      const selectNacionalidad = document.getElementById('pais');
+    
+      // Restablecer la validación cuando el usuario cambia la selección
+      selectNacionalidad.onchange = function() {
+        this.setCustomValidity("");
+      };
+    
+      formulario.addEventListener('submit', function(event) {
+        // Validar el campo nacionalidad
+        if (selectNacionalidad.value === "") {
+          selectNacionalidad.setCustomValidity("Por favor seleccione una opción válida.");
+        } else {
+          selectNacionalidad.setCustomValidity(""); // Limpiar el mensaje de validación personalizado si es correcto
+        }
+    
+        // Verificar si el formulario es válido antes de enviar
+        if (!formulario.checkValidity()) {
+          event.preventDefault(); // Detener el envío del formulario si no es válido
+          event.stopPropagation(); // Detiene la propagación del evento en el DOM
+          formulario.reportValidity(); // Esta función muestra explícitamente las validaciones del formulario
+        } else {
+          event.preventDefault(); // Aun cuando sea válido, prevenir el envío para manejarlo con Fetch
+          // Aquí va el código para manejar el envío del formulario con Fetch
+          const formData = new FormData(formulario);
+    
+          fetch('/upload_editar', {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => response.json())
+          .then(data => {
+            if(data.status === 'success') {
+              formulario.reset();
+              var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+              modalExito.show();
+            } else {
+              alert('Hubo un error al registrar.');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Error al enviar el formulario.');
+          });
+    
+          document.getElementById('botonAceptarModal').addEventListener('click', () => {
+            window.location.href = '/';
+          });
+        }
+      });
+    });
+</script>
+
+<script>
         // Lista de países de América
         var paisesAmerica = [
             "Argentina", "Bolivia", "Brasil", "Canadá", "Chile", "Colombia", "Costa Rica",
@@ -161,49 +319,6 @@
                 }
                 reader.readAsDataURL(fileInput.files[0]);
             }
-        }
-
-        // Agregar evento de clic al botón Cancelar
-        document.getElementById("btn-cancelar").addEventListener("click", function() {
-            // Agrega aquí la lógica para mover el botón Cancelar
-        });
-
-        // Agregar evento de clic al botón Guardar Cambios
-        document.getElementById("btn-guardar").addEventListener("click", function(event) {
-            // Obtener los valores de los campos
-            var nombre = document.getElementById("nombre").value;
-            var correo = document.getElementById("correo").value;
-            var pais = document.getElementById("pais").value;
-
-            // Verificar si algún campo está vacío
-            var error = false;
-            if (nombre.trim() === "") {
-                document.getElementById("error-nombre").style.display = 'block';
-                error = true;
-            } else {
-                document.getElementById("error-nombre").style.display = 'none';
-            }
-            if (correo.trim() === "") {
-                document.getElementById("error-correo").style.display = 'block';
-                error = true;
-            } else {
-                document.getElementById("error-correo").style.display = 'none';
-            }
-            if (pais === "Seleccione") {
-                document.getElementById("error-pais").style.display = 'block';
-                error = true;
-            } else {
-                document.getElementById("error-pais").style.display = 'none';
-            }
-
-            // Evitar que se envíe el formulario si hay errores
-            if (error) {
-                event.preventDefault();
-            }
-        });
-
-        function retroceder() {
-            window.history.back();
         }
     </script>
 </body>
