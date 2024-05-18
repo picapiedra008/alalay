@@ -71,36 +71,47 @@ def editar_perfil():
     docente=cur.fetchone()
     return render_template('editar_perfil.html',docente=docente)
 
-
-@app.route('/upload', methods=['POST','GET'])
+@app.route('/upload', methods=['POST', 'GET'])
 def upload_file():
-  if request.method=='POST':
-      # Obtener los datos del formulario
+    if request.method == 'POST':
+        # Obtener los datos del formulario
         nombre_completo = request.form['nombre']
         correo_electronico = request.form['email']
         contrasena = request.form['contrasena']
         especialidad = request.form['especialidad']
         nacionalidad = request.form['nacionalidad']
         descripcion = request.form['descripcion']
-        print('hola mundo')
-        if 'file' in request.files and 'customFile' in request.files:
-         foto = request.files['file']
-         archivo=request.files['customFile']
-         filename2=archivo.filename
-         filename=foto.filename
-         foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-         archivo.save(os.path.join(app.config['UPLOAD_FOLDER'],filename2))
-         image_url=url_for('static', filename='archivos/' + filename)
-         image_url2=url_for('static', filename='archivos/' + filename2)
-         cur = mysql.connection.cursor()
-         cur.execute("INSERT INTO registro_docentes (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion,curiculum) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                     (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad,image_url, descripcion,image_url2))
-         mysql.connection.commit()
-         cur.close()
-         print("se registro con exito")
-         return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
-         
-  return redirect(url_for('registrar_docente'))
+
+        foto = request.files.get('file')
+        archivo = request.files.get('customFile')
+
+        # Guardar la foto y el archivo si se proporcionan
+        image_url = None
+        image_url2 = None
+
+        if foto:
+            filename = foto.filename
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image_url = url_for('static', filename='archivos/' + filename)
+
+        if archivo:
+            filename2 = archivo.filename
+            archivo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+            image_url2 = url_for('static', filename='archivos/' + filename2)
+
+        # Insertar los datos en la base de datos
+        cur = mysql.connection.cursor()
+        cur.execute("""
+            INSERT INTO registro_docentes (
+                nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, foto, descripcion, curiculum
+            ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+        """, (nombre_completo, correo_electronico, contrasena, especialidad, nacionalidad, image_url, descripcion, image_url2))
+
+        mysql.connection.commit()
+        cur.close()
+        print("se registro con exito")
+        return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+
 
 @app.route('/home')
 def index():
@@ -185,26 +196,33 @@ def listar_cursos():
                         categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
                         busqueda=busqueda)
 
-#añadir una nueva seccion al curso
 @app.route('/addseccion/<int:curso_id>', methods=['GET', 'POST'])
 def addseccion(curso_id):
     if request.method == 'POST':
         name = request.form['section-name']
         description = request.form['section-description']
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO unidad (nombreU, descripcion,IDCURSO) VALUES (%s, %s,%s)", (name, description,curso_id))
-        mysql.connection.commit()
-        cur.close()
+        try:
+            cur.execute("INSERT INTO unidad (nombreU, descripcion, IDCURSO) VALUES (%s, %s, %s)", (name, description, curso_id))
+            mysql.connection.commit()
+            flash('Sección añadida exitosamente', 'success')
+        except Exception as e:
+            mysql.connection.rollback()
+            flash(f'Error al añadir la sección: {str(e)}', 'danger')
+        finally:
+            cur.close()
+        return redirect(url_for('addseccion', curso_id=curso_id))
+
     # Recuperar todas las secciones
     cur = mysql.connection.cursor()
-    conn=mysql.connection.cursor()
-    cur.execute("SELECT*FROM unidad where IDCURSO=%s",(curso_id,))
-    conn.execute("SELECT co.*FROM curso c ,unidad u , contenido co WHERE c.IDCURSO = u.IDCURSO and u.codUnidad= co.codUnidad AND c.IDCURSO=%s",(curso_id,))
+    conn = mysql.connection.cursor()
+    cur.execute("SELECT * FROM unidad WHERE IDCURSO = %s", (curso_id,))
+    conn.execute("SELECT co.* FROM curso c, unidad u, contenido co WHERE c.IDCURSO = u.IDCURSO AND u.codUnidad = co.codUnidad AND c.IDCURSO = %s", (curso_id,))
     sections = cur.fetchall()
-    contenido=conn.fetchall()
+    contenido = conn.fetchall()
     cur.close()
     conn.close()
-    return render_template('addUnit.html', sections=sections,curso_id=curso_id,contenido=contenido)
+    return render_template('addUnit.html', sections=sections, curso_id=curso_id, contenido=contenido)
 
 @app.route('/delete_section/<int:id_section>/<int:curso_id>')
 def delete_section(id_section,curso_id):
