@@ -1,0 +1,130 @@
+
+
+.left-section {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.right-section {
+    flex: 2;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
+
+.imagen-circular {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.imagen-circular img {
+    border-radius: 50%;
+    border: 2px solid #ccc;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="email"],
+select {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+select {
+    width: calc(100% - 20px);
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #e0f0e7;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 16px;
+    padding-right: 30px;
+}
+
+#drop_zone_container {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+}
+
+#drop_zone_inner {
+    padding: 20px;
+}
+
+#drop_zone {
+    width: calc(100% - 40px);
+    height: calc(100% - 40px);
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#preview {
+    max-width: 100%;
+    max-height: 200px;
+    display: none;
+    margin-top: 20px;
+}
+
+
+button {
+    font-size: 18px; /*Cambia el tamaño de la letra del boton*/
+}
+
+.btn-cancelar {
+    display: inline-block;
+    padding: 8px 20px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #77e494;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-right: 10px; /* Espacio entre los botones */
+    font-size: 18px; /* Tamaño de letra aumentado */
+}
+
+.btn-cancelar:hover {
+background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
+}
+
+.error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+.error-field {
+    border: 1px solid red !important;
+}
+
+.error-icon {
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align: middle;
+    font-size: 16px;
+    color: red;
+}
