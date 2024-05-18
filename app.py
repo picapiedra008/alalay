@@ -78,7 +78,13 @@ def upload_editar():
 
 @app.route('/registrar_docente')
 def registrar_docente():
-    return render_template('registro_docente.html')
+    conn=mysql.connection.cursor()
+    conn.execute("select*from registro_docentes")
+    docentes=conn.fetchall()
+    nombres=[titulo[1] for titulo in docentes]
+    correos=[email[2] for email in docentes]
+    conn.close()
+    return render_template('registro_docente.html',nombres=nombres,correos=correos)
 
 @app.route('/addMaterial/<int:section_id>')
 def addmat(section_id):
@@ -95,7 +101,7 @@ def editar_perfil():
     usuario=session.get('usuario')    
     conn = mysql.connection.cursor()
     cur=mysql.connection.cursor()
-    cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+    cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico",(usuario,))
     conn.execute("select*from registro_docentes")
     docentes=conn.fetchall()
     nombres=[titulo[1] for titulo in docentes]
@@ -297,7 +303,7 @@ def perfildocente():
         session['usuario']=usuario    
         conn = mysql.connection.cursor()
         cur=mysql.connection.cursor()
-        cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+        cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico=%s ",(usuario,usuario))
         docentes=cur.fetchone()
         session['id']=docentes[0]
         # Construir consulta SQL con filtros
@@ -318,7 +324,7 @@ def perfildocente():
         session['usuario']=usuario  
         conn = mysql.connection.cursor()
         cur=mysql.connection.cursor()
-        cur.execute("select*from registro_docentes where nombre_completo=%s",(usuario,))
+        cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico=%s",(usuario,usuario))
         docentes=cur.fetchone()
         session['id']=docentes[0]
         # Construir consulta SQL con filtros
@@ -359,7 +365,7 @@ def subir():
          session['cargaHoraria']=request.form['cargaHoraria']
          session['costo']=request.form['costo']
          session['titulo']=request.form['titulo']
-         return render_template('subirfoto.html',id=id)
+         return render_template('subirfoto.html')
     
 def idCategoria(tit):
      c3=mysql.connection.cursor()

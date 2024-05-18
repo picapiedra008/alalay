@@ -46,7 +46,7 @@
                 <button type="submit" id="submit-login" >Iniciar Sesion</button>
                 <a href="#">Olvidaste tu constraseña?</a>
                 <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google icon'></i>Inicia con Google</a>
+                    <a href="#" id="login_google"><i class='bx bxl-google icon'></i>Inicia con Google</a>
                 </div>
             </form>
         </div>
@@ -91,7 +91,7 @@
             console.log(docentes[0][1])
         if(seleccion.value==='Docente'){
             for (let i = 0; i < docentes.length; i++) {
-                if (docentes[i][1] === usuario.value) {
+                if (docentes[i][1] === usuario.value||docentes[i][2]=== usuario.value) {
                     usuarioValido = true;
                     usuario.setCustomValidity("");
                     if (docentes[i][3] === password.value) {
@@ -105,7 +105,7 @@
             }
         }else if(seleccion.value==='Estudiante'){
             for (let i = 0; i < estudiantes.length; i++) {
-                if (estudiantes[i][1] === usuario.value) {
+                if (estudiantes[i][1] === usuario.value|| estudiantes[i][2]=== usuario.value) {
                     usuarioValido = true;
                     usuario.setCustomValidity("");
                     if (estudiantes[i][4] === password.value) {
@@ -147,16 +147,26 @@
         });
     </script>
     <script>
+
+        document.getElementById('rol').addEventListener('change', function() {
+            const enlace = document.getElementById('login_google');
+            if (this.value !== 'default') {
+                enlace.style.display = 'none';
+            } else {
+                enlace.style.display = 'block';
+            }
+        });
+       
+
         document.addEventListener("DOMContentLoaded", function() {
             const loginForm = document.getElementById('inicio_sesion');
             const submitButton = document.getElementById('submit-login');
             const roleSelect = document.getElementById('rol');
             const registerButton = document.getElementById('register');
-    
+            
             submitButton.addEventListener('click', function(event) {
                 if (roleSelect.value === "Docente") {
                     loginForm.action = "/perfil";
-                    
                 } else {
                     loginForm.action = "/listar";
                 }
