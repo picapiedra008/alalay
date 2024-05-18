@@ -193,11 +193,13 @@ def ver_curso_docente(curso_id):
     
 @app.route('/listar' , methods=['POST','GET'])
 def listar_cursos():
+    if request.method=='POST':
+        usuario = request.form['usuario']
+        session['usuario']=usuario      
     conn = mysql.connection
     cur = conn.cursor()
     cur.execute('SELECT * FROM categoria')
     categorias = cur.fetchall()
-    
     cir = conn.cursor()  # Cambiado aquí
     cir.execute('SELECT * FROM nivel')
     niveles = cir.fetchall()
@@ -232,9 +234,24 @@ def listar_cursos():
     cur.execute(query, params)
     cursos = cur.fetchall()
     
-    return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles, 
+    usuario=session.get('usuario')    
+    print(usuario)
+    con = mysql.connection.cursor()
+    con.execute("select*from estudiante where nombre=%s or correo=%s",(usuario,usuario))
+    estudiantes=con.fetchone()
+    if estudiantes is None :
+        if usuario is None:
+          return render_template('index_estudiante.html', cursos=cursos, categorias=categorias, niveles=niveles, 
+                        categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
+                        busqueda=busqueda) 
+        else:
+          return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles, 
                         categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
                         busqueda=busqueda)
+    else:
+        return render_template('index_estudiante.html', cursos=cursos, categorias=categorias, niveles=niveles, 
+                        categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
+                        busqueda=busqueda)     
 
 @app.route('/addseccion/<int:curso_id>', methods=['GET', 'POST'])
 def addseccion(curso_id):
