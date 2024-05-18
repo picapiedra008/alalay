@@ -10,7 +10,7 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="Y170785774709-1gohancc7g0pfhu7url7u49cepcq3bs3.apps.googleusercontent.com">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <title>log in</title>
+    <title>Inicio Sesión</title>
 </head>
 
 <body>
@@ -24,16 +24,16 @@
                     <span id="toggle-password-register" class="toggle-password"><i class="fa-regular fa-eye-slash"></i></span>
                     <input type="password" id="password-register" name="password" placeholder="Contraseña" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$" title="La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula y un número" required>
                 </div>
-                <button type="submit">Registrarse</button>
+                <button type="submit">Registrarme</button>
                 <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google icon'></i>Inicia con Google</a>
+                    <a href="#"><i class='bx bxl-google icon'></i>Iniciar Sesión con Google</a>
                 </div>
             </form>
             
         </div>
         <div class="form-container sign-in">
             <form  id="inicio_sesion" action="/listar" method="post">
-                <h1>Iniciar Sesion</h1>
+                <h1>Iniciar Sesión</h1>
                 <input id="usuario" name="usuario" type="text" placeholder="Usuario">
                 <div class="password-container">
                     <span id="toggle-password" class="toggle-password"><i class="fa-regular fa-eye-slash"></i></span>
@@ -43,10 +43,10 @@
                     <option value="Estudiante">Estudiante</option>
                     <option value="Docente">Docente</option>
                 </select>
-                <button type="submit" id="submit-login" >Iniciar Sesion</button>
+                <button type="submit" id="submit-login" >Iniciar Sesión</button>
                 <a href="#">Olvidaste tu constraseña?</a>
                 <div class="social-icons">
-                    <a href="#"><i class='bx bxl-google icon'></i>Inicia con Google</a>
+                    <a href="#"><i class='bx bxl-google icon'></i>Iniciar Sesión con Google</a>
                 </div>
             </form>
         </div>
@@ -55,14 +55,14 @@
                 <div class="toggle-panel toggle-left">
                     <img src="/static/archivos/logo.jpg" alt="Logo" class="logo-image">
                     <h1>COMIENZA TU APRENDIZAJE AHORA</h1>
-                    <p>ya tengo una cuenta</p>
+                    <p>Ya tengo una cuenta</p>
                     <button class="hidden" id="login">Iniciar Sesion</button>
                 </div>                
                 <div class="toggle-panel toggle-right">
                     <img src="/static/archivos/logo.jpg" alt="Logo" class="logo-image">
                     <h1>COMIENZA TU APRENDIZAJE AHORA</h1>
                     <p>Si aun no tienes cuenta registrate ya<br>Y ten acceso a mas de 500 cursos virtuales</p>
-                    <button class="hidden" id="register">Registrate</button>
+                    <button class="hidden" id="register">Registrarme</button>
                 </div>
             </div>
         </div>
