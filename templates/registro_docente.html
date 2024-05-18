@@ -53,23 +53,22 @@
         </div> 
       </div>
         
-         <div class="col-md-12">
+         <div class="colñ-md-12">
             <div class="container2" id="drop-area">
-                <input type="file" id="file" name="file" accept="image/*" hidden required>
+                <input type="file" id="file" name="file" accept="image/*" hidden>
                 <div class="img-area">
                   <i class='bx bxs-cloud-upload icon'></i>
                   <h3>Suelta la imagen aquí</h3>
                   <p>Tamaño máximo permitido <span>2MB</span></p>
-                  <p><span>Campo Obligatorio</span></p>
                 </div>
                 <button type="button" class="select-image bg-success">Subir Foto</button>
             </div>
         </div>
       
         <div class="col-md-6">
-            <label class="form-label" for="descripcion">Descripción:<span style="color: brown;">*</span></label>
-            <textarea class="form-control" id="descripcion" name="descripcion" style="resize: none;" rows="9"></textarea>
-        </div>
+          <label class="form-label" for="descripcion">Descripción:</label>
+          <textarea class="form-control" id="descripcion" name="descripcion" style="resize: none;" rows="9" oninput="validarEntrada(event)" onfocus="resetearValidacion()"></textarea>
+      </div>
 
         <div class="col-md-6 mb-3">
           <label class="form-label" for="">Curriculum:</label>
@@ -144,40 +143,47 @@
       var fileName = e.target.files[0].name;
       document.querySelector('label[for="customFile"]').textContent = "Subido: " + fileName;
     });
-
+  </script>
+  <script>
     document.addEventListener('DOMContentLoaded', function() {
       let dropArea = document.getElementById('drop-area');
-    
+      
       ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false);
       });
-    
+  
       function preventDefaults(e) {
         e.preventDefault();
         e.stopPropagation();
       }
-    
+  
       ['dragenter', 'dragover'].forEach(eventName => {
         dropArea.classList.add('highlight');
       });
-    
+  
       ['dragleave', 'drop'].forEach(eventName => {
         dropArea.classList.remove('highlight');
       });
-    
+  
       dropArea.addEventListener('drop', handleDrop, false);
-    
+  
       function handleDrop(e) {
         let dt = e.dataTransfer;
         let files = dt.files;
         handleFiles(files);
       }
-    
+  
       function handleFiles(files) {
         files = [...files];
-        files.forEach(previewFile);
+        files.forEach(file => {
+          if (file.type.startsWith('image/')) {
+            previewFile(file);
+          } else {
+            showAlert('Solo se permiten archivos de imagen');
+          }
+        });
       }
-    
+  
       function previewFile(file) {
         let reader = new FileReader();
         reader.readAsDataURL(file);
@@ -187,18 +193,36 @@
           document.querySelector('.img-area').appendChild(img);
         }
       }
-    
+  
       const inputFile = document.getElementById('file');
       inputFile.addEventListener('change', function(e) {
         handleFiles(e.target.files);
       });
-    
+  
       const selectImageBtn = document.querySelector('.select-image');
       selectImageBtn.addEventListener('click', function() {
         inputFile.click();
       });
+  
+      function showAlert(message) {
+        const imgArea = document.querySelector('.img-area');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.position = 'absolute';
+        alertDiv.style.top = '0';
+        alertDiv.style.left = '0';
+        alertDiv.style.width = '100%';
+        alertDiv.textContent = message;
+        imgArea.appendChild(alertDiv);
+  
+        setTimeout(() => {
+          alertDiv.remove();
+        }, 3000);
+      }
     });
-
+  </script>
+  
+  <script>
     document.addEventListener('DOMContentLoaded', () => {
         const formulario = document.getElementById('formularioRegistro');
         const selectNacionalidad = document.getElementById('nacionalidad');
@@ -329,25 +353,6 @@
     
     document.getElementById('email').addEventListener('input', validarEmail);
 
-    function validarDescripcionCurso() {
-        var descripcionInput = document.getElementById("descripcion");
-        var descripcionValue = descripcionInput.value;
-        var regex = /^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑüÜ.,;:'"()!¿?-]+$/;
-
-        // Validamos la longitud de la descripción
-
-        if(!regex.test(descripcionValue)){
-            descripcionInput.setCustomValidity("Descripcion inválido, caracteres no permitidos");
-        }else if (descripcionValue.length>365){
-            descripcionInput.setCustomValidity("Se llego al limite de carateres permitidos");
-        }else{
-            descripcionInput.setCustomValidity("");
-        }
-        descripcionInput.reportValidity();
-    }
-
-    // Llamamos a validarDescripcionCurso en cada cambio en la descripción del curso
-    document.getElementById("descripcion").addEventListener("input", validarDescripcionCurso);
 
     // Nueva funcionalidad para verificar si los campos están vacíos al hacer clic en "Cancelar"
     document.getElementById('cancelButton').addEventListener('click', function() {
@@ -382,7 +387,31 @@
         }
     });
   </script>
-  
+     <script>
+      function validarEntrada(event) {
+          const permitidos = /^[a-zA-Z0-9\s.,;:!?'"()_\-\/áéíóúÁÉÍÓÚ]*$/;
+          const descripcion = document.getElementById('descripcion');
+          const longitudMaxima = 365;
+
+          descripcion.setCustomValidity('');
+          if (event.inputType === "insertText" && !permitidos.test(event.data)) {
+              descripcion.setCustomValidity('Caracteres no permitidos.');
+              descripcion.reportValidity();
+              descripcion.value = descripcion.value.slice(0, -1);
+              return;
+          }
+          // Validar longitud máxima
+          if (descripcion.value.length > longitudMaxima) {
+              descripcion.setCustomValidity('La descripción no puede exceder los 365 caracteres.');
+              descripcion.reportValidity();
+              descripcion.value = descripcion.value.substring(0, longitudMaxima);
+          }
+      }
+      function resetearValidacion() {
+          const descripcion = document.getElementById('descripcion');
+          descripcion.setCustomValidity('');
+      }
+  </script>
   <script>
     
 </script>

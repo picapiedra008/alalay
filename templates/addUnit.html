@@ -6,7 +6,6 @@
     <title>Crear Sección de Curso</title>
     <link rel="stylesheet" href="/static/css/styleUdd.css">
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="stylesheet" href="/static/css/editor.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
@@ -78,9 +77,9 @@
                         </div>
                         <div class="col-md-8 mb-3 row">
                             <div class="col-ms-10">
-                                <input class="form-control" type="text" id="section-name" name="section-name" required maxlength="60">
+                                <input class="form-control" type="text" id="section-name" name="section-name" required pattern="^[a-zA-Z0-9 .,()\"-_]*$" maxlength="60">
                                 <div class="invalid-feedback">
-                                    El título de la unidad debe tener menos de 60 caracteres.
+                                    
                                 </div>
                             </div>
 
@@ -90,7 +89,7 @@
                             <div class="col-ms-10">
                                 <textarea class="form-control" id="section-description" name="section-description" style="resize: none;" rows="5" required maxlength="200" minlength="30"></textarea>
                                 <div class="invalid-feedback" id="description-feedback">
-                                    La descripción debe tener entre 30 y 200 caracteres.
+                                  
                                 </div>
                             </div>
                         </div>
@@ -131,31 +130,55 @@
             document.getElementById("form-container").style.display = "block"; // Muestra el formulario
         });
 
-        function hideForm() {
-            document.getElementById("form-container").style.display = "none"; // Oculta el formulario
-        }
+    function hideForm() {
+    document.getElementById("form-container").style.display = "none"; // Oculta el formulario
+    }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const sectionNameInput = document.getElementById('section-name');
-            const sectionDescriptionTextarea = document.getElementById('section-description');
+    document.addEventListener('DOMContentLoaded', function() {
+    const sectionNameInput = document.getElementById('section-name');
+    const sectionDescriptionTextarea = document.getElementById('section-description');
 
-            sectionNameInput.addEventListener('input', function() {
-                const length = sectionNameInput.value.length;
-                if (length >= 60) {
-                    sectionNameInput.classList.add('is-invalid');
-                } else {
-                    sectionNameInput.classList.remove('is-invalid');
-                }
-            });
+    sectionNameInput.addEventListener('input', function() {
+    const value = sectionNameInput.value;
+    const regex = /^[a-zA-Z0-9 .,()\"-]+/;
+    const length = value.length;
+    const feedbackElement = sectionNameInput.nextElementSibling;
 
-            sectionDescriptionTextarea.addEventListener('input', function() {
-                const length = sectionDescriptionTextarea.value.length;
-                if (length < 30 || length > 200) {
-                    sectionDescriptionTextarea.classList.add('is-invalid');
-                } else {
-                    sectionDescriptionTextarea.classList.remove('is-invalid');
-                }
-            });
+    if (length === 0) {
+        sectionNameInput.classList.add('is-invalid');
+        feedbackElement.textContent = 'Este campo es obligatorio.';
+    } else if (!regex.test(value)) {
+        sectionNameInput.classList.add('is-invalid');
+        feedbackElement.textContent = 'Caracteres no permitidos.';
+    } else if (length < 3 || length >= 60) {
+        sectionNameInput.classList.add('is-invalid');
+        feedbackElement.textContent = 'El nombre de la unidad debe tener entre 3 y 60 caracteres.';
+    } else {
+        sectionNameInput.classList.remove('is-invalid');
+        feedbackElement.textContent = '';
+    }
+});
+
+sectionDescriptionTextarea.addEventListener('input', function() {
+    const value = sectionDescriptionTextarea.value;
+    const regex = /^[a-zA-Z0-9 .,()\"-]+/;
+    const length = value.length;
+    const feedbackElement = sectionDescriptionTextarea.nextElementSibling;
+
+    if (length === 0) {
+        sectionDescriptionTextarea.classList.add('is-invalid');
+        feedbackElement.textContent = 'Este campo es obligatorio.';
+    } else if (!regex.test(value)) {
+        sectionDescriptionTextarea.classList.add('is-invalid');
+        feedbackElement.textContent = 'Caracteres no permitidos.';
+    } else if (length < 30 || length > 200) {
+        sectionDescriptionTextarea.classList.add('is-invalid');
+        feedbackElement.textContent = 'La descripción debe tener entre 30 y 200 caracteres.';
+    } else {
+        sectionDescriptionTextarea.classList.remove('is-invalid');
+        feedbackElement.textContent = '';
+    }
+});
 
             // Añade una validación en tiempo de envío del formulario
             const form = document.getElementById('myForm');
