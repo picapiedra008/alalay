@@ -40,17 +40,19 @@
             <div class="courses-container">
                 {% for curso in cursos %}
                 <div class="course-item d-flex">
-                    <img src="{{ curso[5] }}" alt="Portada del curso"> 
-                    <div class="course-details">
+                    <img src="{{ curso[5] }}" alt="Portada del curso" class="img-thumbnail" style="width: 150px; height: auto;"> 
+                    <div class="course-details ms-3">
                         <h3>{{ curso[1] }}</h3>
                         <p>Nivel: {{ curso[4] }}</p>
                         <p>Duración: {{ curso[2] }}</p>
                         <p>Costo: {{ curso[3] }}$</p>
                     </div>
-                    <div class="course-actions">
+                    <div class="course-actions ms-auto">
                         <button class="btn btn-success">Comprar</button>
                         <a class="btn btn-success" href="{{ url_for('ver_curso', curso_id=curso[0]) }}">Ver Curso</a>
-                        <button class="btn btn-danger">Eliminar</button>
+                        <form action="{{ url_for('eliminar_del_carrito', curso_id=curso[0]) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Eliminar</button>
+                        </form>
                     </div>
                 </div>
                 {% endfor %}
