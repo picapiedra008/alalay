@@ -73,6 +73,15 @@ def abrir_carrito():
     cursor.close()
     return render_template('carrito_cursos.html', cursos=cursos_converted, total=total)
 
+@app.route('/carrito/eliminar/<int:curso_id>', methods=['POST'])
+def eliminar_del_carrito(curso_id):
+    cursor = mysql.connection.cursor()
+    query = "DELETE FROM carrito WHERE IDCURSO = %s"
+    cursor.execute(query, (curso_id,))
+    mysql.connection.commit()
+    cursor.close()
+    flash('Curso eliminado del carrito exitosamente.', 'success')
+    return redirect(url_for('abrir_carrito'))
 
 
 
