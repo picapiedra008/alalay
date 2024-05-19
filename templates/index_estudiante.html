@@ -73,7 +73,7 @@
                     <button type="submit" class="btn btn-success" style="border-radius: 100%;">
                         <img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;">
                     </button>
-                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-secondary" style="border-radius: 25px;" onclick="limpiarFormulario()">Limpiar</a>
+                    <a href="{{ url_for('listar_cursos') }}" class="btn btn-success" style="border-radius: 25px;" onclick="limpiarFormulario()">Limpiar</a>
                     <a href="/carrito" class="btn btn-success">
                         <img src="{{ url_for('static', filename='archivos/carrito.png') }}" alt="Carrito" style="width: 20px;">
                         </a>
@@ -165,47 +165,53 @@
         <script src="https://unpkg.com/tippy.js@6"></script>
         
         <script>
-document.addEventListener("DOMContentLoaded", function() {
-    tippy('#carritoBtn', {
-        allowHTML: true,
-        trigger: 'mouseenter click',
-        interactive: true,
-        hideOnClick: false,
-        onShow(instance) {
-            const descripcion = instance.reference.dataset.descripcion;
-            const cursoId = instance.reference.dataset.cursoId;
-            instance.setContent(`<p>${descripcion}</p><button class="btn btn-success" id="agregarBtn" data-curso-id="${cursoId}">Añadir al carrito</button>`);
-
-            const agregarBtn = instance.popper.querySelector('#agregarBtn');
-            agregarBtn.addEventListener('click', (event) => {
-                event.stopPropagation();
-
-                const cursoId = agregarBtn.dataset.cursoId;
-
-                fetch('/agregar_al_carrito', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: `curso_id=${cursoId}`
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        agregarBtn.textContent = 'Ver carrito';
-                        instance.popper.classList.add('tippy-persist');
-                    } else {
-                        alert(data.message);
+            document.addEventListener("DOMContentLoaded", function() {
+                tippy('#carritoBtn', {
+                    allowHTML: true,
+                    trigger: 'mouseenter click',
+                    interactive: true,
+                    hideOnClick: false,
+                    onShow(instance) {
+                        const descripcion = instance.reference.dataset.descripcion;
+                        const cursoId = instance.reference.dataset.cursoId;
+                        instance.setContent(`<p>${descripcion}</p><button class="btn btn-success" id="agregarBtn" data-curso-id="${cursoId}">Añadir al carrito</button>`);
+            
+                        const agregarBtn = instance.popper.querySelector('#agregarBtn');
+                        agregarBtn.addEventListener('click', (event) => {
+                            event.stopPropagation();
+            
+                            const cursoId = agregarBtn.dataset.cursoId;
+            
+                            fetch('/agregar_al_carrito', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: `curso_id=${cursoId}`
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    agregarBtn.textContent = 'Ver carrito';
+                                    instance.popper.classList.add('tippy-persist');
+                                    
+                                    // Redirigir a /carrito después de un breve retraso
+                                    setTimeout(() => {
+                                        window.location.href = '/carrito';
+                                    }, 500); // 500 ms de retraso antes de redirigir
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                            });
+                        });
                     }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
                 });
             });
-        }
-    });
-});
-        </script>
+            </script>
+            
         
         
 

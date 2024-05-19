@@ -53,10 +53,10 @@ def abrir_carrito():
     cursor = mysql.connection.cursor()
     # Consulta SQL para obtener todos los cursos en el carrito
     query = """
-    SELECT curso.IDCURSO, curso.NOMCURSO, curso.CARGAHORARIAC, curso.COSTOC, nivel.NOMNIVEL
+     SELECT curso.IDCURSO, curso.NOMCURSO, curso.CARGAHORARIAC, curso.COSTOC, nivel.NOMNIVEL, curso.PORTADAC
     FROM carrito
     JOIN curso ON carrito.IDCURSO = curso.IDCURSO
-    JOIN nivel ON curso.CODNIVEL = nivel.CODNIVEL
+    JOIN nivel ON curso.CODNIVEL = nivel.CODNIVEL;
     """
     cursor.execute(query)
     cursos = cursor.fetchall()
@@ -65,13 +65,14 @@ def abrir_carrito():
     cursos_converted = []
     total = 0
     for curso in cursos:
-        idCurso, nombre, duracion, costo, nivel = curso
+        idCurso, nombre, duracion, costo, nivel, portada = curso
         costo = float(costo)
-        cursos_converted.append((idCurso, nombre, duracion, costo, nivel))
+        cursos_converted.append((idCurso, nombre, duracion, costo, nivel, portada))
         total += costo
     
     cursor.close()
     return render_template('carrito_cursos.html', cursos=cursos_converted, total=total)
+
 
 
 

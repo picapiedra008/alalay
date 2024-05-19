@@ -115,7 +115,7 @@
         document.getElementById("carrito-btn").addEventListener("click", function(event) {
             event.preventDefault();
             const cursoId = this.getAttribute("data-curso-id");
-
+        
             fetch('/agregar_al_carrito', {
                 method: 'POST',
                 headers: {
@@ -127,6 +127,8 @@
             .then(data => {
                 if (data.success) {
                     document.getElementById("carrito-text").innerText = "Ir al carrito";
+                    // Redirigir a /carrito
+                    window.location.href = '/carrito';
                 } else {
                     alert(data.message);
                 }
@@ -135,6 +137,7 @@
                 console.error('Error:', error);
             });
         });
-    </script>
+        </script>
+        
 </body>
 </html>
