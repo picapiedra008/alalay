@@ -128,7 +128,7 @@
                 if (data.success) {
                     document.getElementById("carrito-text").innerText = "Ir al carrito";
                     // Redirigir a /carrito
-                    window.location.href = '/carrito';
+                    window.location.href = '/carrito_cursos';
                 } else {
                     alert(data.message);
                 }
@@ -137,6 +137,13 @@
                 console.error('Error:', error);
             });
         });
+        </script>
+
+        
+        <script> //Cambiar el texto del botón a "Ir al carrito"
+            document.getElementById("carrito-btn").addEventListener("click", function() {
+             document.getElementById("carrito-text").innerText = "Ir al carrito";
+             });
         </script>
         
 </body>
