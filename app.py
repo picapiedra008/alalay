@@ -48,6 +48,46 @@ def contenido():
     cursor.close()
     return render_template('tablacontenido.html', datos_contenido=datos_contenido)
 
+@app.route('/carrito')
+def abrir_carrito():
+    cursor = mysql.connection.cursor()
+    # Consulta SQL para obtener todos los cursos en el carrito
+    query = """
+    SELECT curso.IDCURSO, curso.NOMCURSO, curso.CARGAHORARIAC, curso.COSTOC, nivel.NOMNIVEL
+    FROM carrito
+    JOIN curso ON carrito.IDCURSO = curso.IDCURSO
+    JOIN nivel ON curso.CODNIVEL = nivel.CODNIVEL
+    """
+    cursor.execute(query)
+    cursos = cursor.fetchall()
+    
+    # Convertir precios a números y calcular el total
+    cursos_converted = []
+    total = 0
+    for curso in cursos:
+        idCurso, nombre, duracion, costo, nivel = curso
+        costo = float(costo)
+        cursos_converted.append((idCurso, nombre, duracion, costo, nivel))
+        total += costo
+    
+    cursor.close()
+    return render_template('carrito_cursos.html', cursos=cursos_converted, total=total)
+
+
+
+@app.route('/agregar_al_carrito', methods=['POST'])
+def agregar_al_carrito():
+    curso_id = request.form.get('curso_id')
+
+    if curso_id:
+        cursor = mysql.connection.cursor()
+        cursor.execute("INSERT INTO carrito (id, IDCURSO) VALUES (NULL, %s)", (curso_id,))
+        mysql.connection.commit()
+        cursor.close()
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'message': 'Faltan datos'}), 400
+    
 @app.route('/upload_editar',methods=['POST','GET'])
 def upload_editar():
     if request.method=='POST':
