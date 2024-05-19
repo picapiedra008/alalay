@@ -1,0 +1,54 @@
+.course-item {
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .course-item img {
+    max-width: 100px;
+    margin-right: 15px;
+  }
+  
+  .course-details {
+    flex-grow: 1;
+  }
+  
+  .course-actions button,
+  .course-actions a {
+    width: 100%;
+    margin-top: 5px;
+  }
+  
+  .btn-block {
+    display: block;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  .total-section {
+    text-align: right;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  
+  .pay-button {
+    width: 100%;
+    font-size: 1.5em;
+  }
+  
+  .cart-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .courses-container {
+    flex-grow: 1;
+    margin-right: 20px;
+  }
+  
+  .summary-container {
+    flex-shrink: 0;
+    width: 300px;
+  }
