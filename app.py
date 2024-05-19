@@ -128,7 +128,6 @@ def contenido():
     cursor.close()
     return render_template('tablacontenido.html', datos_contenido=datos_contenido)
 
-
 @app.route('/carrito')
 def abrir_carrito():
     cursor = mysql.connection.cursor()
