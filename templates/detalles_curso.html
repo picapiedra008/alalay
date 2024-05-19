@@ -114,13 +114,27 @@
             </a>
         </div>
     </div>
-    <div style="display: flex; justify-content:flex-end; position: relative; height: 50px; width: 100%;">
-        <a href="{{url_for('listar_cursos')}}" class="btn btn-success" style="width: 200px; height: 45px;  border-radius: 15px; display: flex; position: absolute; right: 100px; justify-content: center; align-items: center; text-decoration: none; color: white;">
-          Volver
+    <div style="display: flex; justify-content: space-between; align-items: center; height: 50px; width: 100%;">
+        <a id=carrito-btn class="btn btn-success" style="width: 180px; height: 45px; border-radius: 15px; text-decoration: none; color: white; display: flex; align-items: center;">
+            <img id="carrito-img" src="{{url_for('static', filename='archivos/carrito.png')}}" alt="Carrito" style="height: 30px; margin-right: 10px;">
+            <span id="carrito-text">Añadir al carrito</span>
+        </a>
+        <a href="{{url_for('listar_cursos')}}" class="btn btn-success" style="width: 100px; height: 40px; border-radius: 10px; text-decoration: none; color: white;">
+            Volver
         </a>
     </div>
+    
+    
 
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.getElementById("carrito-btn").addEventListener("click", function() {
+            // Cambiar el texto del botón a "Ir al carrito"
+            document.getElementById("carrito-text").innerText = "Ir al carrito";
+        });
+    </script>
+
 </body>
 </html>
