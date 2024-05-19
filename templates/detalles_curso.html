@@ -15,13 +15,12 @@
             margin-top: 0;
             background-color: #065e06;
             overflow: hidden;
-            display: flex; /* Cambiado de display: contents a display: flex */
-            align-items: center; /* Alinea verticalmente los elementos */
-            box-sizing: border-box; /* Asegura que el relleno se incluya en el ancho total */
-            height: 70px; /* Altura deseada */
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+            height: 70px;
         }
-
-         .nav-bar a {
+        .nav-bar a {
             float: left;
             color: rgb(245, 236, 236);
             text-align: center;
@@ -30,13 +29,11 @@
             border: #34b634;
             font-size: x-large;
             border-color: #ddd;
-         }
-
+        }
         .nav-bar a:hover {
             background-color: #ddd;
             color: black;
         }
-
         .container {
             background-color: #f2f5f3;
             padding: 10px;
@@ -44,23 +41,15 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        
-
-        
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <!-- Brand -->
             <a class="navbar-brand fs-2" href="#">Campus alalay</a>
-            
-            <!-- Toggler for mobile view -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
-            <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
@@ -73,7 +62,6 @@
                         <a class="nav-link fs-3" href="#">Comunidad</a>
                     </li>
                 </ul>
-                <!-- User Icon -->
                 <a href="{{ url_for('index') }}" class="d-flex">
                     <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
                 </a>
@@ -82,59 +70,71 @@
     </nav>
      
     <div class="container">
-
-    <div class="row">
-        <div class="d-flex justify-content-between align-items-center col-md-1 ">
-            <a href="{{ url_for('ver_curso', curso_id=curso_anterior_id) if curso_anterior_id else '#' }}" class="btn btn-lg" style=" color: #333;">
-                &lt;
-            </a>
-        </div>
-
-        <div class="card mb-3 p-3 col-md-10" style="border-radius: 10px;overflow: hidden;">
-            <div class="row g-0 ">
-                <div class="col-md-6 d-flex justify-content-between align-items-center">
-                    <img src="{{curso[0][7]}}" class="img-fluid rounded-start" alt="imagen.png" style=" width: 100%; height: 468px; border-radius: 15px 3px 3px 15px;">
-                </div>
-                <div class="col-md-6">                    
-                    <div class="card-body">
-                      <h1 class="card-title">{{curso[0][3]}}</h1>
-                      <p>Categoria: {{ curso[0][11] }}</p> 
-                       <p> Nivel: {{ curso[0][9] }}</p>
-                       <p class="card-text" >Duración: {{ curso[0][4]}} horas</p>
-                      <p class="card-text" >Costo: {{ curso[0][5] }}$</p>
-                      <p class="card-text" >Descripción: {{ curso[0][6] }}</p>
+        <div class="row">
+            <div class="d-flex justify-content-between align-items-center col-md-1">
+                <a href="{{ url_for('ver_curso', curso_id=curso_anterior_id) if curso_anterior_id else '#' }}" class="btn btn-lg" style="color: #333;">
+                    &lt;
+                </a>
+            </div>
+            <div class="card mb-3 p-3 col-md-10" style="border-radius: 10px;overflow: hidden;">
+                <div class="row g-0">
+                    <div class="col-md-6 d-flex justify-content-between align-items-center">
+                        <img src="{{ curso[0][7] }}" class="img-fluid rounded-start" alt="imagen.png" style="width: 100%; height: 468px; border-radius: 15px 3px 3px 15px;">
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h1 class="card-title">{{ curso[0][3] }}</h1>
+                            <p>Categoria: {{ curso[0][11] }}</p>
+                            <p>Nivel: {{ curso[0][9] }}</p>
+                            <p class="card-text">Duración: {{ curso[0][4] }} horas</p>
+                            <p class="card-text">Costo: {{ curso[0][5] }}$</p>
+                            <p class="card-text">Descripción: {{ curso[0][6] }}</p>
+                        </div>
                     </div>
                 </div>
-                
+            </div>
+            <div class="d-flex justify-content-between align-items-center col-md-1">
+                <a href="{{ url_for('ver_curso', curso_id=curso_siguiente_id) if curso_siguiente_id else '#' }}" class="btn btn-lg" style="color: #333;">
+                    &gt;
+                </a>
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center  col-md-1 ">
-            <a href="{{ url_for('ver_curso', curso_id=curso_siguiente_id) if curso_siguiente_id else '#' }}" class="btn btn-lg" style="color: #333;">
-                 &gt;
+        <div style="display: flex; justify-content: space-between; align-items: center; height: 50px; width: 100%;">
+            <a id="carrito-btn" class="btn btn-success" style="width: 180px; height: 45px; border-radius: 15px; text-decoration: none; color: white; display: flex; align-items: center;" data-curso-id="{{ curso[0][0] }}">
+                <img id="carrito-img" src="{{ url_for('static', filename='archivos/carrito.png') }}" alt="Carrito" style="height: 30px; margin-right: 10px;">
+                <span id="carrito-text">Añadir al carrito</span>
+            </a>
+            <a href="{{ url_for('listar_cursos') }}" class="btn btn-success" style="width: 100px; height: 40px; border-radius: 10px; text-decoration: none; color: white;">
+                Volver
             </a>
         </div>
     </div>
-    <div style="display: flex; justify-content: space-between; align-items: center; height: 50px; width: 100%;">
-        <a id=carrito-btn class="btn btn-success" style="width: 180px; height: 45px; border-radius: 15px; text-decoration: none; color: white; display: flex; align-items: center;">
-            <img id="carrito-img" src="{{url_for('static', filename='archivos/carrito.png')}}" alt="Carrito" style="height: 30px; margin-right: 10px;">
-            <span id="carrito-text">Añadir al carrito</span>
-        </a>
-        <a href="{{url_for('listar_cursos')}}" class="btn btn-success" style="width: 100px; height: 40px; border-radius: 10px; text-decoration: none; color: white;">
-            Volver
-        </a>
-    </div>
-    
-    
 
-    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
-        document.getElementById("carrito-btn").addEventListener("click", function() {
-            // Cambiar el texto del botón a "Ir al carrito"
-            document.getElementById("carrito-text").innerText = "Ir al carrito";
+        document.getElementById("carrito-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            const cursoId = this.getAttribute("data-curso-id");
+
+            fetch('/agregar_al_carrito', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `curso_id=${cursoId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("carrito-text").innerText = "Ir al carrito";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         });
     </script>
-
 </body>
 </html>
