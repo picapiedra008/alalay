@@ -1,5 +1,4 @@
-
-
+/* Estilos básicos */
 .left-section {
     flex: 1;
     padding-right: 20px;
@@ -15,12 +14,18 @@ h1, h2, h3 {
 
 .imagen-circular {
     text-align: center;
-    margin-bottom: 20px;
+    height: 100%;
+    width: 100%;
+    border-radius: 100%;
+    object-fit: cover;
 }
 
 .imagen-circular img {
-    border-radius: 50%;
+    height: 100%;
+    width: 80%;
+    border-radius: 100%;
     border: 2px solid #ccc;
+    object-fit: cover;
 }
 
 label {
@@ -40,12 +45,7 @@ select {
 }
 
 select {
-    width: calc(100% - 20px);
-    padding: 8px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid #e0f0e7;
-    box-sizing: border-box;
+    padding-right: 30px;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -53,7 +53,6 @@ select {
     background-repeat: no-repeat;
     background-position: right 10px top 50%;
     background-size: 16px;
-    padding-right: 30px;
 }
 
 #drop_zone_container {
@@ -86,28 +85,26 @@ select {
     margin-top: 20px;
 }
 
-
 button {
-    font-size: 18px; /*Cambia el tamaño de la letra del boton*/
+    font-size: 18px; /*Cambia el tamaño de la letra del botón*/
 }
 
 .btn-cancelar {
     display: inline-block;
-    padding: 8px 20px;
+    padding: 10px 20px;
     text-align: center;
     text-decoration: none;
     background-color: #77e494;
     color: #fff;
     border: none;
     border-radius: 5px;
-    padding: 10px 20px;
     cursor: pointer;
     margin-right: 10px; /* Espacio entre los botones */
     font-size: 18px; /* Tamaño de letra aumentado */
 }
 
 .btn-cancelar:hover {
-background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
+    background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
 }
 
 .error-message {
@@ -136,7 +133,6 @@ background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
     padding: 30px;
     border-radius: 30px;
     border: 2px dashed #999;
-
 }
 
 .img-area {
@@ -228,10 +224,11 @@ background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
 .select-image:hover {
     background: var(--dark-blue);
 }
+
 .highlight {
-	border-color: blue;
-	background-color: rgba(0, 0, 255, 0.3);
-  }
+    border-color: blue;
+    background-color: rgba(0, 0, 255, 0.3);
+}
 
 /* Media Queries para ajustes específicos en tamaños de pantalla más pequeños */
 @media (max-width: 768px) {
@@ -239,10 +236,10 @@ background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
         padding: 20px;
     }
 
-    .img-area, .select-image {
+    .img-area,
+    .select-image {
         width: 100%;
         max-width: 360px; /* Ajustar según el espacio disponible */
-        left: 0;
     }
 
     .img-area .icon {
