@@ -64,7 +64,7 @@
                         {% endfor %}
                     </select>
                 </div>
-                
+        
                 <div class="col-md-3 col-sm-6" >
                     <input type="text" style="border-radius: 25px;" class="form-control" name="busqueda" placeholder="Qué quieres aprender?" value="{{ busqueda }}">
                 </div>
@@ -74,6 +74,9 @@
                         <img src="{{ url_for('static', filename='archivos/search.png') }}" alt="Buscar" style="width: 20px;">
                     </button>
                     <a href="{{ url_for('listar_cursos') }}" class="btn btn-secondary" style="border-radius: 25px;" onclick="limpiarFormulario()">Limpiar</a>
+                    <a href="/carrito" class="btn btn-success">
+                        <img src="{{ url_for('static', filename='archivos/carrito.png') }}" alt="Carrito" style="width: 20px;">
+                        </a>
                 </div>
             </div>
         </form>
@@ -96,8 +99,13 @@
                   <p>Nivel: {{ curso[3] }}</p>
                   <p>Duración: {{ curso[4] }} horas</p>
                   <p>Costo: {{ curso[5] }}$</p>
-                  <div class="mt-auto">
+                  <div class="mt-auto d-flex justify-content-between">
                     <a href="{{ url_for('ver_curso', curso_id=curso[0]) }}" class="btn btn-success btn-block"style="border-radius: 10px;" >Ver Curso</a>
+                    <div class="mt-auto d-flex justify-content-between">
+                        <a href="#" class="btn btn-success" style="border-radius: 10px;" id="carritoBtn" data-descripcion="{{ curso[6] }}" data-curso-id="{{ curso[0] }}">
+                            <img src="{{ url_for('static', filename='archivos/carrito.png') }}" alt="Carrito" style="width: 20px;">
+                        </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -124,7 +132,6 @@
             document.addEventListener("DOMContentLoaded", function() {
                 const categoriaSelect = document.getElementById('categoria');
                 const nivelSelect = document.getElementById('nivel');
-        
                 // Función para enviar el formulario con los filtros seleccionados
                 const enviarFormulario = () => {
                     const categoriaSeleccionada = categoriaSelect.value;
@@ -133,7 +140,6 @@
                     document.getElementById('nivelHidden').value = nivelSeleccionado;
                     document.getElementById('filtroForm').submit();
                 };
-        
                 // Evento para detectar cambios en el selector de categoría
                 categoriaSelect.addEventListener('change', () => {
                     enviarFormulario();
@@ -146,7 +152,63 @@
             });
         </script>
         
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                var tooltipList = tooltips.map(function (tooltipEl) {
+                    return new bootstrap.Tooltip(tooltipEl);
+                });
+            });
+        </script>
+
+        <script src="https://unpkg.com/@popperjs/core@2"></script>
+        <script src="https://unpkg.com/tippy.js@6"></script>
         
+        <script>
+document.addEventListener("DOMContentLoaded", function() {
+    tippy('#carritoBtn', {
+        allowHTML: true,
+        trigger: 'mouseenter click',
+        interactive: true,
+        hideOnClick: false,
+        onShow(instance) {
+            const descripcion = instance.reference.dataset.descripcion;
+            const cursoId = instance.reference.dataset.cursoId;
+            instance.setContent(`<p>${descripcion}</p><button class="btn btn-success" id="agregarBtn" data-curso-id="${cursoId}">Añadir al carrito</button>`);
+
+            const agregarBtn = instance.popper.querySelector('#agregarBtn');
+            agregarBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+
+                const cursoId = agregarBtn.dataset.cursoId;
+
+                fetch('/agregar_al_carrito', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `curso_id=${cursoId}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        agregarBtn.textContent = 'Ver carrito';
+                        instance.popper.classList.add('tippy-persist');
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        }
+    });
+});
+        </script>
+        
+        
+
         <form id="filtroForm" action="{{ url_for('listar_cursos') }}" method="GET" style="display: none;">
             <input type="hidden" name="categoria" id="categoriaHidden">
             <input type="hidden" name="nivel" id="nivelHidden">
