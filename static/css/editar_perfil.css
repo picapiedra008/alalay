@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 
 
-=======
-/* Estilos básicos */
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 .left-section {
     flex: 1;
     padding-right: 20px;
@@ -19,27 +15,12 @@ h1, h2, h3 {
 
 .imagen-circular {
     text-align: center;
-<<<<<<< HEAD
     margin-bottom: 20px;
 }
 
 .imagen-circular img {
     border-radius: 50%;
     border: 2px solid #ccc;
-=======
-    height: 100%;
-    width: 100%;
-    border-radius: 100%;
-    object-fit: cover;
-}
-
-.imagen-circular img {
-    height: 100%;
-    width: 80%;
-    border-radius: 100%;
-    border: 2px solid #ccc;
-    object-fit: cover;
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 }
 
 label {
@@ -59,16 +40,12 @@ select {
 }
 
 select {
-<<<<<<< HEAD
     width: calc(100% - 20px);
     padding: 8px;
     margin-bottom: 10px;
     border-radius: 5px;
     border: 1px solid #e0f0e7;
     box-sizing: border-box;
-=======
-    padding-right: 30px;
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -76,10 +53,7 @@ select {
     background-repeat: no-repeat;
     background-position: right 10px top 50%;
     background-size: 16px;
-<<<<<<< HEAD
     padding-right: 30px;
-=======
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 }
 
 #drop_zone_container {
@@ -112,44 +86,28 @@ select {
     margin-top: 20px;
 }
 
-<<<<<<< HEAD
 
 button {
     font-size: 18px; /*Cambia el tamaño de la letra del boton*/
-=======
-button {
-    font-size: 18px; /*Cambia el tamaño de la letra del botón*/
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 }
 
 .btn-cancelar {
     display: inline-block;
-<<<<<<< HEAD
     padding: 8px 20px;
-=======
-    padding: 10px 20px;
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
     text-align: center;
     text-decoration: none;
     background-color: #77e494;
     color: #fff;
     border: none;
     border-radius: 5px;
-<<<<<<< HEAD
     padding: 10px 20px;
-=======
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
     cursor: pointer;
     margin-right: 10px; /* Espacio entre los botones */
     font-size: 18px; /* Tamaño de letra aumentado */
 }
 
 .btn-cancelar:hover {
-<<<<<<< HEAD
 background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
-=======
-    background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 }
 
 .error-message {
@@ -178,10 +136,7 @@ background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
     padding: 30px;
     border-radius: 30px;
     border: 2px dashed #999;
-<<<<<<< HEAD
 
-=======
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 }
 
 .img-area {
@@ -273,18 +228,10 @@ background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
 .select-image:hover {
     background: var(--dark-blue);
 }
-<<<<<<< HEAD
 .highlight {
 	border-color: blue;
 	background-color: rgba(0, 0, 255, 0.3);
   }
-=======
-
-.highlight {
-    border-color: blue;
-    background-color: rgba(0, 0, 255, 0.3);
-}
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
 
 /* Media Queries para ajustes específicos en tamaños de pantalla más pequeños */
 @media (max-width: 768px) {
@@ -292,17 +239,10 @@ background-color: #71e271; /* Color de fondo cuando se pasa el cursor */
         padding: 20px;
     }
 
-<<<<<<< HEAD
     .img-area, .select-image {
         width: 100%;
         max-width: 360px; /* Ajustar según el espacio disponible */
         left: 0;
-=======
-    .img-area,
-    .select-image {
-        width: 100%;
-        max-width: 360px; /* Ajustar según el espacio disponible */
->>>>>>> a8ee83b5177162045e7e04d68c01ea237026c044
     }
 
     .img-area .icon {
