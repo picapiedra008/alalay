@@ -184,3 +184,7 @@ body {
 .pay-button {
   width: 100%;
 }
+.swal2-small {
+  width: 300px !important; /* Ancho personalizado */
+  height: 300px !important; /* Altura ajustada automáticamente */
+}
