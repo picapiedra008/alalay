@@ -105,3 +105,29 @@ height: 70px; /* Altura deseada */
     width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
     border-radius: 15px 15px 0 0;
 }
+/* Define la clase para el tooltip personalizado */
+.tippy-box[data-theme~='custom'] {
+    background-color: #0d3d26; /* Tonalidad clara de verde */
+    color: rgb(240, 243, 242); /* Color del texto */
+}
+
+.tippy-box[data-theme~='custom'] .tippy-content {
+    padding: 10px; /* Padding personalizado */
+}
+.message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1000;
+}
+.message.success {
+    background-color: #28a745;
+    color: white;
+}
+.message.error {
+    background-color: #dc3545;
+    color: white;
+}
