@@ -91,12 +91,18 @@ def agregar_al_carrito():
 
     if curso_id:
         cursor = mysql.connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM carrito WHERE IDCURSO = %s", (curso_id,))
+        if cursor.fetchone()[0] > 0:
+            cursor.close()
+            return jsonify({'success': False, 'message': 'El curso ya está en el carrito'}), 400
+
         cursor.execute("INSERT INTO carrito (id, IDCURSO) VALUES (NULL, %s)", (curso_id,))
         mysql.connection.commit()
         cursor.close()
         return jsonify({'success': True})
     else:
         return jsonify({'success': False, 'message': 'Faltan datos'}), 400
+
     
 @app.route('/upload_editar',methods=['POST','GET'])
 def upload_editar():
@@ -238,6 +244,17 @@ def ver_curso_docente(curso_id):
     curso = cursor.fetchall()
     if curso:
         return render_template('ver_curso.html', curso=curso)
+    else:
+        return "Curso no encontrado", 404
+    
+@app.route('/cursoCarrito/<int:curso_id>')
+def verCurso(curso_id):
+    cursor = mysql.connection.cursor()
+    query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
+    cursor.execute(query, (curso_id,))
+    curso = cursor.fetchall()
+    if curso:
+        return render_template('detallesCursoCarrito.html', curso=curso)
     else:
         return "Curso no encontrado", 404
     
