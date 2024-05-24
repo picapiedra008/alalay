@@ -160,7 +160,9 @@
                                 const carritoIcon = instance.reference.querySelector('img');
                                 carritoIcon.style.filter = 'invert(0%)';
                             } else {
+                                if(agregarBtn.textContent !== 'Ver carrito') {
                                 showMessage('error', data.message);
+                            }
                             }
                         })
                             .catch(error => {
@@ -177,10 +179,6 @@
                 });
             });
         </script>
-        
-
-            
-        
 
         <form id="filtroForm" action="{{ url_for('listar_cursos') }}" method="GET" style="display: none;">
             <input type="hidden" name="categoria" id="categoriaHidden">
@@ -189,3 +187,4 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script> 
 </body>
 </html>
+
