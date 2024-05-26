@@ -4,9 +4,28 @@
     padding: 10px;
     margin: 10px 0;
     background-color: #f9f9f9;
+    max-width: 800px; /* Ajusta el valor según tus necesidades */
+    word-wrap: break-word;
 }
-
-
+.section-box h3,
+.section-box p {
+  overflow-wrap: break-word;
+}
+.section-box h3,
+.section-box p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.custom-alert {
+    position: absolute;
+    background-color: #fad5d5;
+    color: #741720;
+    padding: 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
 #form-container {
     margin: 0;
     padding: 20px;

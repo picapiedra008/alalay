@@ -240,3 +240,22 @@ body {
     font-size: 1.5em; /* Tamaño del icono */
     color: #7e7c7c;
 }
+
+
+.logo-image {
+    width: 150px;
+    height: auto;
+    margin-bottom: 15px;
+    border-radius: 15%; /* Ligeramente redondeado */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: bounce 3s ease-in-out infinite; /* Movimiento cada 3 segundos */
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}

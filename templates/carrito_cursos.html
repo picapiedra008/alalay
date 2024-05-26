@@ -6,13 +6,12 @@
     <title>Campus Alalay - Carrito</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="static/css/index.css">
     <link rel="stylesheet" href="static/css/carrito.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-success">
         <div class="container-fluid">
-            <a class="navbar-brand fs-2" href="#">Campus Alalay</a>
+            <a class="navbar-brand fs-2" href="/landing">Campus Alalay</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -22,7 +21,7 @@
                         <a class="nav-link fs-3" aria-current="page" href="#">Inicio</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fs-3" href="#">Cursos</a>
+                        <a class="nav-link fs-3" href="/listar">Cursos</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fs-3" href="#">Comunidad</a>
@@ -32,30 +31,34 @@
         </div>
     </nav>
 
-    <div class="container mt-5">
-        <h1>Carrito</h1>
+    <div class="container mt-3">
+        <div class="d-flex align-items-center">
+            <img src="static/archivos/carrito.png" alt="Carrito" class="header-img">
+            <h1 class="ms-3">Carrito</h1>
+        </div>        
         <p>{{ cursos|length }} cursos en el carrito</p>
-
-        <div class="cart-container">
-            <div class="courses-container">
+        <div class="d-flex">
+            <div class="courses-container mt-1 flex-grow-1">
                 {% for curso in cursos %}
                 <div class="course-item d-flex">
-                    <img src="{{ curso[5] }}" alt="Portada del curso"> 
-                    <div class="course-details">
+                    <img src="{{ curso[5] }}" alt="Portada del curso" class="img-thumbnail">
+                    <div class="course-details ms-3">
                         <h3>{{ curso[1] }}</h3>
                         <p>Nivel: {{ curso[4] }}</p>
                         <p>Duración: {{ curso[2] }}</p>
                         <p>Costo: {{ curso[3] }}$</p>
                     </div>
-                    <div class="course-actions">
+                    <div class="course-actions ms-auto">
                         <button class="btn btn-success">Comprar</button>
-                        <a class="btn btn-success" href="{{ url_for('ver_curso', curso_id=curso[0]) }}">Ver Curso</a>
-                        <button class="btn btn-danger">Eliminar</button>
+                        <a class="btn btn-success" href="{{ url_for('verCurso', curso_id=curso[0]) }}">Ver Curso</a>
+                        <form action="{{ url_for('eliminar_del_carrito', curso_id=curso[0]) }}" method="post" style="display:inline;">
+                            <button type="button" class="btn btn-danger" onclick="confirmarEliminacion({{ curso[0] }})">Eliminar</button>
+                        </form>
+                        
                     </div>
                 </div>
                 {% endfor %}
             </div>
-
             <div class="summary-container">
                 <div class="total-section">
                     Total: {{ total }}$
@@ -64,7 +67,42 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
+        function confirmarEliminacion(cursoId) {
+            // Mostrar el modal de SweetAlert2 con un tamaño personalizado
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "Esta acción eliminará el curso del carrito.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#28a745',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar',
+                customClass: {
+                    popup: 'swal2-small' // Clase CSS para definir el tamaño del modal
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "/carrito/eliminar/" + cursoId, true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            // Recargar la página después de eliminar el curso
+                            location.reload();
+                        }
+                    };
+                    xhr.send();
+                }
+            });
+        }
+    </script>
+    
+
+    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXlXpr46n9aN2QER4rOGv0dAW3J9jybmY/4fydsPYYjUhRg34Wr7J8K8IW6E" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGkQ3wK8gav0K3/Jr74PIKvlx1SMFY9I3qYhD7z8l5e6zxrHj5PJlfw2LG9" crossorigin="anonymous"></script>
 </body>

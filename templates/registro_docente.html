@@ -1,87 +1,87 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <title>REGISTRO DE DOCENTES</title>
     <link rel="stylesheet" href="/static/css/stilos_docente.css">
     <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
-   
 </head>
 <body>
 
-  <div class="d-flex   justify-content-center align-items-center" style="margin: 0; padding: 0;">
-     <div class="container col-md-7  p-5  m-3 shadow-lg" style=" border-radius: 15px;" >      
-       <form id="formularioRegistro" name="formularioRegistro" class="row g-4"  method="post" >
+  <div class="d-flex justify-content-center align-items-center" style="margin: 0; padding: 0;">
+     <div class="container col-md-7 p-5 m-3 shadow-lg" style="border-radius: 15px;">      
+       <form id="formularioRegistro" name="formularioRegistro" class="row g-4" method="post">
         
         <div class="text-center">
             <h1 class="my-custom-heading">Registrar Docente</h1>
         </div>
        
         <div class="col-md-6">
-        <label for="nombre" class="form-label">Nombre Completo: <span style="color: brown;">*</span></label>
-        <input class="form-control" type="text" id="nombre" name="nombre"  minlength="3" maxlength="60" required>
-       </div>
+            <label for="nombre" class="form-label">Nombre Completo: <span style="color: brown;">*</span></label>
+            <input class="form-control" type="text" id="nombre" name="nombre" minlength="3" maxlength="60" required>
+        </div>
         
        <div class="col-md-6">
-        <label for="especialidad" class="form-label">Especialidad:<span style="color: brown;">*</span></label>
-        <input type="text" id="especialidad" class="form-control" name="especialidad" required>
-      </div>
+            <label for="especialidad" class="form-label">Especialidad:<span style="color: brown;">*</span></label>
+            <input type="text" id="especialidad" class="form-control" name="especialidad" required>
+        </div>
       
        <div class="col-md-6">
-        <label for="email" class="form-label">Correo Electrónico:<span style="color: brown;">*</span></label>
-        <input type="email" id="email" class="form-control" name="email" required>
-        <div id="titulo-alert"></div>
+            <label for="email" class="form-label">Correo Electrónico:<span style="color: brown;">*</span></label>
+            <input type="email" id="email" class="form-control" name="email" required>
+            <div id="titulo-alert"></div>
        </div>
       
        <div class="col-md-6">
-        <label for="nacionalidad" class="form-label">Nacionalidad:<span style="color: brown;">*</span></label>
-        <select class="form-select" id="nacionalidad" name="nacionalidad" required>
-          <option value="">Sin Asignar</option>
-          <option value="bolivia">Bolivia</option>
-          <option value="argentina">Argentina</option>
-          <option value="peru">Peru</option>
-        </select>
+            <label for="nacionalidad" class="form-label">Nacionalidad:<span style="color: brown;">*</span></label>
+            <select class="form-select" id="nacionalidad" name="nacionalidad" required>
+              <option value="">Sin Asignar</option>
+              <option value="bolivia">Bolivia</option>
+              <option value="argentina">Argentina</option>
+              <option value="peru">Peru</option>
+            </select>
        </div>
              
-         <div class="col-md-6">
-            <label for="contrasena" class="form-label">Contraseña:<span style="color: brown;">*</span></label>
-             <input type="password" class="form-control" id="contrasena" name="contrasena"  required>
-         </div> 
+       <div class="col-md-6 position-relative">
+        <label for="contrasena" class="form-label">Contraseña:<span style="color: brown;">*</span></label>
+        <div class="password-container">
+        <span id="toggle-password" class="toggle-password"><i class="fa-regular fa-eye-slash"></i></span>
+        <input type="password" class="form-control" id="contrasena" name="contrasena" required>
+        </div> 
+      </div>
         
-         <div class="col-md-12">
-          <div class="container2" id="drop-area">
-            <input type="file" id="file" name="file" accept="image/*" hidden required>
-            <div class="img-area">
-              <i class='bx bxs-cloud-upload icon'></i>
-              <h3>Suelta la imagen aquí</h3>
-              <p>Tamaño máximo permitido <span>2MB</span></p>
-              <p><span>Campo Obligatorio</span></p>
+         <div class="colñ-md-12">
+            <div class="container2" id="drop-area">
+                <input type="file" id="file" name="file" accept="image/*" hidden>
+                <div class="img-area">
+                  <i class='bx bxs-cloud-upload icon'></i>
+                  <h3>Suelta la imagen aquí</h3>
+                  <p>Tamaño máximo permitido <span>2MB</span></p>
+                </div>
+                <button type="button" class="select-image bg-success">Subir Foto</button>
             </div>
-            <button type="button" class="select-image bg-success">Subir Foto</button>
-          </div>
         </div>
       
         <div class="col-md-6">
-            <label class="form-label" for="descripcion">Descripción:<span style="color: brown;">*</span></label>
-            <textarea class="form-control" id="descripcion" name="descripcion" style="resize: none;" rows="9"></textarea>
-        </div>
+          <label class="form-label" for="descripcion">Descripción:</label>
+          <textarea class="form-control" id="descripcion" name="descripcion" style="resize: none;" rows="9" oninput="validarEntrada(event)" onfocus="resetearValidacion()"></textarea>
+      </div>
 
-        <div class="col-md-6 mb-3 ">
+        <div class="col-md-6 mb-3">
           <label class="form-label" for="">Curriculum:</label>
           <div class="justify-content-center align-items-center d-flex">
             <input type="file" class="form-control" id="customFile" name="customFile" accept=".pdf, .doc, .docx" hidden>
-            <label class="btn " for="customFile" style="background: #a8e6b8;">
+            <label class="btn btn-success" for="customFile">
               <i class='bx bx-upload'></i> Subir archivo
             </label>
           </div>
-          
         </div>
 
         <div class="text-center">
-           <button class="btn btn-primary btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;"  data-bs-toggle="modal" data-bs-target="#cancelModal" >Cancelar</button>
+           <button type="button" class="btn btn-danger btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;" id="cancelButton">Cancelar</button>
            <button type="submit" id="guardar" class="btn btn-success btn-block btn-lg" style="border-radius: 30px; font-size: 20px;">Registrar</button>
         </div>
        </form>
@@ -97,7 +97,6 @@
                     registrado exitosamente!!
              </div>
              <div class="modal-footer">
-                <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
                 <button type="button" class="btn btn-success" id="botonAceptarModal">Aceptar</button>
              </div>
           </div>
@@ -115,17 +114,30 @@
                     ¿Estás seguro de cancelar registro?
                 </div>
                 <div class="modal-footer gap-2">
-                    <button type="button" class="btn btn-primary " style="border-radius: 10px;" onclick="location.href='/'">Si,quiero cancelar</button>
+                    <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="location.href='/'">Si, quiero cancelar</button>
                     <button type="button" class="btn btn-success" style="border-radius: 10px;" data-bs-dismiss="modal">Seguir Registrando</button>
-    
                 </div>
             </div>
         </div>
        </div>
      </div>
   </div>
-
-
+  <!---Logica para el icono de visualizacion de constraseña-->
+<script>
+  const iconEye = document.querySelector(".toggle-password") 
+        iconEye.addEventListener('click',function(){
+            const icon = this.querySelector('i');
+            if(this.nextElementSibling.type==='password'){
+                this.nextElementSibling.type='text';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye')
+            }else{
+                this.nextElementSibling.type='password';
+                icon.classList.remove('fa-eye')
+                icon.classList.add('fa-eye-slash')
+            }
+        }); 
+</script>
   <script>
     document.getElementById('customFile').addEventListener('change', function(e) {
       var fileName = e.target.files[0].name;
@@ -135,37 +147,43 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       let dropArea = document.getElementById('drop-area');
-    
+      
       ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropArea.addEventListener(eventName, preventDefaults, false);
       });
-    
+  
       function preventDefaults(e) {
         e.preventDefault();
         e.stopPropagation();
       }
-    
+  
       ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+        dropArea.classList.add('highlight');
       });
-    
+  
       ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+        dropArea.classList.remove('highlight');
       });
-    
+  
       dropArea.addEventListener('drop', handleDrop, false);
-    
+  
       function handleDrop(e) {
         let dt = e.dataTransfer;
         let files = dt.files;
         handleFiles(files);
       }
-    
+  
       function handleFiles(files) {
         files = [...files];
-        files.forEach(previewFile);
+        files.forEach(file => {
+          if (file.type.startsWith('image/')) {
+            previewFile(file);
+          } else {
+            showAlert('Solo se permiten archivos de imagen');
+          }
+        });
       }
-    
+  
       function previewFile(file) {
         let reader = new FileReader();
         reader.readAsDataURL(file);
@@ -175,21 +193,37 @@
           document.querySelector('.img-area').appendChild(img);
         }
       }
-    
+  
       const inputFile = document.getElementById('file');
       inputFile.addEventListener('change', function(e) {
         handleFiles(e.target.files);
       });
-    
+  
       const selectImageBtn = document.querySelector('.select-image');
       selectImageBtn.addEventListener('click', function() {
         inputFile.click();
       });
+  
+      function showAlert(message) {
+        const imgArea = document.querySelector('.img-area');
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger';
+        alertDiv.style.position = 'absolute';
+        alertDiv.style.top = '0';
+        alertDiv.style.left = '0';
+        alertDiv.style.width = '100%';
+        alertDiv.textContent = message;
+        imgArea.appendChild(alertDiv);
+  
+        setTimeout(() => {
+          alertDiv.remove();
+        }, 3000);
+      }
     });
   </script>
-
+  
   <script>
-      document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const formulario = document.getElementById('formularioRegistro');
         const selectNacionalidad = document.getElementById('nacionalidad');
       
@@ -241,99 +275,146 @@
           }
         });
       });
- </script>
 
-
-<script>
-  // Función para validar el campo del título en tiempo real
-  function validarTitulo() {
-    var tituloInput = document.getElementById("nombre");
-    var tituloAlert = document.getElementById("titulo-alert");
-    var tituloValue = tituloInput.value;
-    // Validamos el título con la expresión regular
-    if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
-        tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
-    } else if(tituloValue.length>30){
-      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
-    }else{
-      tituloInput.setCustomValidity("");
+    // Función para validar el campo del título en tiempo real
+    function validarNombre() {
+      var tituloInput = document.getElementById("nombre");
+      var tituloAlert = document.getElementById("titulo-alert");
+      var tituloValue = tituloInput.value;
+      const nombres = JSON.parse('{{ nombres | tojson | safe }}');
+        console.log('Datos recibidos:', nombres);
+        var indice = nombres.indexOf(tituloValue);
+      // Validamos el título con la expresión regular
+      if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
+          tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
+      } else if(tituloValue.length>30){
+        tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+      }else if(indice!==-1){
+        tituloInput.setCustomValidity("Usuario ya se encuantra ya registrado");
+      }else{
+        tituloInput.setCustomValidity("")
+      }
+      tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
     }
-    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
-  }
- // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
-document.getElementById("nombre").addEventListener("input", validarTitulo);
+   // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+  document.getElementById("nombre").addEventListener("input", validarNombre);
 
- //validar el campo de la especialidad 
- function validarEspecialidad() {
-  var tituloInput = document.getElementById("especialidad");
-  var tituloAlert = document.getElementById("titulo-alert");
-  var tituloValue = tituloInput.value;
-    // Validamos el título con la expresión regular
-    if (!/^[\p{L}\s.,'-]*$/u.test(tituloValue)) {
-        tituloInput.setCustomValidity("Especialidad inválido, caracteres no permitidos");
-    } else if(tituloValue.length>30){
-      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
-    }else{
-      tituloInput.setCustomValidity("");
-    }
-    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
-  }
-// Llamamos a validarTitulo en cada cambio en el campo de entrada del título
-  document.getElementById("especialidad").addEventListener("input", validarEspecialidad);
-  
-  function validarContraseñaEnTiempoReal() {
-    const inputPassword = document.getElementById('contrasena');
-    const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$');
-
-    inputPassword.addEventListener('input', function () {
-        // Comprobando si la contraseña es válida
-        if (regex.test(inputPassword.value)) {
-          inputPassword.setCustomValidity("");
-        } else {
-          inputPassword.setCustomValidity("Contraseña inválida. Debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&)");
+    function validarEspecialidad() {
+        var tituloInput = document.getElementById("especialidad");
+        var tituloAlert = document.getElementById("titulo-alert");
+        var tituloValue = tituloInput.value;
+        // Validamos el título con la expresión regular
+        if (!/^[\p{L}\s.,'-]*$/u.test(tituloValue)) {
+            tituloInput.setCustomValidity("Especialidad inválido, caracteres no permitidos");
+        } else if(tituloValue.length>30){
+          tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+        }else{
+          tituloInput.setCustomValidity("");
         }
-           inputPassword.reportValidity();
-    });
-    
-}
-
-// Llamando a la función al cargar la página
-document.addEventListener('DOMContentLoaded', validarContraseñaEnTiempoReal);
-
-document.getElementById('email').addEventListener('input', function (e) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex para validación de correo
-  if (emailRegex.test(e.target.value)) {
-      e.target.setCustomValidity(''); // No hay error
-  } else {
-      e.target.setCustomValidity('Por favor introduce un correo electrónico válido.'); // Mensaje de error
-  }
-  e.target.reportValidity(); // Muestra el mensaje de validación
-});
-
-function validarDescripcionCurso() {
-  var descripcionInput = document.getElementById("descripcion");
-  var descripcionValue = descripcionInput.value;
-  var regex = /^[a-zA-Z0-9 áéíóúÁÉÍÓÚñÑüÜ.,;:'"()!¿?-]+$/;
-
-  // Validamos la longitud de la descripción
-
-  if(!regex.test(descripcionValue)){
-    descripcionInput.setCustomValidity("Descripcion inválido, caracteres no permitidos");
-  }else if (descripcionValue.length>365){
-    descripcionInput.setCustomValidity("Se llego al limite de carateres permitidos");
-  }else{
-    descripcionInput.setCustomValidity("");
-  }
-  descripcionInput.reportValidity();
-}
-
-// Llamamos a validarDescripcionCurso en cada cambio en la descripción del curso
-document.getElementById("descripcion").addEventListener("input", validarDescripcionCurso);
-
+        tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
+    }
+    // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+    document.getElementById("especialidad").addEventListener("input", validarEspecialidad);
   
+    function validarContraseñaEnTiempoReal() {
+        const inputPassword = document.getElementById('contrasena');
+        const regex = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$');
+
+        inputPassword.addEventListener('input', function () {
+            // Comprobando si la contraseña es válida
+            if (regex.test(inputPassword.value)) {
+                inputPassword.setCustomValidity("");
+            } else {
+                inputPassword.setCustomValidity("Contraseña inválida. Debe tener al menos 8 caracteres, incluyendo una mayúscula, una minúscula, un número y un carácter especial (@$!%*?&)");
+            }
+            inputPassword.reportValidity();
+        });
+    }
+
+    // Llamando a la función al cargar la página
+    document.addEventListener('DOMContentLoaded', validarContraseñaEnTiempoReal);
+
+    function validarEmail(){
+      const emailImput = document.getElementById('email');
+      const emailValue = emailImput.value;
+      const correos = JSON.parse('{{ correos | tojson | safe }}');
+      console.log(correos)
+      const indice = correos.indexOf(emailValue);
+    
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)){
+           emailImput.setCustomValidity('Por favor introduce un correo electrónico válido.');
+      }else if(indice!==-1){
+           emailImput.setCustomValidity("El correo electronico ya se encuentra registrado");
+      }else{
+           emailImput.setCustomValidity("");
+      }
+      email.reportValidity();
+    }
+    
+    document.getElementById('email').addEventListener('input', validarEmail);
+
+
+    // Nueva funcionalidad para verificar si los campos están vacíos al hacer clic en "Cancelar"
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        const inputs = document.querySelectorAll('#formularioRegistro input');
+        const textareas = document.querySelectorAll('#formularioRegistro textarea');
+        const selects = document.querySelectorAll('#formularioRegistro select');
+        let isEmpty = true;
+
+        inputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        textareas.forEach(textarea => {
+            if (textarea.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        selects.forEach(select => {
+            if (select.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        if (isEmpty) {
+            window.location.href = '/'; // Redirigir sin mostrar el modal
+        } else {
+            var cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+            cancelModal.show();
+        }
+    });
+  </script>
+     <script>
+      function validarEntrada(event) {
+          const permitidos = /^[a-zA-Z0-9\s.,;:!?'"()_\-\/áéíóúÁÉÍÓÚ]*$/;
+          const descripcion = document.getElementById('descripcion');
+          const longitudMaxima = 365;
+
+          descripcion.setCustomValidity('');
+          if (event.inputType === "insertText" && !permitidos.test(event.data)) {
+              descripcion.setCustomValidity('Caracteres no permitidos.');
+              descripcion.reportValidity();
+              descripcion.value = descripcion.value.slice(0, -1);
+              return;
+          }
+          // Validar longitud máxima
+          if (descripcion.value.length > longitudMaxima) {
+              descripcion.setCustomValidity('La descripción no puede exceder los 365 caracteres.');
+              descripcion.reportValidity();
+              descripcion.value = descripcion.value.substring(0, longitudMaxima);
+          }
+      }
+      function resetearValidacion() {
+          const descripcion = document.getElementById('descripcion');
+          descripcion.setCustomValidity('');
+      }
+  </script>
+  <script>
+    
 </script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>

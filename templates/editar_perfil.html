@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+    <link rel="stylesheet" href="/static/css/editar_perfil.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <!-- Brand -->
+            <a class="navbar-brand fs-2" href="{{url_for('landing')}}" >Campus alalay</a>
+            
+            <!-- Toggler for mobile view -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link  fs-3" aria-current="page" href="#">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                         <a class="nav-link fs-3" href="{{ url_for('listar_cursos') }}">Cursos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fs-3" href="#">Comunidad</a>
+                    </li>
+                </ul>
+                <!-- User Icon -->
+                <a href="{{ url_for('perfildocente') }}" class="d-flex">
+                    <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
+                </a>
+            </div>
+        </div>
+    </nav>
+    <div class="d-flex mt-4 align-items-center justify-content-center">
+        <div class="container col-md-10 p-5  m-3 shadow-lg" style=" border-radius: 15px;">
+            <div class="text-center">
+                <h1 class="my-custom-heading">Editar Perfil</h1>
+            </div>
+            <div class="row p-3">
+                <div class="col-md-4 align-items-start d-flex">
+                    <div>
+                        <div class="imagen-circular">
+                            <img src="{{docente[6]}}" alt="imagen">
+                        </div>
+                        <h2>{{docente[1]}}</h2>
+                        <h3>{{docente[2]}}</h3>
+                    </div>
+                    
+                </div>
+                <div class="col-md-8 "> 
+                    <form class="row gap-2" action="/guardar_perfil" id="formularioRegistro" method="POST" enctype="multipart/form-data">
+                       <div class="col-md-12">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre">
+                        <div class="error-message" id="error-nombre"><span class="error-icon">&#9888;</span> Por favor ingresa tu nombre</div>
+                       </div> 
+
+                       <div class="col-md-12">
+                        <label for="correo">Correo electrónico:</label>
+                        <input type="email" id="email" name="email" placeholder="correo@example.com">
+                       </div>
+
+                       <div class="col-md-12">
+                        <label for="pais">País:</label>
+                        <select id="pais" name="pais" id="pais">
+                            <!-- Opciones predefinidas -->
+                            <option value="">Seleccione</option>
+                            <!-- Opciones de países de América generadas dinámicamente -->
+                        </select>
+                        <div class="error-message" id="error-pais"><span class="error-icon">&#9888;</span> Por favor selecciona tu país</div> 
+                       </div>
+                        
+                       <br>
+                       <div class="col-md-12">
+                        <label for="pais">Cambiar Imagen</label>
+                        <div class="container2" id="drop-area">
+                            <input type="file" id="file_image" name="file_image" accept=".jpg, .jpeg, .png" hidden  required>
+                            <div class="img-area">
+                              <i class='bx bxs-cloud-upload icon'></i>
+                              <h3>Suelta la imagen aquí</h3>
+                              <p>Tamaño máximo permitido <span>2MB</span> <br/>Formato permitido png , jpeg y jpg</p>
+                            </div>
+                            <button type="button" class="select-image bg-success">Subir Foto</button>
+                          </div>
+                       </div>                        
+                        <!-- Otros campos de perfil que desees editar -->
+                        <div class="text-center mt-4">
+                          <button type="button" class="btn btn-danger btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;" id="cancelButton">Cancelar</button>
+                            <button type="submit" id="guardar" class="btn btn-success btn-block btn-lg me-4" style="border-radius: 30px; font-size: 20px;">Guardar Cambios</button>
+                        </div>
+                            
+                    </form>
+                    <!-- Puedes añadir más contenido HTML según tus necesidades -->
+                    <div class="modal" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                           <div class="modal-content">
+                             <div class="modal-header">
+                                  <h5 class="modal-title" id="modalExitoLabel">Mensaje</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                             </div>
+                             <div class="modal-body">
+                                   Cambios realizados!!
+                             </div>
+                             <div class="modal-footer">
+                                <!-- <button  type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button> -->
+                                <button type="button" class="btn btn-success" id="botonAceptarModal">Aceptar</button>
+                             </div>
+                          </div>
+                        </div>
+                       </div>
+                      <!--Modal para el boton de cancelar-->
+                       <div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="cancelModalLabel">Confirmación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    ¿Estás seguro de cancelar registro?
+                                </div>
+                                <div class="modal-footer gap-2">
+                                    <button type="button" class="btn btn-danger" style="border-radius: 10px;" onclick="location.href='/'">Si, quiero cancelar</button>
+                                    <button type="button" class="btn btn-success" style="border-radius: 10px;" data-bs-dismiss="modal">Seguir Registrando</button>
+                                </div>
+                            </div>
+                        </div>
+                       </div>
+                </div>
+
+
+            </div>
+            
+
+        </div>
+      
+    </div>
+
+    <script>
+      document.getElementById('cancelButton').addEventListener('click', function() {
+        const inputs = document.querySelectorAll('#formularioRegistro input');
+        const selects = document.querySelectorAll('#formularioRegistro select');
+        let isEmpty = true;
+
+        inputs.forEach(input => {
+            if (input.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        selects.forEach(select => {
+            if (select.value.trim() !== '') {
+                isEmpty = false;
+            }
+        });
+
+        if (isEmpty) {
+            window.location.href = '/perfil'; // Redirigir sin mostrar el modal
+        } else {
+            var cancelModal = new bootstrap.Modal(document.getElementById('cancelModal'));
+            cancelModal.show();
+        }
+    });
+    </script>
+    <script>
+      document.getElementById('formularioRegistro').addEventListener('submit', function(event) {
+          const imagenInput = document.getElementById('file_image');
+          const imagen = imagenInput.files[0];
+
+          // Reset custom validity messages
+          imagenInput.setCustomValidity('');
+
+          if (imagen) {
+              const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+              const maxSizeInBytes = 2 * 1024 * 1024; // 2 MB
+
+              if (!validTypes.includes(imagen.type)) {
+                  imagenInput.setCustomValidity('Solo se permiten imágenes en formato JPG, JPEG o PNG.');
+              } else if (imagen.size > maxSizeInBytes) {
+                  imagenInput.setCustomValidity('El tamaño de la imagen no debe exceder los 2 MB.');
+              }
+          }
+
+          if (!imagenInput.checkValidity()) {
+              event.preventDefault(); // Previene el envío del formulario si hay errores
+              imagenInput.reportValidity(); // Muestra los errores de validación
+          }
+      });
+  </script>
+    
+<script>
+    // Función para validar el campo del título en tiempo real
+  function validarTitulo() {
+    var tituloInput = document.getElementById("nombre");
+    var tituloAlert = document.getElementById("titulo-alert");
+    var tituloValue = tituloInput.value;
+    const nombres = JSON.parse('{{ nombres | tojson | safe }}');
+      console.log('Datos recibidos:', nombres);
+      var indice = nombres.indexOf(tituloValue);
+    // Validamos el título con la expresión regular
+    if (!/^[\p{L}\s'-]*$/u.test(tituloValue)) {
+        tituloInput.setCustomValidity("Título inválido, caracteres no permitidos");
+    } else if(tituloValue.length>30){
+      tituloInput.setCustomValidity("Se llego al limite de caracteres"); 
+    }else if(indice!==-1){
+      tituloInput.setCustomValidity("Usuario ya se encuantra ya registrado");
+    }else{
+      tituloInput.setCustomValidity("")
+    }
+    tituloInput.reportValidity(); // Mostramos el mensaje de alerta en tiempo real
+  }
+ // Llamamos a validarTitulo en cada cambio en el campo de entrada del título
+document.getElementById("nombre").addEventListener("input", validarTitulo);
+ 
+function validarEmail(){
+  const emailImput = document.getElementById('email');
+  const emailValue = emailImput.value;
+  const correos = JSON.parse('{{ correos | tojson | safe }}');
+  console.log(correos)
+  const indice = correos.indexOf(emailValue);
+
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)){
+       emailImput.setCustomValidity('Por favor introduce un correo electrónico válido.');
+  }else if(indice!==-1){
+       emailImput.setCustomValidity("El correo electronico ya se encuentra registrado");
+  }else{
+       emailImput.setCustomValidity("");
+  }
+  email.reportValidity();
+}
+
+document.getElementById('email').addEventListener('input', validarEmail);
+  
+</script>
+
+<script>
+            document.addEventListener('DOMContentLoaded', function() {
+              let dropArea = document.getElementById('drop-area');
+            
+              ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+              });
+            
+              function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            
+              ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.add('highlight'), false);
+              });
+            
+              ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, () => dropArea.classList.remove('highlight'), false);
+              });
+            
+              dropArea.addEventListener('drop', handleDrop, false);
+            
+              function handleDrop(e) {
+                let dt = e.dataTransfer;
+                let files = dt.files;
+                handleFiles(files);
+              }
+            
+              function handleFiles(files) {
+                files = [...files];
+                files.forEach(previewFile);
+              }
+            
+              function previewFile(file) {
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onloadend = function() {
+                  let img = document.createElement('img');
+                  img.src = reader.result;
+                  document.querySelector('.img-area').appendChild(img);
+                }
+              }
+            
+              const inputFile = document.getElementById('file_image');
+              inputFile.addEventListener('change', function(e) {
+                handleFiles(e.target.files);
+              });
+            
+              const selectImageBtn = document.querySelector('.select-image');
+              selectImageBtn.addEventListener('click', function() {
+                inputFile.click();
+              });
+            });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const formulario = document.getElementById('formularioRegistro');
+      const selectNacionalidad = document.getElementById('pais');
+    
+      // Restablecer la validación cuando el usuario cambia la selección
+      selectNacionalidad.onchange = function() {
+        this.setCustomValidity("");
+      };
+    
+      formulario.addEventListener('submit', function(event) {
+        // Validar el campo nacionalidad
+        if (selectNacionalidad.value === "") {
+          selectNacionalidad.setCustomValidity("Por favor seleccione una opción válida.");
+        } else {
+          selectNacionalidad.setCustomValidity(""); // Limpiar el mensaje de validación personalizado si es correcto
+        }
+    
+        // Verificar si el formulario es válido antes de enviar
+        if (!formulario.checkValidity()) {
+          event.preventDefault(); // Detener el envío del formulario si no es válido
+          event.stopPropagation(); // Detiene la propagación del evento en el DOM
+          formulario.reportValidity(); // Esta función muestra explícitamente las validaciones del formulario
+        } else {
+          event.preventDefault(); // Aun cuando sea válido, prevenir el envío para manejarlo con Fetch
+          // Aquí va el código para manejar el envío del formulario con Fetch
+          const formData = new FormData(formulario);
+    
+          fetch('/upload_editar', {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => response.json())
+          .then(data => {
+            if(data.status === 'success') {
+              formulario.reset();
+              var modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+              modalExito.show();
+            } else {
+              alert('Hubo un error al registrar.');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            alert('Error al enviar el formulario.');
+          });
+    
+          document.getElementById('botonAceptarModal').addEventListener('click', () => {
+            window.location.href = '/perfil';
+          });
+        }
+      });
+    });
+</script>
+<script>
+        // Lista de países de América
+        var paisesAmerica = [
+            "Argentina", "Bolivia", "Brasil", "Canadá", "Chile", "Colombia", "Costa Rica",
+            "Cuba", "Ecuador", "El Salvador", "Estados Unidos", "Guatemala", "Honduras",
+            "México", "Nicaragua", "Panamá", "Paraguay", "Perú", "República Dominicana",
+            "Uruguay", "Venezuela"
+        ];
+
+        // Función para agregar opciones de países al ComboBox
+        function agregarPaises() {
+            var selectPais = document.getElementById("pais");
+            paisesAmerica.forEach(function(pais) {
+                var option = document.createElement("option");
+                option.text = pais;
+                selectPais.add(option);
+            });
+        }
+
+        // Llama a la función para agregar países cuando la página se cargue
+        window.onload = function() {
+            agregarPaises();
+        };
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var files = event.dataTransfer.files;
+            fileSelected(files[0]);
+        }
+
+        function fileSelected(file) {
+            var preview = document.getElementById('preview');
+            var fileInput = document.getElementById('file_input');
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+            else if (fileInput.files && fileInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(fileInput.files[0]);
+            }
+        }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

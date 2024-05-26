@@ -10,7 +10,7 @@
 </head>
 <body class=" d-flex  justify-content-center  align-items-center  vh-100">
 <div class="col-md-8 container bg-white p-5  shadow-lg" style="border-radius: 15px;">
-  <form class="row g-5 border-dark" id="miFormulario" action="/subir" method="post">
+  <form class="row g-5 border-dark" id="miFormulario" action="{{url_for('subir')}}" method="post">
     <div class="flash-messages">
       <h2 class="display-4  fw-bold fs-1  ali text-center" >Registro Curso</h2>
     </div>
@@ -112,6 +112,7 @@ document.getElementById('cargaHoraria').addEventListener('keydown', function(eve
     var categoria = document.getElementById('categoria').value;
     if (titulo.trim() === ''&&costo.trim() === ''&&carga.trim() === ''&&nivel.trim() === ''&&categoria.trim() === '') {
         // No mostrar el modal si el campo está vacío
+        
          window.location.href = '/perfil';
     } 
   }
