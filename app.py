@@ -1,5 +1,5 @@
 
-from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session,abort
+from flask import Flask,render_template,request,redirect,url_for,jsonify,flash,session
 from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 from google.oauth2 import id_token
@@ -31,86 +31,6 @@ app.config['MYSQL_DB'] = 'campus_alalay'
 mysql=MySQL(app)
 
 
-
-os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-GOOGLE_CLIENT_ID = "441504444918-mu1h1g4nha7s98i2mkiu6gt7rt22n35n.apps.googleusercontent.com"
-client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
-
-flow = Flow.from_client_secrets_file(
-    client_secrets_file=client_secrets_file,
-    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri="http://127.0.0.1:5000/callback"
-)
-
-def login_is_required(function):
-    def wrapper(*args, **kwargs):
-        if "google_id" not in session:
-            return abort(401)  # Authorization required
-        else:
-            return function()
-
-    return wrapper
-
-@app.route("/login_google")
-def login_google():
-    authorization_url, state = flow.authorization_url()
-    session["state"] = state
-    return redirect(authorization_url)
-
-@app.route("/callback")
-def callback():
-    flow.fetch_token(authorization_response=request.url)
-
-    if not session["state"] == request.args["state"]:
-        abort(500)  # State does not match!
-
-    credentials = flow.credentials
-    request_session = requests.session()
-    cached_session = cachecontrol.CacheControl(request_session)
-    token_request = google.auth.transport.requests.Request(session=cached_session)
-
-    id_info = id_token.verify_oauth2_token(
-        id_token=credentials._id_token,
-        request=token_request,
-        audience=GOOGLE_CLIENT_ID
-    )
-
-    session["google_id"] = id_info.get("sub")
-    session["name"] = id_info.get("name")
-    session["email"]=id_info.get("email")
-    session["picture"]=id_info.get("picture")
-    return redirect("/protected_area")
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect("/login")
-
-@app.route("/protected_area")
-@login_is_required
-def protected_area():
-    nombre=session.get('name')
-    correo=session.get('email')
-    foto=session.get('picture')
-    cur = mysql.connection.cursor()
-    conn = cur
-    cur.execute('select*from estudiante where nombre=%s and correo=%s',(nombre,correo,))
-    estudiante = cur.fetchone()
-    if estudiante is None:
-        conn.execute('insert into estudiante(nombre,correo,foto)values(%s,%s,%s)',(nombre,correo,foto,))
-        mysql.connection.commit()
-        conn.close()
-        cur.close()
-        con=mysql.connection.cursor()
-        con.execute('select*from estudiante where nombre=%s and correo=%s',(nombre,correo,))
-        estudiante=con.fetchone()
-        session['usuario']=estudiante[1]
-        return redirect(url_for('listar_cursos'))
-    else:
-        cur.close()
-        session['usuario']=nombre
-        return redirect(url_for('listar_cursos'))
 @app.route('/')
 def landing():
     session.clear()
@@ -171,55 +91,46 @@ def agregar_al_carrito():
 
     if curso_id:
         cursor = mysql.connection.cursor()
+        cursor.execute("SELECT COUNT(*) FROM carrito WHERE IDCURSO = %s", (curso_id,))
+        if cursor.fetchone()[0] > 0:
+            cursor.close()
+            return jsonify({'success': False, 'message': 'El curso ya está en el carrito'}), 400
+
         cursor.execute("INSERT INTO carrito (id, IDCURSO) VALUES (NULL, %s)", (curso_id,))
         mysql.connection.commit()
         cursor.close()
         return jsonify({'success': True})
     else:
         return jsonify({'success': False, 'message': 'Faltan datos'}), 400
+
     
 @app.route('/upload_editar',methods=['POST','GET'])
 def upload_editar():
-    if request.method == 'POST':
-        nombre = request.form['nombre']
-        correo = request.form['email']
-        pais = request.form['pais']
-        photo = request.files['file_image']
-        id = session.get('usuario')
-        cursor=mysql.connection.cursor()
-        cursor.execute("SELECT * FROM registro_docentes WHERE nombre_completo=%s OR correo_electronico=%s", (id, id))
-        docente = cursor.fetchone()
+    if request.method=='POST':
+        nombre=request.form['nombre']
+        correo=request.form['email']
+        pais=request.form['pais']
+        id=session.get('usuario')
+        session.clear()
+        if 'file_image' in request.files:
+            foto=request.files['file_image']
+            filename=secure_filename(foto.filename)
+            foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+            image_url=url_for('static', filename='archivos/' + filename)
+            conn=mysql.connection.cursor()
+            conn.execute("update registro_docentes set nombre_completo=%s,correo_electronico=%s,nacionalidad=%s,foto=%s where nombre_completo=%s",(nombre,correo,pais,image_url,id))
+            conn.connection.commit()
+            conn.close()
+            cur=mysql.connection.cursor()
+            con=cur
+            cur.execute("select*from registro_docentes where nombre_completo=%s",(nombre,))
+            docentes=cur.fetchone()
+            session['usuario']=nombre
+            session['id']=docentes[0]
+            print(session.get('usuario'))
+            return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})      
 
-        if photo:
-            filename = secure_filename(photo.filename)
-            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image_url = url_for('static', filename='archivos/' + filename)
-        else:
-            image_url = docente[6]  # Asumiendo que el índice 6 es el campo de la foto en la tabla
         
-        if nombre == docente[1] and correo == docente[2] and pais == docente[5] and not photo:
-            return redirect(url_for('editar_perfil'))
-
-        conn = mysql.connection.cursor()
-        if photo:
-            conn.execute("UPDATE registro_docentes SET nombre_completo=%s, correo_electronico=%s, nacionalidad=%s, foto=%s WHERE nombre_completo=%s OR correo_electronico=%s",
-                         (nombre, correo, pais, image_url, id, id))
-        else:
-            conn.execute("UPDATE registro_docentes SET nombre_completo=%s, correo_electronico=%s, nacionalidad=%s WHERE nombre_completo=%s OR correo_electronico=%s",
-                         (nombre, correo, pais, id, id))
-        
-        mysql.connection.commit()
-        conn.close()
-
-        cursor.execute("SELECT * FROM registro_docentes WHERE nombre_completo=%s", (nombre,))
-        docente_actualizado = cursor.fetchone()
-        session['usuario'] = nombre
-        session['id'] = docente_actualizado[0]
-        return redirect(url_for('perfildocente'))
-
-    return redirect(url_for('perfildocente'))
-        
-                  
 
 @app.route('/registrar_docente')
 def registrar_docente():
@@ -246,12 +157,12 @@ def editar_perfil():
     usuario=session.get('usuario')    
     conn = mysql.connection.cursor()
     cur=mysql.connection.cursor()
-    cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico=%s",(usuario,usuario))
-    docente=cur.fetchone()
+    cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico",(usuario,))
     conn.execute("select*from registro_docentes")
     docentes=conn.fetchall()
     nombres=[titulo[1] for titulo in docentes]
     correos=[email[2] for email in docentes]
+    docente=cur.fetchone()
     conn.close()
     cur.close()
     return render_template('editar_perfil.html',docente=docente,nombres=nombres,correos=correos)
@@ -275,12 +186,12 @@ def upload_file():
         image_url2 = None
 
         if foto:
-            filename = secure_filename(foto.filename)
+            filename = foto.filename
             foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             image_url = url_for('static', filename='archivos/' + filename)
 
         if archivo:
-            filename2 = secure_filename(archivo.filename)
+            filename2 = archivo.filename
             archivo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
             image_url2 = url_for('static', filename='archivos/' + filename2)
 
@@ -296,6 +207,7 @@ def upload_file():
         cur.close()
         print("se registro con exito")
         return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
+
 
 @app.route('/home')
 def index():
@@ -332,6 +244,17 @@ def ver_curso_docente(curso_id):
     curso = cursor.fetchall()
     if curso:
         return render_template('ver_curso.html', curso=curso)
+    else:
+        return "Curso no encontrado", 404
+    
+@app.route('/cursoCarrito/<int:curso_id>')
+def verCurso(curso_id):
+    cursor = mysql.connection.cursor()
+    query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
+    cursor.execute(query, (curso_id,))
+    curso = cursor.fetchall()
+    if curso:
+        return render_template('detallesCursoCarrito.html', curso=curso)
     else:
         return "Curso no encontrado", 404
     
@@ -379,6 +302,7 @@ def listar_cursos():
     cursos = cur.fetchall()
     
     usuario=session.get('usuario')    
+    print(usuario)
     con = mysql.connection.cursor()
     con.execute("select*from estudiante where nombre=%s or correo=%s",(usuario,usuario))
     estudiantes=con.fetchone()
@@ -443,8 +367,8 @@ def addfile():
         cod_unidad = request.form.get('codUnidad')
 
         if video or archivo or contenido_html.strip() != '':
-            filename =secure_filename( video.filename) if video else None
-            filename2 = secure_filename(archivo.filename) if archivo else None
+            filename = video.filename if video else None
+            filename2 = archivo.filename if archivo else None
 
             if filename:
                 video.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -564,7 +488,7 @@ def addB():
       print(titulo,categoria,nivel,cargaHoraria,costo)
       if 'imageInput' in request.files:
          f= request.files['imageInput']
-         filename=secure_filename(f.filename)
+         filename=f.filename
          f.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
          image_url=url_for('static', filename='archivos/' + filename)
          descripcion=request.form['courseDescription']
@@ -575,6 +499,8 @@ def addB():
          mysql.connection.commit()
          return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})
       
+
+
 @app.route('/login')
 def login():
     conn= mysql.connection.cursor()
