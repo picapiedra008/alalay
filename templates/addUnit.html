@@ -82,30 +82,6 @@
                                     
                                 </div>
                             </div>
-<<<<<<< HEAD
-
-                            <label class="form-label mt-4" for="section-description">
-                                ¿Qué podrán hacer los estudiantes en esta sección?
-                            </label>
-                            <div class="col-ms-10">
-                                <textarea class="form-control" id="section-description" name="section-description" style="resize: none;" rows="5" required maxlength="200" minlength="30"></textarea>
-                                <div class="invalid-feedback" id="description-feedback">
-                                  
-                                </div>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <a href="#" class="btn btn-danger me-5" onclick="hideForm()" style="width: 150px; border-radius: 15px;">Cancelar</a>
-                            <button class="btn btn-success me-5" type="submit" style="width: 150px; border-radius: 15px;">Guardar</button>
-                        </div>    
-                    </form>   
-                </div>
-                <div>
-                    <button class="btn btn-success" id="add-section-btn" style="width: 150px; border-radius: 10px;"> <span>+</span>Añadir Sección </button>
-                </div>
-            </div>
-        </div>
-=======
                             
                         {% endfor %}
                         <div class="col-md-12" id="form-container" style="display: none;">
@@ -142,7 +118,6 @@
                 </div> 
          </div>
 
->>>>>>> b7aabb08a5087ac4e677e7bc00ff5e3ece828f40
     </div>
 
     <!-- Modal de Confirmación -->
@@ -239,12 +214,9 @@ sectionDescriptionTextarea.addEventListener('input', function() {
             }, 3000);
         });
 
-<<<<<<< HEAD
-=======
     </script>
     
     <script>
->>>>>>> b7aabb08a5087ac4e677e7bc00ff5e3ece828f40
         function openAddMaterialPage(sectionId) {
             window.location.href = '/addMaterial/' + sectionId; // Envía el ID de la sección a la página addMaterial
         }
