@@ -82,6 +82,7 @@
                                     
                                 </div>
                             </div>
+<<<<<<< HEAD
 
                             <label class="form-label mt-4" for="section-description">
                                 ¿Qué podrán hacer los estudiantes en esta sección?
@@ -104,6 +105,44 @@
                 </div>
             </div>
         </div>
+=======
+                            
+                        {% endfor %}
+                        <div class="col-md-12" id="form-container" style="display: none;">
+                                <form class="row" action="{{url_for('addseccion',curso_id=curso_id)}}" method="POST">
+                                     <div class="col-md-2">
+                                        <h3>Seccion:</h3>
+                                     </div>
+                                    <div class="col-md-8 mb-3 row">
+                                        <div class="col-ms-10">
+                                           <input  class="form-control" type="text" id="section-name" name="section-name" required>
+                                        </div>
+                
+                                        <label class=" form-label mt-4" for="section-description">
+                                            Que podran hacer los estudiantes en esta seccion?
+                                        </label>
+                                        <div class="col-ms-10">
+                                           <textarea class="form-control" id="section-description" name="section-description" style="resize: none;" rows="5"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end" >
+                                        <!-- <button class="btn btn-danger me-5" type="button" style="width: 150px; border-radius: 15px;">Cancelar</button> -->
+                                        <a href="{{url_for('addseccion',curso_id=curso_id)}}" class="btn btn-danger me-5"style="width: 150px; border-radius: 15px;">Cancelar</a>
+                                        <button class="btn btn-success me-5" type="submit" style="width: 150px; border-radius: 15px;">Guardar</button>
+                                    </div>    
+                                </form>   
+                                
+                        </div>
+                       
+                        <div class="">
+                            <button class="btn btn-success" id="add-section-btn" style="width: 150px; border-radius: 10px;"> <span>+</span>Añadir Sección </button>
+                        </div>
+                   
+                </div> 
+         </div>
+
+>>>>>>> b7aabb08a5087ac4e677e7bc00ff5e3ece828f40
     </div>
 
     <!-- Modal de Confirmación -->
@@ -200,6 +239,12 @@ sectionDescriptionTextarea.addEventListener('input', function() {
             }, 3000);
         });
 
+<<<<<<< HEAD
+=======
+    </script>
+    
+    <script>
+>>>>>>> b7aabb08a5087ac4e677e7bc00ff5e3ece828f40
         function openAddMaterialPage(sectionId) {
             window.location.href = '/addMaterial/' + sectionId; // Envía el ID de la sección a la página addMaterial
         }
