@@ -106,29 +106,45 @@ def agregar_al_carrito():
     
 @app.route('/upload_editar',methods=['POST','GET'])
 def upload_editar():
-    if request.method=='POST':
-        nombre=request.form['nombre']
-        correo=request.form['email']
-        pais=request.form['pais']
-        id=session.get('usuario')
-        session.clear()
-        if 'file_image' in request.files:
-            foto=request.files['file_image']
-            filename=secure_filename(foto.filename)
-            foto.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            image_url=url_for('static', filename='archivos/' + filename)
-            conn=mysql.connection.cursor()
-            conn.execute("update registro_docentes set nombre_completo=%s,correo_electronico=%s,nacionalidad=%s,foto=%s where nombre_completo=%s",(nombre,correo,pais,image_url,id))
-            conn.connection.commit()
-            conn.close()
-            cur=mysql.connection.cursor()
-            con=cur
-            cur.execute("select*from registro_docentes where nombre_completo=%s",(nombre,))
-            docentes=cur.fetchone()
-            session['usuario']=nombre
-            session['id']=docentes[0]
-            print(session.get('usuario'))
-            return jsonify({'status': 'success', 'message': 'Registrado exitosamente.'})      
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        correo = request.form['email']
+        pais = request.form['pais']
+        photo = request.files['file_image']
+        id = session.get('usuario')
+        cursor=mysql.connection.cursor()
+        cursor.execute("SELECT * FROM registro_docentes WHERE nombre_completo=%s OR correo_electronico=%s", (id, id))
+        docente = cursor.fetchone()
+
+        if photo:
+            filename = secure_filename(photo.filename)
+            photo.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image_url = url_for('static', filename='archivos/' + filename)
+        else:
+            image_url = docente[6]  # Asumiendo que el índice 6 es el campo de la foto en la tabla
+
+        if nombre == docente[1] and correo == docente[2] and pais == docente[5] and not photo:
+            return redirect(url_for('editar_perfil'))
+
+        conn = mysql.connection.cursor()
+        if photo:
+            conn.execute("UPDATE registro_docentes SET nombre_completo=%s, correo_electronico=%s, nacionalidad=%s, foto=%s WHERE nombre_completo=%s OR correo_electronico=%s",
+                         (nombre, correo, pais, image_url, id, id))
+        else:
+            conn.execute("UPDATE registro_docentes SET nombre_completo=%s, correo_electronico=%s, nacionalidad=%s WHERE nombre_completo=%s OR correo_electronico=%s",
+                         (nombre, correo, pais, id, id))
+
+        mysql.connection.commit()
+        conn.close()
+
+        cursor.execute("SELECT * FROM registro_docentes WHERE nombre_completo=%s", (nombre,))
+        docente_actualizado = cursor.fetchone()
+        session['usuario'] = nombre
+        session['id'] = docente_actualizado[0]
+        return redirect(url_for('perfildocente'))
+
+    return redirect(url_for('perfildocente'))
+     
 
         
 
@@ -154,15 +170,15 @@ def addmat(section_id):
 # Editar Perfil
 @app.route('/editar_perfil')
 def editar_perfil():
-    usuario=session.get('usuario')    
+    usuario=session.get('usuario')
     conn = mysql.connection.cursor()
     cur=mysql.connection.cursor()
-    cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico",(usuario,))
+    cur.execute("select*from registro_docentes where nombre_completo=%s or correo_electronico=%s",(usuario,usuario))
+    docente=cur.fetchone()
     conn.execute("select*from registro_docentes")
     docentes=conn.fetchall()
     nombres=[titulo[1] for titulo in docentes]
     correos=[email[2] for email in docentes]
-    docente=cur.fetchone()
     conn.close()
     cur.close()
     return render_template('editar_perfil.html',docente=docente,nombres=nombres,correos=correos)
