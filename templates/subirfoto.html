@@ -31,7 +31,7 @@
         </div>
 
         <div class="text-center gap-2  col-md-12 ">
-            <a class ="btn btn-primary btn-lg me-md-5 " style="border-radius: 10px;" href="{{ url_for('add') }}">&lt; Volver</a>
+            <a class ="btn btn-primary btn-lg me-md-5 " style="border-radius: 10px;" href="{{ url_for('add')}}">&lt; Volver</a>
             <button class ="btn btn-success btn-lg " id="botonConfirmarRegistro" style="border-radius: 10px;" type="submit" class="next-btn">Finalizar Registro &gt;</button>
         </div>
 
@@ -102,7 +102,7 @@
       const vistaPrevia = document.getElementById('imagePreview');
 
       // Enviar los datos del formulario al servidor Flask usando Fetch API
-      fetch('/add', {
+      fetch("add", {
         method: 'POST',
         body: formData,
       })

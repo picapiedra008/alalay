@@ -1,3 +1,19 @@
+.section-box {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+
+#form-container {
+    margin: 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
 .nav-bar {
     margin-top: 0; 
     background-color: #065e06;
@@ -21,25 +37,32 @@
 .form-control {
     min-height: 39px;
 }
-.text-area {
-    min-height: 200px; /* ajusta este valor según lo grande que quieras que sea el área de texto hacia abajo */
-}
+
 .primer-contenedor {
-    background-color: #cccccc; /* Plomo */
-    padding: 20px; /* Espaciado interno */
+    background-color: #cffcd9;
+    padding: 15px;
+    margin-bottom: -5px; /* Eliminar el margen inferior */
+    border-radius: 10px; /* Ajusta el valor según sea necesario */
+  }
+  
+  .segundo-contenedor {
+    background-color: #fafcfd;
+    padding: 10px; /* Espaciado interno */
     margin-bottom: 20px; /* Espaciado inferior */
-}
-.segundo-contenedor{
-  background-color: #fafcfd; /* Plomo */
-    padding: 20px; /* Espaciado interno */
-    margin-bottom: 20px; /* Espaciado inferior */
-
-}
-#presentationFile{
-
+    border-radius: 5px; /* Ajustar el radio del borde */
+    margin-top: 5px; /* Eliminar el margen superior */
+  }
+  
+    #presentationFile{
+    
     display: none;
-}
-
-#videoFile{
- display: none;
-}
+    }
+    
+    #videoFile{
+     display: none;
+    }
+    .fixed-width-button {
+        width: 250px; /* Establece un ancho fijo para el botón */
+        height: 40px; 
+    }
+   

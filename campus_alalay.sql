@@ -26,11 +26,13 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `carrito`
 --
 
+
 CREATE TABLE `carrito`(
   `idCarrito` int(11) NOT NULL,
   `id` int(11) NULL DEFAULT NULL,
   `IDCURSO` int (11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --

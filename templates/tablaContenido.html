@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Alalay</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/addArchivo.css">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/static/css/editor.css">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-bar bg-success d-flex justify-content-between align-items-center">
+        <div>
+            <a class="navbar-brand text-white" href="{{url_for('landing')}}">Campus Alalay</a>
+        </div>
+        <div class="d-flex justify-content-center flex-grow-1">
+            <div class="nav-links">
+                <a href="#">Inicio</a>
+                <a href="{{ url_for('listar_cursos') }}">Cursos</a>
+                <a href="#">Comunidad</a>
+            </div>
+        </div>
+        <div>
+            <a href="{{ url_for('perfildocente') }}" class="d-flex">
+                <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
+            </a>
+        </div>
+    </div>
+
+    <h2>Tabla de Contenido</h2>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Video</th>
+            <th>Archivo PDF</th>
+            <th>Descripción</th>
+            <th>Unidad</th>
+        </tr>
+        {% for row in datos_contenido %}
+        <tr>
+            <td>{{ row[0] }}</td>
+            <td>
+                <video width="100" height="100" controls>
+                    <source src="{{ row[1] }}" type="video/mp4">
+                    Tu navegador no soporta la etiqueta de vídeo.
+                </video>
+            </td>
+            <td><a href="{{ row[2] }}">{{ row[2] }} Descargar</a></td>
+            <td>{{ row[3]|safe }}</td>
+            <td>{{ row[4] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

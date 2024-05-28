@@ -22,14 +22,6 @@
 
   <!-- Template Main CSS File -->
   <link href="/static/css/style.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: Appland
-  * Template URL: https://bootstrapmade.com/free-bootstrap-app-landing-page-template/
-  * Updated: Mar 17 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
@@ -47,13 +39,13 @@
       <nav id="navbar" class="navbar">
         <h1><a href="{{ url_for('listar_cursos') }}">Inicio</a></h1>
         <ul>
-            <li><a class="getstarted scrollto" href="#features">Iniciar Sesión</a></li>
+            <li><a class="getstarted scrollto" href="{{ url_for('login') }}">Iniciar Sesión</a></li>
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle getstarted2 scrollto" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     Regístrate
                 </a>
                 <ul class="dropdown-menu rounded-dropdown" style="border-radius: 10px;" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#alumnos">Alumnos</a></li>
+                  <a href="{{ url_for('login') }}?form=register#registro">Estudiante</a>
                     <li><a class="dropdown-item" href="{{url_for('registrar_docente')}}">Docentes</a></li>
                 </ul>
             </li>
@@ -104,6 +96,7 @@
 
       })() 
   </script>
+  
 
 </body>
 
