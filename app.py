@@ -246,7 +246,7 @@ def ver_curso(curso_id):
     curso_siguiente_id = cursos[curso_index + 1][0] if curso_index < len(cursos) - 1 else None
 
     if curso:
-        if session['id']:
+        if 'id' in session and isinstance(session['id'], int) and session['id'] > 0:
             return render_template('DetalleCursoDocente.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
         else:    
             return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
