@@ -236,8 +236,7 @@ def ver_curso(curso_id):
     cursor = mysql.connection.cursor()
     query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
     cursor.execute(query, (curso_id,))
-    curso = cursor.fetchall()
-
+    curso = cursor.fetchone()
     # Obtener el ID del curso anterior y siguiente
     query = 'SELECT IDCURSO FROM curso ORDER BY IDCURSO'
     cursor.execute(query)
@@ -247,9 +246,13 @@ def ver_curso(curso_id):
     curso_siguiente_id = cursos[curso_index + 1][0] if curso_index < len(cursos) - 1 else None
 
     if curso:
-        return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
+        if session['id']:
+            return render_template('DetalleCursoDocente.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
+        else:    
+            return render_template('detalles_curso.html', curso=curso, curso_anterior_id=curso_anterior_id, curso_siguiente_id=curso_siguiente_id)
     else:
         return "Curso no encontrado", 404
+
 
 @app.route('/ver_curso/<int:curso_id>')
 def ver_curso_docente(curso_id):
@@ -257,7 +260,7 @@ def ver_curso_docente(curso_id):
     cursor = mysql.connection.cursor()
     query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
     cursor.execute(query, (curso_id,))
-    curso = cursor.fetchall()
+    curso = cursor.fetchone()
     if curso:
         return render_template('ver_curso.html', curso=curso)
     else:
@@ -268,7 +271,7 @@ def verCurso(curso_id):
     cursor = mysql.connection.cursor()
     query = 'SELECT * FROM curso, nivel, categoria WHERE curso.CODCATEGORIA=categoria.CODCATEGORIA AND curso.CODNIVEL=nivel.CODNIVEL AND curso.IDCURSO = %s'
     cursor.execute(query, (curso_id,))
-    curso = cursor.fetchall()
+    curso = cursor.fetchone()
     if curso:
         return render_template('detallesCursoCarrito.html', curso=curso)
     else:
@@ -328,7 +331,7 @@ def listar_cursos():
                         categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
                         busqueda=busqueda) 
         else:
-          return render_template('index.html', cursos=cursos, categorias=categorias, niveles=niveles, 
+          return render_template('ListarCursosDocente.html', cursos=cursos, categorias=categorias, niveles=niveles, 
                         categoria_seleccionada=categoria_seleccionada, nivel_seleccionado=nivel_seleccionado,
                         busqueda=busqueda)
     else:

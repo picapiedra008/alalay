@@ -41,6 +41,20 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+        .message {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +76,7 @@
                         <a class="nav-link fs-3" href="#">Comunidad</a>
                     </li>
                 </ul>
-                <a href="{{ url_for('index') }}" class="d-flex">
+                <a href="{{ url_for('perfildocente') }}" class="d-flex">
                     <img src="{{ url_for('static', filename='archivos/user.png') }}" alt="Usuario" style="width: 30px;">
                 </a>
             </div>
@@ -71,6 +85,11 @@
      
     <div class="container">
         <div class="row">
+            <div class="d-flex justify-content-between align-items-center col-md-1">
+                <a href="{{ url_for('ver_curso', curso_id=curso_anterior_id) if curso_anterior_id else '#' }}" class="btn btn-lg" style="color: #333;">
+                    &lt;
+                </a>
+            </div>
             <div class="card mb-3 p-3 col-md-10" style="border-radius: 10px;overflow: hidden;">
                 <div class="row g-0">
                     <div class="col-md-6 d-flex justify-content-between align-items-center">
@@ -88,16 +107,66 @@
                     </div>
                 </div>
             </div>
+            <div class="d-flex justify-content-between align-items-center col-md-1">
+                <a href="{{ url_for('ver_curso', curso_id=curso_siguiente_id) if curso_siguiente_id else '#' }}" class="btn btn-lg" style="color: #333;">
+                    &gt;
+                </a>
+            </div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; height: 50px; width: 100%;">
-            <a href="/carrito" class="btn btn-success" style="width: 100px; height: 40px; border-radius: 10px; text-decoration: none; color: white;">
+            <a href="{{ url_for('listar_cursos') }}" class="btn btn-success" style="width: 100px; height: 40px; border-radius: 10px; text-decoration: none; color: white;">
                 Volver
             </a>
         </div>
     </div>
 
+    <div id="message" class="message"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-       
+    <script>
+        function showMessage(type, text) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = 'message ' + type;
+            messageDiv.textContent = text;
+            messageDiv.style.display = 'block';
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 2000);
+        }
+
+        document.getElementById("carrito-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            const cursoId = this.getAttribute("data-curso-id");
         
+            fetch('/agregar_al_carrito', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `curso_id=${cursoId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                const carritoBtn = document.getElementById("carrito-btn");
+                const carritoText = document.getElementById("carrito-text");
+
+                if (data.success) {
+                    carritoText.innerText = "Ir al carrito";
+                    showMessage('success', 'Curso añadido al carrito');
+                    carritoBtn.addEventListener('click', function() {
+                        window.location.href = '/carrito';
+                    });
+                } else {
+                    if (carritoText.innerText !== "Ir al carrito") {
+                        showMessage('error', data.message);
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('error', 'Error al agregar al carrito');
+            });
+        });
+    </script>
 </body>
 </html>
