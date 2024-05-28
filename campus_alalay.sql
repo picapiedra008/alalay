@@ -11,7 +11,6 @@ SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
-
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -27,10 +26,11 @@ SET time_zone = "+00:00";
 -- Estructura de tabla para la tabla `carrito`
 --
 
-CREATE TABLE `carrito` (
+
+CREATE TABLE `carrito`(
   `idCarrito` int(11) NOT NULL,
-  `id` iINT(11) NULL DEFAULT NULL,
-  `IDCURSO` int(11) NOT NULL
+  `id` int(11) NULL DEFAULT NULL,
+  `IDCURSO` int (11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
