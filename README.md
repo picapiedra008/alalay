@@ -2,7 +2,6 @@
 # Team: Work System;
 # Integrantes:                                                                                                                                                                   
 1.- Ismael Huarachi Ticacolque                                        
-
 2.- Jesus Valdivia      Orellana                                                                                                                                                  
 3.- Jhonny Delgadillo  Lopez                                                                                                                                                 
 4.- Jhonny Rojas  Flores                                                                                                                                                     
