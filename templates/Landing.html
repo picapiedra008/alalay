@@ -6,6 +6,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
   <title>Campus Alalay</title>
+  <link rel="icon" href="/static/archivos/logo.jpg" type="image/png">
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -30,12 +31,14 @@
   <header id="header" class="fixed-top  header-transparent ">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <div class="logo">
-        <h1><a href="{{ url_for('landing') }}">Campus Alalay</a></h1>
-        <!-- Uncomment below if you prefer to use an image logo -->
-        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
-      </div>
-      
+      <div class="logo" style="display: flex; align-items: center;">
+        <link href="/static/css/logo.css" rel="stylesheet">
+        <a href="{{ url_for('landing') }}">
+            <img src="/static/archivos/logo.jpg" alt="logo" class="logo-image">
+        </a>
+        <h1><a href="{{ url_for('landing') }}">. Campus Alalay</a></h1>
+    </div>  
+
       <nav id="navbar" class="navbar">
         <h1><a href="{{ url_for('listar_cursos') }}">Inicio</a></h1>
         <ul>
@@ -73,9 +76,42 @@
           <img src="/static/archivos/aiso.png" class="img-fluid" alt="">
         </div>
       </div>
+      <body>
+        <head>
+            <link href="/static/css/redes.css" rel="stylesheet">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        </head>
+        <div class="menu bg-transparent"  >
+            <a class="link" style="--color: #3b5998;">
+                <i class="link-icon fab fa-facebook"></i>
+                <span class="link-title">Facebook</span>
+            </a>
+            <a class="link" style="--color: #25D366;">
+                <i class="link-icon fab fa-whatsapp"></i>
+                <span class="link-title">WhatsApp</span>
+            </a>
+            <a class="link" style="--color: #E4405F;">
+                <i class="link-icon fab fa-instagram"></i>
+                <span class="link-title">Instagram</span>
+            </a>
+            <a class="link" style="--color: #D44638;">
+                <i class="link-icon fas fa-envelope"></i>
+                <span class="link-title">Correo</span>
+            </a>
+            <a class="link" style="--color: #333333;">
+                <i class="link-icon fab fa-github"></i>
+                <span class="link-title">GitHub</span>
+            </a>
+            <a class="link" style="--color: #0077b5;">
+                <i class="link-icon fas fa-question-circle"></i>
+                <span class="link-title">Ayuda</span>
+            </a>
+        </div>
+    </body>
     </div>
 
   </section><!-- End Hero --> 
+
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
    <!-- Vendor JS Files -->
   <script src="/static/js/aos.js"></script>

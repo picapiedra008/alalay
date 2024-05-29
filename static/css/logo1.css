@@ -1,0 +1,11 @@
+.logo-image {
+    height: 40px; /* Ajusta el tamaño de la imagen según sea necesario */
+    margin-right: 10px; /* Espacio entre la imagen y el texto */
+    border-radius: 8px; /* Bordes curvados */
+    transition: transform 0.3s ease, border-radius 0.3s ease; /* Animación suave */
+}
+
+.logo-image:hover {
+    transform: scale(1.1); /* Agrandar la imagen al pasar el cursor */
+    border-radius: 12px; /* Aumentar la curvatura al pasar el cursor */
+}

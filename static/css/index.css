@@ -2,6 +2,7 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     margin: 0;
+    
 }
 
 .nav-bar {
@@ -31,12 +32,50 @@ body {
 }
 
 .contador {
-    background-color: #a8e6b8;
+    background: linear-gradient(180deg, #063006, #a8e6b8); /* Degradado de verde oscuro a verde claro */
     padding: 20px;
-    margin-top: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 3px;
+    border-radius: 12px; /* Bordes curvados */
+    position: relative; /* Necesario para el posicionamiento del pseudo-elemento */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Asegura que el pseudo-elemento no se salga del contenedor */
+    color: #ffffff; /* Color de texto blanco para mayor contraste */
 }
+
+.contador::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 12px;
+    border: 3px solid transparent; 
+    background-image: linear-gradient(90deg, transparent, transparent, #51bb7d);
+    animation: borderHighlight 2s linear infinite; /* Animación de resaltado */
+    pointer-events: none; /* Asegura que el pseudo-elemento no interfiera con la interacción de los elementos internos */
+}
+
+@keyframes borderHighlight {
+    0% {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #97fda5;
+    }
+    100% {
+        border-color: transparent;
+    }
+}
+
+.form-control, .btn {
+    z-index: 1; /* Asegura que los botones y elementos de formulario estén por encima del pseudo-elemento animado */
+    position: relative; /* Asegura el correcto posicionamiento de los elementos interactivos */
+}
+
+
+
+
 
 .boton {
     background-color: #218838;
