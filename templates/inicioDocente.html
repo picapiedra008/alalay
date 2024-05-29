@@ -7,38 +7,39 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>perfil registrar_docente</title>
-    <link rel="icon" href="/static/archivos/logo.jpg" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-    <link href="/static/css/perfilDoncente.css" rel="stylesheet" />
+    <link href="/static/css/logo1.css" rel="stylesheet">
+    <link href="/static/css/perfilDoncente.css" rel="stylesheet" />    
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="static/css/logo1.css">
-   <style>
+     <style>
         /* Estilos para la ventana emergente */
         .popup {
             position: absolute;
             background-color: rgb(179, 242, 211);
             border: 1px solid #221c1c;
-            padding: 0;
+            padding: 10px;
             z-index: 1000;
             display: none;
-             /* Agregamos un desplazamiento hacia la derecha y hacia abajo */
-            top: 30px; /* Desplazamiento hacia abajo */
-            left: 60px; /* Desplazamiento hacia la derecha */
-            
-
+            top: 30px; 
+            left: 60px;
         }
     </style>
 </head>
 <body class="sb-nav-fixed">
-    <nav class="sb-topnav navbar navbar-expand-lg navbar-dark bg-success">
+    <nav class="sb-topnav navbar navbar-expand-lg navbar-dark bg-success " >
         <div class="container-fluid">
-            <a class="navbar-brand fs-2 d-flex align-items-center" href="{{ url_for('landing') }}">
-                <img src="/static/archivos/logo.jpg" alt="logo" class="logo-image">
-                Campus Alalay
+            <!-- Brand -->
+            <img src="/static/archivos/logo.jpg" alt="logo" class="logo-image">
+            <a class="navbar-brand fs-2" href="{{url_for('landing')}}">  
+                Campus alalay
             </a>
+            
+            <button class="btn btn-link btn-sm order-3 order-lg-0 me-5 me-lg-2" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+            <!-- Toggler for mobile view -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -61,31 +62,38 @@
         <div id="layoutSidenav_nav">
             <nav class=" sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
-                    <div class="nav">
-                        <br>
-                        <div class="imagen-circular text-center">
-                            <img src="{{docentes[6]}}" alt="imagen">
-                        </div>
+                    <div class="nav align-content-center d-flex justify-content-center" >
                         
-                        <br>
-                        <h2 class="text-center">{{ docentes[1] }}</h2>
-                        <h3 class="text-center">{{ docentes[2] }}</h3>
-                        <br>
-                        <!-- <div class="sb-sidenav-menu-heading">Core</div> -->
-                    
-                        <a class="nav-link" href="#s" style=" font-size: 25px;">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Cursos
-                        </a>
-                        <a class="nav-link" href="#s" style=" font-size: 25px;">
-                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                            Alumnos
-                        </a>
-                        <br>
+                            <br>
+                            <br>
+                            <div class="imagen-circular text-center">
+                                <img src="{{docentes[6]}}" alt="imagen">
+                            </div>
+                            
+                            <br>
+                            <h3 class="text-center" >{{ docentes[1] }}</h3>
+                            <h4 class="text-center">{{ docentes[2] }}</h4>
+                            <br>
+                            <!-- <div class="sb-sidenav-menu-heading">Core</div> -->
+                  
+                           
+                            <a class="nav-link " href="#s" style=" font-size: 25px;">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                                Cursos
+                            </a>
+                             <a class="nav-link " href="#s" style=" font-size: 25px; ">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                                    Alumnos
+                             </a>
+                            
+                            <br>
+                            <br>
+                            <div class="text-center">
+                                <a href="/editar_perfil" class="btn btn-success" style="width: 200px; height: 50px; border-radius: 30px; font-size:20px ;">Editar Perfil</a>
+                            </div>
+
+                     
                         
-                        <div class="text-center">
-                            <a href="/editar_perfil" class="btn btn-success" style="width: 200px; height: 50px; border-radius: 30px; font-size:20px ;">Editar Perfil</a>
-                        </div>
                         
                         
                     </div>
@@ -136,6 +144,5 @@
         </div>
     </div>
     <script src="/static/js/scripts.js"></script>
-
 </body>
 </html>

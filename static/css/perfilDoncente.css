@@ -11,9 +11,9 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
  .imagen-circular img {
-  width: 290px; /* o el tamaño que prefieras */
-  height: 290px; /* debe ser igual al ancho para que sea un círculo perfecto */
-  border-radius: 30px; /* esto crea el efecto circular */
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
   object-fit: cover; /* asegura que la imagen cubra completamente el círculo sin deformarse */
 }
 .card-img-top-fit{
@@ -21,6 +21,7 @@
   object-fit: cover; /* Esto asegura que la imagen cubra completamente el área sin distorsionarse */
   width: 100%; /* Esto hace que la imagen sea tan ancha como su contenedor */
 }
+
 
  :root {
   --bs-blue: #0d6efd;
@@ -11036,22 +11037,22 @@ body {
 
 .sb-sidenav-dark {
   background-color: #a8e6b8;
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .sb-sidenav-menu-heading {
-  color: rgba(255, 255, 255, 0.25);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link {
-  color: rgba(255, 255, 255, 0.5);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-nav-link-icon {
-  color: rgba(255, 255, 255, 0.25);
+  color: #fff;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link .sb-sidenav-collapse-arrow {
   color: rgba(255, 255, 255, 0.25);
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
-  color: #fff;
+  color: darkgreen;
 }
 .sb-sidenav-dark .sb-sidenav-menu .nav-link.active {
   color: #fff;

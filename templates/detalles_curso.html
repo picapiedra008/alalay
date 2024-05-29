@@ -5,36 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ curso.titulo }} - Detalles del Curso</title>
     <link rel="icon" href="/static/archivos/logo.jpg" type="image/png">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="static/css/logo1.css">
+    <link rel="stylesheet" href="/static/css/logo1.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
-        }
-        .nav-bar {
-            margin-top: 0;
-            background-color: #065e06;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            box-sizing: border-box;
-            height: 70px;
-        }
-        .nav-bar a {
-            float: left;
-            color: rgb(245, 236, 236);
-            text-align: center;
-            padding: 14px 25px;
-            text-decoration: none;
-            border: #34b634;
-            font-size: x-large;
-            border-color: #ddd;
-        }
-        .nav-bar a:hover {
-            background-color: #ddd;
-            color: black;
         }
         .container {
             background-color: #f2f5f3;
@@ -64,7 +40,7 @@
         <div class="container-fluid">
             <a class="navbar-brand fs-2 d-flex align-items-center" href="{{ url_for('landing') }}">
                 <img src="/static/archivos/logo.jpg" alt="logo" class="logo-image">
-                Campus Alalay
+                 Campus Alalay
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
