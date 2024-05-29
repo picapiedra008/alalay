@@ -60,7 +60,7 @@
         currentIndex = (currentIndex + 1) % phrases.length;
       }
 
-      setInterval(changePhrase, 5000); // Change phrase every 5 seconds
+      setInterval(changePhrase, 6000); // Change phrase every 5 seconds
       changePhrase(); // Initial call to set the first phrase
     });
   </script>
@@ -119,31 +119,37 @@
   </section><!-- End Hero -->
 
   <div class="menu menu-fixed">
-    <a class="link" style="--color: #3b5998;">
-      <i class="link-icon fab fa-facebook"></i>
-      <span class="link-title">Facebook</span>
+    <div class="link-container">
+      <a class="link" style="--color: #3b5998;">
+        <i class="link-icon fab fa-facebook"></i>
+        <span class="link-title">Facebook</span>
+      </a>
+      <a class="link" style="--color: #25D366;">
+        <i class="link-icon fab fa-whatsapp"></i>
+        <span class="link-title">WhatsApp</span>
+      </a>
+      <a class="link" style="--color: #E4405F;">
+        <i class="link-icon fab fa-instagram"></i>
+        <span class="link-title">Instagram</span>
+      </a>
+      <a class="link" style="--color: #D44638;">
+        <i class="link-icon fas fa-envelope"></i>
+        <span class="link-title">Correo</span>
+      </a>
+      <a class="link" style="--color: #333333;">
+        <i class="link-icon fab fa-github"></i>
+        <span class="link-title">GitHub</span>
+      </a>
+      <a class="link" style="--color: #0077b5;">
+        <i class="link-icon fas fa-question-circle"></i>
+        <span class="link-title">Ayuda</span>
+      </a>
+    </div>
+    <a href="#" class="team-link">
+      <img src="/static/archivos/team.jpg" alt="Team" class="team-image">
     </a>
-    <a class="link" style="--color: #25D366;">
-      <i class="link-icon fab fa-whatsapp"></i>
-      <span class="link-title">WhatsApp</span>
-    </a>
-    <a class="link" style="--color: #E4405F;">
-      <i class="link-icon fab fa-instagram"></i>
-      <span class="link-title">Instagram</span>
-    </a>
-    <a class="link" style="--color: #D44638;">
-      <i class="link-icon fas fa-envelope"></i>
-      <span class="link-title">Correo</span>
-    </a>
-    <a class="link" style="--color: #333333;">
-      <i class="link-icon fab fa-github"></i>
-      <span class="link-title">GitHub</span>
-    </a>
-    <a class="link" style="--color: #0077b5;">
-      <i class="link-icon fas fa-question-circle"></i>
-      <span class="link-title">Ayuda</span>
-    </a>
-  </div>
+  </div>  
+  
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
   <!-- Vendor JS Files -->
