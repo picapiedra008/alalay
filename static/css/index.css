@@ -32,7 +32,7 @@ body {
 }
 
 .contador {
-    background: linear-gradient(180deg, #063006, #a8e6b8); /* Degradado de verde oscuro a verde claro */
+    background: linear-gradient(180deg, #0e633b, #a8e6b8); /* Degradado de verde oscuro a verde claro */
     padding: 20px;
     margin-top: 3px;
     border-radius: 12px; /* Bordes curvados */
@@ -61,7 +61,7 @@ body {
         border-color: transparent;
     }
     50% {
-        border-color: #97fda5;
+        border-color: #9be458;
     }
     100% {
         border-color: transparent;
@@ -168,4 +168,10 @@ body {
 .message.error {
     background-color: #dc3545;
     color: white;
+}
+.card-curso {
+    transition: background-color 0.2s ease;
+}
+.card-curso:hover {
+    background-color: #a0ebc5; /* Color verde claro */
 }

@@ -1,34 +1,16 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
-*,
-*:after,
-*:before {
-    margin: 0;
-    box-sizing: border-box;
-}
-
-body {
-    height: auto;
-    font-family: "Inter", sans-serif;
-    line-height: 1.5;
-    min-height: 100vh;
-    display: flex;
-   
-    background-color: #eee;
-}
-
-.menu {
-    padding: 2rem;
-    background-color: #fff;
-    position: relative;
-    width: calc(130px + 470px + 4rem);
+/* Redes Sociales Fijas */
+.menu-fixed {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0); /* Fondo semitransparente */
+    padding: 1rem 0;
     display: flex;
     justify-content: center;
-    width: 100%;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px 0 rgba(0, 0, 0, 0.075);
-}
-
-.link {
+    box-shadow: 0 -2px 10px rgba(189, 185, 185, 0.089);
+  }
+  
+  .link {
     display: inline-flex;
     cursor: pointer;
     justify-content: center;
@@ -43,9 +25,9 @@ body {
     transition: width 0.8s ease-in;
     text-decoration: none;
     color: inherit;
-}
-
-.link:before {
+  }
+  
+  .link:before {
     position: absolute;
     z-index: -1;
     content: "";
@@ -58,28 +40,28 @@ body {
     transition: transform 0.2s ease-in;
     transform-origin: center right;
     background-color: #eee;
-}
-
-.link:hover, .link:focus {
+  }
+  
+  .link:hover, .link:focus {
     outline: 0;
     width: 140px;
-}
-
-.link:hover:before,
-.link:hover .link-title {
+  }
+  
+  .link:hover:before,
+  .link:hover .link-title {
     transform: translateX(0%);
-}
-
-.link-icon {
+  }
+  
+  .link-icon {
     color: var(--color);
     font-size: 27px !important;
     display: block;
     flex-shrink: 0;
     left: 18px;
     position: absolute;
-}
-
-.link-title {
+  }
+  
+  .link-title {
     color: var(--color);
     transform: translateX(100%);
     transition: transform 0.2s ease-in;
@@ -87,4 +69,20 @@ body {
     text-align: center;
     text-indent: 20px;
     width: 100%;
-}
+  }
+
+  .team-image {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    border-radius: 10%;
+   
+  }
+  .team-link {
+    margin-left: 350px; /* Adjust as needed for spacing */
+  }
+
+  .team-image {
+    width: 100px; /* Adjust size as needed */
+    height: auto;
+    border-radius: 10%; /* Optional: Make it circular */
+  }
